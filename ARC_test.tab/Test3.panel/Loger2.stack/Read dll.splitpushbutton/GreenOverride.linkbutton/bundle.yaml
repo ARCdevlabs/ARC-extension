@@ -1,0 +1,7 @@
+title: OverrideGreen
+tooltip: Test Link Button Tooltip
+author: "{{author}}"
+highlight: new
+assembly: ONES
+command_class: OverrideGreen
+# availability_class: PyRevitTestLinkCommandAvail

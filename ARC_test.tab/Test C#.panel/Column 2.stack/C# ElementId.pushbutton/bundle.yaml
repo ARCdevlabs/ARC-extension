@@ -1,0 +1,9 @@
+title:   
+  en_us: C# Pick
+  ja: C# ピック
+tooltip: |
+  en_us: Create tool with C#
+  ja: C#でツールを作成する
+highlight: new      # highlight as new or update
+authors:
+  - Trần Văn A

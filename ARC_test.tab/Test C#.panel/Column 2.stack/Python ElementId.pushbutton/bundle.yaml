@@ -1,0 +1,13 @@
+title:   
+  en_us: Python Pick
+  ja: Python ピック
+tooltip: |
+  en_us: Create tool with Python
+  ja: Pythonでツールを作成する
+highlight: new      # highlight as new or update
+authors:
+  - Trần Văn A
+background:
+  panel: '#ff0000'
+  title: '#00ff00'
+  slideout: '#0000ff'

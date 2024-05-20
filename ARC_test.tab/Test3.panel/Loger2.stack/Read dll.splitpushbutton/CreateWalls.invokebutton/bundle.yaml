@@ -1,0 +1,7 @@
+title: CreateWalls
+tooltip: Test Link Button Tooltip
+author: "{{author}}"
+highlight: new
+assembly: CreateWalls
+command_class: Command
+# availability_class: PyRevitTestLinkCommandAvail
