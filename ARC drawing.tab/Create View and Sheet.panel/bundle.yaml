@@ -1,0 +1,9 @@
+layout:
+  - View
+  - Place View
+  - ">>>>>"
+  - More Tool
+background:
+  title: '#b6d8f7'
+  panel: '#cfe2f3'
+  # slideout: '#cfe2f3'

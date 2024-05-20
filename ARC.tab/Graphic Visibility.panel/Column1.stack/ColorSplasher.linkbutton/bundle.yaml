@@ -1,0 +1,11 @@
+title:   
+  en_us: ColorSplasher
+  ja: 更新中...
+tooltip:
+  en_us:
+    Công cụ để override tất cả đối tượng trong Revit
+    Rất thuận tiện trong việc select
+  ja:
+    更新中...
+assembly: ColorSplasher
+command_class: Command

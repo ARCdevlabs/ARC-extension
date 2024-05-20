@@ -1,0 +1,15 @@
+title:   
+  en_us: Top/Base
+  ja: 更新中...
+tooltip:
+  en_us:
+    Điều chỉnh Top và Base offset của Tường
+  ja:
+    更新中...
+author: 
+  - "Phan Mẫu Cường"
+assembly: ModifyTopBaseWall
+command_class: Command
+
+
+

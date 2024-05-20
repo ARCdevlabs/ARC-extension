@@ -1,0 +1,15 @@
+title:   
+  en_us: Vẽ Dầm từ Link Cad
+  ja: 更新中...
+tooltip:
+  en_us:
+    Vẽ Dầm từ Link Cad
+  ja:
+    更新中...
+author: 
+  - "Phan Mẫu Cường"
+assembly: InputBeam
+command_class: Command_BeamBy1Layer
+
+
+
