@@ -9,7 +9,6 @@ module = importlib.import_module(str(begin))
 import Autodesk
 from Autodesk.Revit.DB import *
 from System.Collections.Generic import *
-print "a"
 try:
     if module.AutodeskData():
         uidoc = __revit__.ActiveUIDocument
