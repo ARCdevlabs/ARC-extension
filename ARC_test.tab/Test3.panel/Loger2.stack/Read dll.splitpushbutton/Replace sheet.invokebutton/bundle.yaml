@@ -1,7 +1,0 @@
-title: Replace Sheet Named
-tooltip: Test Link Button Tooltip
-author: "{{author}}"
-highlight: new
-assembly: ReplaceName
-command_class: Command_ReplaceSheetName
-# availability_class: PyRevitTestLinkCommandAvail

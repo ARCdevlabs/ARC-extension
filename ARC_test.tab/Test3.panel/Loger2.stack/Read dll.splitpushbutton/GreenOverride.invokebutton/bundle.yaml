@@ -1,7 +1,0 @@
-title: OverrideGreen
-tooltip: Test Link Button Tooltip
-author: "{{author}}"
-highlight: new
-assembly: JoinGeometry
-command_class: EventExecute
-# availability_class: PyRevitTestLinkCommandAvail

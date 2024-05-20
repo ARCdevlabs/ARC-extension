@@ -1,7 +1,0 @@
-title: CreateSheets
-tooltip: Test Link Button Tooltip
-author: "{{author}}"
-highlight: new
-assembly: CreateSheets
-command_class: Command
-# availability_class: PyRevitTestLinkCommandAvail

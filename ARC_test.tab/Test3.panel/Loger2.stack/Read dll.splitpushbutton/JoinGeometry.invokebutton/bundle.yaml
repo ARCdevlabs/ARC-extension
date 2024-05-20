@@ -1,7 +1,0 @@
-title: JoinGeometry
-tooltip: Test Link Button Tooltip
-author: "{{author}}"
-highlight: new
-assembly: AutoJoinGeometry
-command_class: Command_JoinGeometry
-# availability_class: PyRevitTestLinkCommandAvail

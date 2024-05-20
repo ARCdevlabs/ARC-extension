@@ -1,7 +1,0 @@
-title: CreateSectionView
-tooltip: Test Link Button Tooltip
-author: "{{author}}"
-highlight: new
-assembly: CreateSectionView
-command_class: CommandController
-# availability_class: PyRevitTestLinkCommandAvail

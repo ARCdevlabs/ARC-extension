@@ -1,7 +1,0 @@
-title: InputBeam
-tooltip: Test Link Button Tooltip
-author: "{{author}}"
-highlight: new
-assembly: InputBeam
-command_class: Command_BeamByManyLayers
-# availability_class: PyRevitTestLinkCommandAvail

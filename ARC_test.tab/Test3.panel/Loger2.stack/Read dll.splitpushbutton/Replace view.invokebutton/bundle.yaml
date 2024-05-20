@@ -1,7 +1,0 @@
-title: ReplaceViewName
-tooltip: Test Link Button Tooltip
-author: "{{author}}"
-highlight: new
-assembly: ReplaceName
-command_class: Command_ReplaceViewName
-# availability_class: PyRevitTestLinkCommandAvail

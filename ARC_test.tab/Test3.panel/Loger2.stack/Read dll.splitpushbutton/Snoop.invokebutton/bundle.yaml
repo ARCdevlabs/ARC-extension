@@ -1,7 +1,0 @@
-title: Snoop
-tooltip: Test Link Button Tooltip
-author: "{{author}}"
-highlight: new
-assembly: RevitLookup
-command_class: SnoopSurfaceCommand
-# availability_class: PyRevitTestLinkCommandAvail
