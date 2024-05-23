@@ -1,8 +1,6 @@
 """Opens the sheet containing this view and zooms to the viewport."""
 
 from pyrevit import revit, DB
-
-
 shts = DB.FilteredElementCollector(revit.doc)\
          .OfCategory(DB.BuiltInCategory.OST_Sheets)\
          .WhereElementIsNotElementType()\
