@@ -9,7 +9,7 @@ tooltip:
 author: 
   - "Phan Mẫu Cường"
 assembly: AutoJoinGeometry
-command_class: Autojoin
+command_class: Command_JoinGeometry
 
 
 
