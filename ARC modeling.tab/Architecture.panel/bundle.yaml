@@ -1,6 +1,7 @@
 layout:
   - Wall
   - Wall Top Base
+  - Column Top Base
   - Door
   - Floor
   - Ceiling
