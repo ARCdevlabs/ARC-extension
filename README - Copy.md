@@ -1,2 +1,0 @@
-# ARC-extension
-ARC extension
