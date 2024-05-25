@@ -20,7 +20,7 @@ my_config = script.get_config()
 
 
 CategoryOption = namedtuple('CategoryOption', ['name', 'revit_cat'])
-
+print CategoryOption
 
 class PickByCategorySelectionFilter(UI.Selection.ISelectionFilter):
     """Selection filter implementation"""
