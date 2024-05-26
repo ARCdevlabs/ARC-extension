@@ -1534,7 +1534,6 @@ def move_segment_xa_nhat (list_sorted, vector_cua_dim, kich_co_chu, khoang_cach_
     
     vi_tri = seg_xa_nhat.Origin
 
-    cong_thuc = ((kich_co_chu/304.8)/2) + ((value_segment)/2) #theo don vi feet
     cong_thuc = ((kich_co_chu/304.8)/2) + ((value_segment)/2) + khoang_cach_dim_toi_text
     if huong_phai:
         move = move_point_along_vector(vi_tri, vector_cua_dim, cong_thuc) #move theo don vi feet

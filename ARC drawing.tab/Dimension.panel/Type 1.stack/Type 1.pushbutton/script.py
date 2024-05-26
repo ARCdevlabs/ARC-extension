@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""Activates selection tool that picks a specific type of element.
+
+Shift-Click:
+Pick favorites from all available categories
+"""
 __doc__ = 'nguyenthanhson1712@gmail.com'
 __author__ = 'NguyenThanhSon' "Email: nguyenthanhson1712@gmail.com"
 from codecs import Codec
@@ -94,10 +99,14 @@ try:
         else:
             sorted_phai =  module.sort_seg_by_distance_mat_cat(return_point,seg_phai) #Sort segment xa nhất tới gần nhất tính tình point đã click
             sorted_trai =  module.sort_seg_by_distance_mat_cat(return_point,seg_trai) #Sort segment xa nhất tới gần nhất tính tình point đã click            
-        if len(seg_phai) > 0:
-            module.move_segment_xa_nhat(sorted_phai, vector, kich_co,quy_doi_theo_ty_le, huong_phai = True)
-        if len(seg_trai) > 0:
-            module.move_segment_xa_nhat(sorted_trai, vector,kich_co,quy_doi_theo_ty_le, huong_phai = False)
+        if len(sorted_phai) > 0:
+            value_phai_0 = (sorted_phai[0].Value) * 304.8 
+            kich_co_phai_0 = module.xac_dinh_kich_co_chu(current_view, value_phai_0, kich_thuoc_moi_chu)
+            module.move_segment_xa_nhat(sorted_phai, vector, kich_co_phai_0,quy_doi_theo_ty_le, huong_phai = True)
+        if len(sorted_trai) > 0:
+            value_trai_0 = (sorted_trai[0].Value) * 304.8 
+            kich_co_trai_0 = module.xac_dinh_kich_co_chu(current_view, value_trai_0, kich_thuoc_moi_chu)
+            module.move_segment_xa_nhat(sorted_trai, vector,kich_co_trai_0,quy_doi_theo_ty_le, huong_phai = False)
     else:
         seg = element
         none_segment.append(seg)
