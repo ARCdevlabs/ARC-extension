@@ -34,12 +34,12 @@ def save_configs(content):
     my_config.width_input = content
     script.save_config()
 
-
-from rpw.ui.forms import TextInput
-input = TextInput('Input width of 1 symbol, nomaly 1.7~1.9', default="1.8")
-prev_width_of_text_of_dim = load_configs()
-input_value = [input]
-save_configs(input_value)
+if __name__ == "__main__":
+    from rpw.ui.forms import TextInput
+    input = TextInput('Input width of 1 symbol, nomaly 1.7~1.9', default="1.8")
+    prev_width_of_text_of_dim = load_configs()
+    input_value = [input]
+    save_configs(input_value)
 
 
 
