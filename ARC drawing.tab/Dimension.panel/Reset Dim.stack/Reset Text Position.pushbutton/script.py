@@ -33,19 +33,20 @@ try:
         pick = uidoc.Selection.PickObject(ObjectType.Element)
         element = doc.GetElement(pick.ElementId)
     else:
-        element = current_selection[0]
+        element = current_selection
 
     # print return_point
-    number_of_segments =  element.NumberOfSegments
+    
     t = Transaction(doc,"Reset Text Position")
     t.Start() 
-    number_of_segments =  element.NumberOfSegments
-    if number_of_segments != 0:
-        segments = element.Segments
-        for tung_seg in segments:
-            tung_seg.ResetTextPosition()
-    else:
-        element.ResetTextPosition()
+    for i in element:
+        number_of_segments =  i.NumberOfSegments
+        if number_of_segments != 0:
+            segments = i.Segments
+            for tung_seg in segments:
+                tung_seg.ResetTextPosition()
+        else:
+            i.ResetTextPosition()
     t.Commit()
 except:
     # print(traceback.format_exc())
