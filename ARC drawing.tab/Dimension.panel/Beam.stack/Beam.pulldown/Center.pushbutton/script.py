@@ -375,13 +375,14 @@ for wall in Ele:
         ti_le_1 = seg_1_value / (total_value)
         ti_le_2 = seg_2_value / (total_value)
         width_1 = total_value
+        khoang_cach_tu_dim = 1.5 * (Currentview.Scale)
         if seg_1_value < width_text_1: 
-            width_offset_text_1 = (seg_1_value - (25 * Currentview.Scale/50) + width_text_1/2) 
+            width_offset_text_1 = (seg_1_value/2 + khoang_cach_tu_dim + width_text_1/2 ) 
         else:
             width_offset_text_1 = 0
         
         if seg_2_value < width_text_2: 
-            width_offset_text_2 = (seg_2_value - (25 * Currentview.Scale/50) + width_text_1/2)
+            width_offset_text_2 = (seg_2_value/2 + khoang_cach_tu_dim + width_text_2/2 )
         else:
             width_offset_text_2 = 0
 
