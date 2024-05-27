@@ -437,6 +437,7 @@ for column in Ele:
                 len_formatted_value_1 = len(formatted_value_1)
                 len_formatted_value_2 = len(formatted_value_2)
                 one_unit_width = 1.83 #Chieu rong 1 don vi text
+                khoang_cach_tu_dim = 0.5 * (view.Scale)
                 width_text_1 = float(len_formatted_value_1 * one_unit_width * (view.Scale))
                 width_text_2 = float(len_formatted_value_2 * one_unit_width * (view.Scale))
                 total_value = seg_1_value + seg_2_value
@@ -444,13 +445,13 @@ for column in Ele:
                 ti_le_2 = seg_2_value / (total_value)
                 width = total_value
                 if seg_1_value < width_text_1: 
-                    width_offset_text_1 = (seg_1_value + width_text_1/2)
+                    width_offset_text_1 = (seg_1_value/2 + width_text_1/2 + khoang_cach_tu_dim)
                 else:
                     width_offset_text_1 = 0
                 move_seg_1 = move_point_along_vector(seg_1_position,curve_dim_direction, - (width_offset_text_1/304.8))
 
                 if seg_2_value < width_text_2: 
-                    width_offset_text_2 = (seg_2_value + width_text_2/2)
+                    width_offset_text_2 = (seg_2_value/2 + width_text_2/2 + khoang_cach_tu_dim)
                 else:
                     width_offset_text_2 = 0            
                 move_seg_2 = move_point_along_vector(seg_2_position,curve_dim_direction, (width_offset_text_2/304.8))
