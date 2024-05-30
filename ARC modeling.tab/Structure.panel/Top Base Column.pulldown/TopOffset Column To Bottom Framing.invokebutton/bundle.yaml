@@ -1,0 +1,15 @@
+title:   
+  en_us: Chỉnh Top Offset tới mặt dưới dầm 
+  ja: 更新中...
+tooltip:
+  en_us:
+    Theo tiêu chuẩn obayashi hoặc các tiêu chuẩn khác
+  ja:
+    更新中...
+author: 
+  - "Phan Mẫu Cường"
+assembly: ModifyTopBaseColumn
+command_class: ModifyTopOffsetColumnToBottomBeamAtEndLevel
+
+
+
