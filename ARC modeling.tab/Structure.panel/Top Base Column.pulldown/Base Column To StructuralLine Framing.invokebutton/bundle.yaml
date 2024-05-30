@@ -1,9 +1,9 @@
 title:   
-  en_us: Chỉnh Base Offset cột tới line kết cấu dầm 
+  en_us: Chỉnh Base cột tới line kết cấu dầm 
   ja: 更新中...
 tooltip:
   en_us:
-    Theo tiêu chuẩn obayashi hoặc các tiêu chuẩn khác
+    Theo tiêu chuẩn obayashi (Parameter "柱脚 x オフセット値") hoặc các tiêu chuẩn khác ("Base Offset")
   ja:
     更新中...
 author: 
