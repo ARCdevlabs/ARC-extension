@@ -7,6 +7,8 @@ ARC = string.ascii_lowercase
 begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
 module = importlib.import_module(str(begin))
 
+from nances import vectortransform
+
 import Autodesk
 from Autodesk.Revit.DB import *
 from System.Collections.Generic import *
@@ -61,6 +63,15 @@ try:
     t_1.Start()
     list_new_spot = []
     dict_point_ref_and_xyz = {}
+
+    bend_D = 10
+
+    nghieng = True
+
+    nghieng_60_do = 5
+
+    shoulder_D = 10
+
     for edge in edges:
 
         start_point_ref = edge.GetEndPointReference(0)
@@ -71,8 +82,8 @@ try:
         start_point_curve = curve_of_edge.GetEndPoint(0)
         end_point_curve = curve_of_edge.GetEndPoint(1)
 
-        start_point_curve_key = (round((start_point_curve.X),5), round((start_point_curve.Y),5))
-        end_point_curve_key = (round((end_point_curve.X),5), round((end_point_curve.Y),5))
+        start_point_curve_key = (round((start_point_curve.X),2), round((start_point_curve.Y),2))
+        end_point_curve_key = (round((end_point_curve.X),2), round((end_point_curve.Y),2))
 
         list_point_ref.append(start_point_ref)
         list_point_ref.append(end_point_ref)
@@ -88,7 +99,7 @@ try:
     for sub_element_point in slab_shape_editor:
         n += 1
         toa_do_sub_element_point = sub_element_point.Position
-        key = (round((toa_do_sub_element_point.X),5), round((toa_do_sub_element_point.Y),5))
+        key = (round((toa_do_sub_element_point.X),2), round((toa_do_sub_element_point.Y),2))
         if key in dict_point_ref_and_xyz:
             ket_qua_dict_point_ref_and_xyz[toa_do_sub_element_point] = dict_point_ref_and_xyz[key]
 
@@ -96,8 +107,26 @@ try:
     values = ket_qua_dict_point_ref_and_xyz.values()
     for toa_do_sub_point, ref_point in zip(keys,values):
 
+        up_direction = Currentview.UpDirection
+
+        view_direction = Currentview.ViewDirection
+        
+
+        bend = module.move_point_along_vector(toa_do_sub_point, up_direction, bend_D * Currentview.Scale /304.8)
+
+        # xoay_vector_90 = XYZ(up_direction.Y,up_direction.X,up_direction.Z)
+
+        xoay_vector_90 = vectortransform.rotate_vector(up_direction, view_direction, -90)
+
+        if nghieng == True:
+            bend = module.move_point_along_vector(bend, xoay_vector_90, nghieng_60_do * Currentview.Scale /304.8)
+        else:
+            bend = bend
+
+        shoulder = module.move_point_along_vector(bend, xoay_vector_90, shoulder_D * Currentview.Scale /304.8)
+
         new_spot_elevation = spot_elevation(doc, Currentview, ref_point, toa_do_sub_point,
-                        toa_do_sub_point, toa_do_sub_point,toa_do_sub_point, False)
+                        bend, shoulder,toa_do_sub_point, True)
         list_new_spot.append(new_spot_elevation)
 
     module.get_current_selection(uidoc,list_new_spot)
@@ -148,5 +177,5 @@ try:
     transaction_group.Assimilate()
 except:
     import traceback
-    print(traceback.format_exc())
+    # print(traceback.format_exc())
     pass
