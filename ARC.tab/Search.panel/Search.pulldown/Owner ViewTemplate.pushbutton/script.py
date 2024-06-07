@@ -49,11 +49,12 @@ if module.AutodeskData():
     results = []
     for i,j in zip(list_view_name, list_view):             
         output = script.get_output()
-        # print (output.linkify(j.Id) + "                   " +  "View Name: " + str(i) )
-        # print ("______________________________________________________________________")
+        print (output.linkify(j.Id) + "                   " +  "View Name: " + str(i) )
+        print ("______________________________________________________________________")
         results.append((output.linkify(j.Id), str(i)))
-    if len(results) != 0:
-        output.print_md("## View đang sử dụng view teamplte: " + str(text))
-        headers = ["View ID", "View Name"]
-        output.print_table(results, headers)
-    else: module.message_box("Không có view nào đang áp dụng view template được chọn")
+    if len(results) == 0:
+        module.message_box("Không có view nào đang áp dụng view template được chọn")
+        # output.print_md("## View đang sử dụng view teamplte: " + str(text))
+        # headers = ["View ID", "View Name"]
+        # output.print_table(results, headers)
+    # else: module.message_box("Không có view nào đang áp dụng view template được chọn")
