@@ -13,6 +13,7 @@ import threading
 from functools import wraps
 import datetime
 import webbrowser
+import Autodesk.Revit.DB as DB
 
 from pyrevit import HOST_APP, EXEC_PARAMS, DOCS, BIN_DIR
 from pyrevit import PyRevitCPythonNotSupported, PyRevitException, PyRevitCPythonNotSupported
@@ -2182,6 +2183,108 @@ def select_viewtemplates(title='Select View Templates',
         )
 
     return selected_viewtemplates
+
+
+def select_view_filter(title='Select View Filter',
+                         button_name='Select',
+                         width=DEFAULT_INPUTWINDOW_WIDTH,
+                         multiple=True,
+                         filterfunc=None,
+                         doc=None):
+    """Standard form for selecting view filters.
+
+    Args:
+        title (str, optional): list window title
+        button_name (str, optional): list window button caption
+        width (int, optional): width of list window
+        multiselect (bool, optional):
+            allow multi-selection (uses check boxes). defaults to True
+        filterfunc (function):
+            filter function to be applied to context items.
+        doc (DB.Document, optional):
+            source document for views; defaults to active document
+
+    Returns:
+        list[DB.View]: list of selected view templates
+
+    Example:
+        >>> from pyrevit import forms
+        >>> forms.select_viewtemplates()
+        ... [<Autodesk.Revit.DB.View object>,
+        ...  <Autodesk.Revit.DB.View object>]
+    """
+    doc = doc or DOCS.doc
+    all_view_filters_name =[]
+    all_view_filters = DB.FilteredElementCollector(doc).OfClass(DB.ParameterFilterElement).ToElements()
+    for tung_filter in all_view_filters:
+        all_view_filters_name.append(DB.Element.Name.GetValue(tung_filter))
+    if filterfunc:
+        all_view_filters = filter(filterfunc, all_view_filters)
+
+    selected_view_filter = SelectFromList.show(
+        sorted([x for x in all_view_filters_name],
+               key=lambda x: x),
+        title=title,
+        button_name=button_name,
+        width=width,
+        multiselect=multiple,
+        checked_only=True
+        )
+    return selected_view_filter
+
+def select_import_instance(title='Select Import Instance',
+                         button_name='Select',
+                         width=DEFAULT_INPUTWINDOW_WIDTH,
+                         multiple=True,
+                         filterfunc=None,
+                         doc=None):
+    """Standard form for selecting view filters.
+
+    Args:
+        title (str, optional): list window title
+        button_name (str, optional): list window button caption
+        width (int, optional): width of list window
+        multiselect (bool, optional):
+            allow multi-selection (uses check boxes). defaults to True
+        filterfunc (function):
+            filter function to be applied to context items.
+        doc (DB.Document, optional):
+            source document for views; defaults to active document
+
+    Returns:
+        list[DB.View]: list of selected view templates
+
+    Example:
+        >>> from pyrevit import forms
+        >>> forms.select_viewtemplates()
+        ... [<Autodesk.Revit.DB.View object>,
+        ...  <Autodesk.Revit.DB.View object>]
+    """
+    doc = doc or DOCS.doc
+    import_instances_name =[]
+    all_view_filters = DB.FilteredElementCollector(doc).OfClass(DB.ParameterFilterElement).ToElements()
+    collector = DB.FilteredElementCollector(doc)
+    all_import_instances = collector.OfClass(DB.ImportInstance).ToElements()
+    for tung_import_instances in all_import_instances:
+        try:
+            import_instances_name.append(tung_import_instances.Category.Name)
+            list_import_instance_set = list(set(import_instances_name))
+        except:
+            pass
+    if filterfunc:
+        list_import_instance_set = filter(filterfunc, list_import_instance_set)
+
+    selected_import_instance = SelectFromList.show(
+        sorted([x for x in list_import_instance_set],
+               key=lambda x: x),
+        title=title,
+        button_name=button_name,
+        width=width,
+        multiselect=multiple,
+        checked_only=True
+        )
+    return selected_import_instance
+
 
 
 def select_schedules(title='Select Schedules',

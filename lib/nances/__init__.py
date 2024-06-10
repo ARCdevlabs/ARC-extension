@@ -867,7 +867,8 @@ def get_selected_elements(tem_uidoc, tem_doc, noti = True):
             # module_path = Autodesk.__file__
             # print module_path
             dialog = TaskDialog("ARC")
-            dialog.MainContent = "Please select element before use this tool"
+            tin_nhan = "Please select element before use this tool.\n \n このツールを使用する前に要素をご選択ください。"
+            dialog.MainContent = tin_nhan
             dialog.TitleAutoPrefix = False
             dialog.Show()
         return False
@@ -1410,7 +1411,7 @@ import clr
 clr.AddReference("System.Windows.Forms")
 from System.Windows.Forms import MessageBox, MessageBoxButtons, MessageBoxIcon
 def message_box(message):
-    MessageBox.Show(message, "ARC: Notification", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    MessageBox.Show(message, "ARC", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
 
 
