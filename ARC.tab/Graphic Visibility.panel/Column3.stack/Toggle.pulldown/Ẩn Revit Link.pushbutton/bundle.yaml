@@ -1,0 +1,9 @@
+title:   
+  en_us: Ẩn Revit link
+  ja: 更新中.Revit
+tooltip:
+  en_us:
+    Tool sẽ tạm ẩn tất cả Revit link trong view đang mở.
+  ja:
+    更新中
+author: Nguyễn Thanh Sơn
