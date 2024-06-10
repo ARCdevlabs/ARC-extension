@@ -4,11 +4,22 @@ Shift-Click:
 Pick favorites from all available categories
 """
 # pylint: disable=E0401,W0703,C0103
+# -*- coding: utf-8 -*-
+__doc__ = 'python for revit api'
+__author__ = 'NguyenThanhSon' "Email: nguyenthanhson1712@gmail.com"
+import string
+import codecs
+import importlib
+ARC = string.ascii_lowercase
+begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
+module = importlib.import_module(str(begin))
+
 from collections import namedtuple
 
-from pyrevit import revit, UI
-from pyrevit import forms
-from pyrevit import script
+from nances import revit, UI
+from nances import forms
+from nances import script
+
 
 # import this script's configurator
 import pick_config
@@ -20,7 +31,6 @@ my_config = script.get_config()
 
 
 CategoryOption = namedtuple('CategoryOption', ['name', 'revit_cat'])
-print CategoryOption
 
 class PickByCategorySelectionFilter(UI.Selection.ISelectionFilter):
     """Selection filter implementation"""

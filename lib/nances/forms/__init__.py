@@ -1139,7 +1139,7 @@ class CommandSwitchWindow(TemplateUserInputWindow):
 
     def handle_click(self, sender, args):    #pylint: disable=W0613
         """Handle mouse click."""
-        self.Close()
+        # self.Close()
 
     def handle_input_key(self, sender, args):
         """Handle keyboard inputs."""
