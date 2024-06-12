@@ -1,5 +1,6 @@
 layout:
   - DuplicateAsDependentView
+  - CopyViewToAnotherLevel
   - Duplicate Selected View
 
 
