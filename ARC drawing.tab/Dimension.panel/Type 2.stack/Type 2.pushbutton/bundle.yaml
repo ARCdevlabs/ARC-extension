@@ -1,0 +1,16 @@
+title:   
+  en_us: Type 2
+  ja: タイプ2
+tooltip:
+  en_us:
+    Move text của dim để tránh chồng đè chữ
+
+    Bấm Shift + Click chuột trái và setting kích thước mỗi ký tự
+
+    cho lần đầu sử dụng, giá trị thường sử dụng là 1.8mm
+
+    (1.8mm là kích thước mỗi chữ sau khi in ra)
+  ja:
+    更新中...
+author: 
+  - "Nguyễn Thanh Sơn"

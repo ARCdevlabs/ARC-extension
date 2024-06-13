@@ -10,7 +10,7 @@ ARC = string.ascii_lowercase
 begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
 module = importlib.import_module(str(begin))
 if module.AutodeskData():
-    from pyrevit import forms, script
+    from nances import forms
     uidoc = __revit__.ActiveUIDocument
     doc = uidoc.Document
     view = doc.ActiveView
@@ -196,10 +196,10 @@ if module.AutodeskData():
             override_settings = OverrideGraphicSettings()
             index_i = checked_items.index(i_name)
             random_color = list_color[index_i]
-            override_settings.SetSurfaceForegroundPatternColor(random_color)
-            override_settings.SetSurfaceForegroundPatternId(GetFillPattern.Id)
-            override_settings.SetCutForegroundPatternColor(random_color)
-            override_settings.SetCutForegroundPatternId(GetFillPattern.Id)
+            override_settings.SetSurfaceBackgroundPatternColor(random_color)
+            override_settings.SetSurfaceBackgroundPatternId(GetFillPattern.Id)
+            override_settings.SetCutBackgroundPatternColor(random_color)
+            override_settings.SetCutBackgroundPatternId(GetFillPattern.Id)
             for wall in list_tem:
                 wall_name = Autodesk.Revit.DB.Element.Name.GetValue(wall)
                 if i_name == wall_name:

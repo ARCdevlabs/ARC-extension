@@ -9,7 +9,7 @@ begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
 module = importlib.import_module(str(begin))
 try:
     if module.AutodeskData():
-        from pyrevit import forms, script
+        from nances import forms
         import clr
         clr.AddReference("System")
         from System import Array
@@ -54,7 +54,7 @@ try:
 
         select_filter = forms.select_view_filter()
         if str(select_filter) == "None":
-            module.message_box("Chưa chọn filter nào")
+            module.message_box("0 filter was selected")
             sys.exit()
         else:
             checked_items = select_filter
@@ -75,7 +75,7 @@ try:
                 for tung_doi_tuong_2 in tung_doi_tuong:
                     list_selected_element_thu_cap.append(tung_doi_tuong_2)
             if len(list_selected_element_thu_cap) == 0:
-                module.message_box("Không có đối tượng nào khớp với filter đã chọn")
+                module.message_box("There are no objects matching the selected filter")
             else:
                 chon_doi_tuong = module.get_current_selection(uidoc,list_selected_element_thu_cap)
 except:

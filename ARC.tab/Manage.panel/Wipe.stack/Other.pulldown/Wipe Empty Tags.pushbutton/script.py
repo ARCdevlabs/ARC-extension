@@ -6,7 +6,7 @@ Remove tags in selected views
 #pylint: disable=C0103,E0401
 from pyrevit import framework
 from pyrevit import revit, DB
-from pyrevit import forms
+from nances import forms
 
 
 if __shiftclick__:  #pylint: disable=undefined-variable
