@@ -1,7 +1,7 @@
 """Configuration window for Match tool."""
 #pylint: disable=E0401,C0111,W0613
 from pyrevit import HOST_APP
-from pyrevit import forms
+from nances import forms
 from pyrevit import script
 
 
