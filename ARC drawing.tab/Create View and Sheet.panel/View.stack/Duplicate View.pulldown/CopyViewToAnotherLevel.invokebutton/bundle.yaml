@@ -1,0 +1,7 @@
+title:   
+  en_us: Copy view to another level
+  ja: 複製ビュー
+author: 
+  - "Phan Mẫu Cường"
+assembly: CopyView
+command_class: CopyView_Command
