@@ -1,7 +1,7 @@
 """Compare instance and type properties between two elements."""
 #pylint: disable=import-error,invalid-name,broad-except
 from pyrevit import revit, DB
-from pyrevit import forms
+from nances import forms
 from pyrevit import script
 
 

@@ -1,7 +1,8 @@
 """Erase selected data schema and its entities."""
 
 from pyrevit import revit, DB
-from pyrevit import forms, HOST_APP
+from pyrevit import HOST_APP
+from nances import forms
 
 doc = revit.doc
 

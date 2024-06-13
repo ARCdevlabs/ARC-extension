@@ -1,7 +1,7 @@
 """Delete all instances of selected element, from model."""
 #pylint: disable=import-error,invalid-name,broad-except,superfluous-parens
 from pyrevit import revit, DB
-from pyrevit import forms
+from nances import forms
 from pyrevit.framework import List
 
 

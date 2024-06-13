@@ -2,7 +2,7 @@
 put the view in isolate element mode"""
 # pylint: disable=import-error,invalid-name,broad-except,superfluous-parens
 from pyrevit.framework import List
-from pyrevit import forms
+from nances import forms
 from pyrevit import revit, DB
 
 import isolate_config
