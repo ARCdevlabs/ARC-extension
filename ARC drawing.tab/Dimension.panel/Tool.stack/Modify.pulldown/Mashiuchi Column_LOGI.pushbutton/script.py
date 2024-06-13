@@ -220,13 +220,13 @@ for element in Ele:
                 all_ref.Append(ref_trai)
             if float(tc_phai) > 0:
                 all_ref.Append(ref_phai)
-            all_ref.Append(ref_doc)
+            # all_ref.Append(ref_doc)
         if huong.Y == 1:
             if float(tc_truoc) > 0:
                 all_ref.Append(ref_truoc)
             if float(tc_sau) > 0:
                 all_ref.Append(ref_sau)
-            all_ref.Append(ref_ngang)
+            # all_ref.Append(ref_ngang)
     new_dim = doc.Create.NewDimension(current_view, line, all_ref)
 
     list_new_dim.append(new_dim)
