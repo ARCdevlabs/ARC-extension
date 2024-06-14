@@ -1413,10 +1413,6 @@ from System.Windows.Forms import MessageBox, MessageBoxButtons, MessageBoxIcon
 def message_box(message):
     MessageBox.Show(message, "ARC", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
-
-
-
-
 # math
 import Autodesk
 from Autodesk.Revit.DB import *

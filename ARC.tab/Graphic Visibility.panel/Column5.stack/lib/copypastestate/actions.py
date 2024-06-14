@@ -8,7 +8,7 @@ from pyrevit.framework import List
 from pyrevit.coreutils import logger
 from pyrevit.coreutils import moduleutils
 from pyrevit.coreutils import pyutils
-from pyrevit import forms
+from nances import forms
 from pyrevit import script
 
 from copypastestate import basetypes
@@ -715,7 +715,7 @@ class FilterOverridesAction(basetypes.CopyPasteStateAction):
                 slot_name=self.__class__.__name__,
                 data=FilterOverridesData(
                     source_viewid=view.Id,
-                    filter_ids=[f.Id for f in view_filters]
+                    filter_ids=[f.Id for f in selected_filters]
                 )
             )
 
