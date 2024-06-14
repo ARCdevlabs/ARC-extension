@@ -1,41 +1,44 @@
-__doc__ = 'python for revit api'
-__author__ = 'SonKawamura'
-from Autodesk.Revit.UI.Selection.Selection import PickObject
-from Autodesk.Revit.UI.Selection  import ObjectType
-from Autodesk.Revit.DB import*
+__doc__ = 'nguyenthanhson1712@gmail.com'
+__author__ = 'NguyenThanhSon' "Email: nguyenthanhson1712@gmail.com"
+from codecs import Codec
+import string
+import importlib
+ARC = string.ascii_lowercase
+begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
+module = importlib.import_module(str(begin))
 import Autodesk
 from Autodesk.Revit.DB import *
-from Autodesk.Revit.DB import Element
+import Autodesk.Revit.DB as DB
 from System.Collections.Generic import *
-import math
-from rpw import ui
-#Get UIDocument
-uidoc = __revit__.ActiveUIDocument
-#Get Document 
-doc = uidoc.Document
-Currentview = doc.ActiveView
-Curve = []
-def get_selected_elements():
-    selection = uidoc.Selection
-    selection_ids = selection.GetElementIds()
-    elements = []
-    for element_id in selection_ids:
-        elements.append(doc.GetElement(element_id))
-    return elements
-Ele = get_selected_elements()
-select = uidoc.Selection
-t = Transaction (doc, "Find reference of dim, spot elevation")
-listid = []
-t.Start()
-for i in Ele:
-    try:
-        ref_dim = i.References
-        for a in ref_dim:
-            idref_dim = a.ElementId
-            listid.append(idref_dim)
-            Icollection = List[ElementId](listid)
-            select.SetElementIds(Icollection)
-    except:
-        pass
-t.Commit()
+from Autodesk.Revit.UI.Selection import ObjectType, Selection
+import traceback
+try:
+    if module.AutodeskData():
+        uidoc = __revit__.ActiveUIDocument
+        doc = uidoc.Document
+        Ele = module.get_selected_elements(uidoc,doc,False)
+        element = []
+        if Ele == False:
+
+            pick = uidoc.Selection.PickObject(ObjectType.Element)
+            element.append(doc.GetElement(pick.ElementId))
+        else:
+            for i in Ele:
+                element.append(i)
+
+    select = uidoc.Selection
+    listid = []
+    for i in element:
+        try:
+            ref_dim = i.References
+            for a in ref_dim:
+                idref_dim = a.ElementId
+                listid.append(idref_dim)
+                Icollection = List[ElementId](listid)
+                select.SetElementIds(Icollection)
+        except:
+            pass
+except:
+    pass
+
       

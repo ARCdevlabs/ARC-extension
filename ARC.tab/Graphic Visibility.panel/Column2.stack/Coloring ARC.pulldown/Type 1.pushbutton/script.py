@@ -16,16 +16,6 @@ import clr
 import os.path as op
 import sys
 
-'''Dong nay dung de import file dll nhung khong dung nua
-
-USER_ROAMING_DIR = os.getenv('appdata')
-PYREVIT_APP_DIR = op.join(USER_ROAMING_DIR,'pyRevit-Master','extensions','pyRevitTools.extension','SonKawamura.tab','Core') 
-sys.path.append(PYREVIT_APP_DIR)  # path of dll
-clr.AddReference ("SonKawamura") # the dll
-import SonKawamura
-
-'''
-
 def override_graphics_in_view(view, list_element_id, color, color_cut):
     name_pattern = "<Solid fill> , <塗り潰し>"
     patterns = FilteredElementCollector(doc).OfClass(FillPatternElement)
@@ -45,8 +35,10 @@ def override_graphics_in_view(view, list_element_id, color, color_cut):
 uidoc = __revit__.ActiveUIDocument
 doc = uidoc.Document
 AcView= doc.ActiveView
+
 t = Transaction(doc, "Appy template of vn03")
 t.Start()
+
 Checkviewtemplate = str(AcView.ViewTemplateId)
 #Check view have ViewTemplate or not, if not => don't need to Enable Temporary view
 if Checkviewtemplate != "-1":
