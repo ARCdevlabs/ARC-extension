@@ -1,8 +1,6 @@
 title:
-  ru: Создать набор печати из выделенных видов
-  fr_fr: Créer des impressions depuis les vues sélectionnées
+  ja: シートセットの作成
   en_us: Tạo sheet set
 tooltip:
-  ru: Создает набор печати из выделенных видов.
-  fr_fr: Créer des impressions depuis les vues sélectionnées
-  en_us: Tạo sheet set
+  ja: 更新中..
+  en_us: Chọn các sheet bên thanh browser, sau đó click vào tool để tạo nhanh sheet set, tiết kiệm thời gian in bản vẽ.

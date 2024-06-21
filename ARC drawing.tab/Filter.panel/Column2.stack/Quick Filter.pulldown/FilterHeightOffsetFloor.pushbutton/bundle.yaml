@@ -1,9 +1,9 @@
 title:   
-  en_us: FilterHeightOffsetFloor
-  ja: 测试包
+  en_us: Height Offset Sàn Kết Cấu
+  ja: 更新中.. Height Offset Sàn Kết Cấu
 tooltip: |
-  en_us: Create new patterns in Revit
-  ja: 测试包
+  en_us: Tạo Filter dựa vào Height Offset của tất cả sàn kết cấu có trong model. Lưu ý chỉ filter cho sàn có tick vào parameter "Structural"
+  ja: 更新中..
 # highlight: new      # highlight as new or update
 authors:
   - Nguyễn Thanh Sơn

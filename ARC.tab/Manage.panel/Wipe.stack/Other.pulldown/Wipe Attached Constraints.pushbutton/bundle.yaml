@@ -1,8 +1,6 @@
 title:
-  ru: Очистить прикрепленные ограничения
-  fr_fr: Supprimer les contraintes attachées
+  ja: 更新中..Wipe Attached Constraints
   en_us: Wipe Attached Constraints
 tooltip:
-  ru: Удаляет все прикрепленные ограничения прикрепленные к выделенному элементу.
-  fr_fr: Supprime toutes les contraintes attachées à l'objet sélectionné
-  en_us: Deletes all attached_constraints attached to the selected object
+  ja: 更新中..
+  en_us: Xóa tất cả attached_constraints đang attached vào đối tượng đang chọn.

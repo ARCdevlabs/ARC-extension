@@ -1,20 +1,15 @@
 title:
-  ru: Мини-ть RevitUI
-  fr_fr: Minimiser UI Revit
+  ru: 
+  ja: 更新中.Minify Revit UI
   en_us: Minify Revit UI
 tooltip:
-  ru: >-
-    Минимизирует список открытых вкладок Revit.
+  ja: >-
+    更新中..
     
     Shift+Click:
     
-    Настроить, какие вкладки должны быть скрыты в мини-режиме.
-  fr_fr: >-
-     Réduire la liste des onglets Revit ouverts
-    
-     Shift+Clic :
-    
-     Personnalisez les onglets à masquer en mode minimisé
+    更新中..
+
   en_us: >-
     Reduce the list of open Revit tabs
     
