@@ -1,8 +1,6 @@
 title:
-  ru: Найти используемые шаблоны видов в фильтрах
-  fr_fr: Trouver les filtres de gabarits de vue utilisés
+  ja: 更新中.Find Used View Filters
   en_us: Find Used View Filters
 tooltip:
-  ru: Показывает все шаблоны видов и фильтры, которые были применены к ним.
-  fr_fr: Répertorie tous les gabartis de vue et les filtres qui ont été attribués à chacun
-  en_us: Lists all view and the filters that has been assigned to each
+  ja: 更新中..
+  en_us: Xuất ra tất cả view và filter đang được áp dụng vào view, quá trình này có thể mất thời gian 

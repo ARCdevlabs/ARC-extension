@@ -1,0 +1,6 @@
+title:
+  ja: 更新中.Tạo legend từ filter có trong view hiện tại
+  en_us: Tạo legend từ filter có trong view hiện tại
+tooltip:
+  ja: 更新中..
+  en_us: Fill region sẽ được override màu, hatch khớp với setting của filter có trong view hiện tại
