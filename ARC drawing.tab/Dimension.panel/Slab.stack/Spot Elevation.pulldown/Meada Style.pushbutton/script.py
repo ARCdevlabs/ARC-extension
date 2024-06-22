@@ -1,3 +1,4 @@
+
 __doc__ = 'python for revit api'
 __author__ = 'SonKawamura'
 from Autodesk.Revit.UI.Selection.Selection import PickObject
