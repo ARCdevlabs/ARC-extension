@@ -36,30 +36,34 @@ list_point = []
 list_ok=[]
 list_not_ok= []
 
-# beam = module.get_all_elements_of_OST(doc, BuiltInCategory.OST_StructuralFraming)
-Ele = module.get_selected_elements(uidoc,doc)
+Ele = module.get_all_elements_of_OST(doc, BuiltInCategory.OST_StructuralFraming)
+# Ele = module.get_selected_elements(uidoc,doc)
 t = Transaction(doc, "Auto check hướng dầm")
 t.Start()
 for i in Ele:
-    cur = i.Location.Curve.Direction
-    Point1 = i.Location.Curve.GetEndPoint(0)
-    Point2 = i.Location.Curve.GetEndPoint(1)
-    list_point.append(Point1)
-    list_point.append(Point2)
-    is_mirrored = i.Mirrored
-    if is_mirrored:
-        list_ok.append(i)
-    else:
-        if abs(cur.X) < abs(cur.Y):
-            # if Point1.Y < Point2.Y:
-            if Point1.Y < Point2.Y:
-                list_ok.append(i)            
-            else:
-                list_not_ok.append(i)
-        elif Point1.X < Point2.X:
+    try:
+        cur = i.Location.Curve.Direction
+        Point1 = i.Location.Curve.GetEndPoint(0)
+        Point2 = i.Location.Curve.GetEndPoint(1)
+        list_point.append(Point1)
+        list_point.append(Point2)
+        is_mirrored = i.Mirrored
+        if is_mirrored:
             list_ok.append(i)
-        else: 
-            list_not_ok.append(i)
+        else:
+            if abs(cur.X) < abs(cur.Y):
+                # if Point1.Y < Point2.Y:
+                if Point1.Y < Point2.Y:
+                    list_ok.append(i)            
+                else:
+                    list_not_ok.append(i)
+            elif Point1.X < Point2.X:
+                list_ok.append(i)
+            else: 
+                list_not_ok.append(i)
+    except:
+        # print(traceback.format_exc())
+        pass
 def TempIsolate(view, items):
     ielements = List[ElementId]([x.Id for x in items])
     view.IsolateElementsTemporary(ielements)

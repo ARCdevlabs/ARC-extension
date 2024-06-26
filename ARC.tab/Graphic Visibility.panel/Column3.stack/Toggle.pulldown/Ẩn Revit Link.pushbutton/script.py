@@ -30,6 +30,7 @@ try:
         def TempIsolate(view, items):
             ielements = List[ElementId]([x.Id for x in items])
             view.HideElementsTemporary(ielements)
+        print collector.GetElementCount()
         TempIsolate(AcView, collector )
         t.Commit()
 except:
