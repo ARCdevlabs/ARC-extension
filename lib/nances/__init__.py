@@ -1589,3 +1589,25 @@ def set_work_plane_for_view(view):
         except:
             pass
     return True
+
+
+
+
+class DimensionSelectionFilter(Autodesk.Revit.UI.Selection.ISelectionFilter):
+    def AllowElement(self, element):
+        # Chỉ cho phép chọn đối tượng Dimension
+        return isinstance(element, Autodesk.Revit.DB.Dimension)
+
+    def AllowReference(self, reference, point):
+        # Không sử dụng AllowReference trong trường hợp này
+        return False
+
+# Hàm chọn một Dimension từ danh sách sử dụng ISelectionFilter
+def pick_dimension_element(iuidoc,idoc):
+    selected_dimension = iuidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element, DimensionSelectionFilter(), "Pick 1 Dimension")
+    return idoc.GetElement(selected_dimension.ElementId) if selected_dimension else None
+
+def pick_dimension_elements(iuidoc,idoc):
+    selected_dimension = iuidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element, DimensionSelectionFilter(), "Pick Dimensions")
+    return idoc.GetElement(selected_dimension.ElementId) if selected_dimension else None
+

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 __doc__ = 'python for revit api'
 __author__ = 'SonKawamura'
 from Autodesk.Revit.UI.Selection.Selection import PickObject
@@ -53,7 +54,7 @@ for a in ListAnotation:
 for i in Ele:
     EleId = i.Id
     for b in ListAnotationInCurrentView:
-        if b.Category.Name != "Room Tags":
+        if b.Category.Name != "Room Tags" or "部屋タグ":
             bhost = b.TaggedLocalElementId
             if b.TaggedLocalElementId == EleId:
                 ListTag.append(b)

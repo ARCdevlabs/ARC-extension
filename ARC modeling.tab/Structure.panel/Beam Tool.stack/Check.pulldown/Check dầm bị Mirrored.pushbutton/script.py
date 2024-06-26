@@ -19,6 +19,17 @@ import os
 import clr
 import os.path as op
 import sys
+import sys
+import string
+import importlib
+import traceback
+# print(traceback.format_exc())
+ARC = string.ascii_lowercase
+begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
+module = importlib.import_module(str(begin))
+import Autodesk
+from Autodesk.Revit.DB import *
+from System.Collections.Generic import *
 
 def get_selected_elements():
     selection = uidoc.Selection
@@ -27,7 +38,8 @@ def get_selected_elements():
     for element_id in selection_ids:
         elements.append(doc.GetElement(element_id))
     return elements
-ele = get_selected_elements()
+# ele = get_selected_elements()
+ele = module.get_all_elements_of_OST(doc, BuiltInCategory.OST_StructuralFraming)
 lstpoint = []
 listok=[]
 listnotok= []
