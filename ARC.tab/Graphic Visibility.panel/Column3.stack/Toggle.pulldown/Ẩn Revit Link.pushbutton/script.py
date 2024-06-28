@@ -25,13 +25,16 @@ try:
         collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_RvtLinks).WhereElementIsNotElementType()
         collector.ToElements()
         listfloorA = []
-        t = Transaction(doc, "Hide Revit link")
-        t.Start()
         def TempIsolate(view, items):
             ielements = List[ElementId]([x.Id for x in items])
             view.HideElementsTemporary(ielements)
-        print collector.GetElementCount()
-        TempIsolate(AcView, collector )
-        t.Commit()
+        count_link_revit = collector.GetElementCount()
+        if count_link_revit > 0:
+            t = Transaction(doc, "Hide Revit link")
+            t.Start()
+            TempIsolate(AcView, collector )
+            t.Commit()
+        else:
+            module.message_box("Don't have Revit Link")
 except:
     pass     
