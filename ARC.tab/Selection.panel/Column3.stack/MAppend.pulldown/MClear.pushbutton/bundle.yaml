@@ -5,4 +5,4 @@ tooltip:
   en_us: >-
     Loại bỏ hết các đối tượng khỏi bộ nhớ (điều này không ảnh hưởng tới model)
   ja: >-
-    メモリからすべてのオブジェクトを削除する（これはモデルには影響しない）
+    メモリからすべての要素を削除します。（これはモデルには影響しません）
