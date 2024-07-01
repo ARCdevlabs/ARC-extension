@@ -1,8 +1,8 @@
 title:
   en_us: MAppend
-  ja: 更新中...
+  ja: MAppend
 tooltip:
   en_us: >-
     Thêm đối tượng vào bộ nhớ đã lưu với lệnh MWrite
   ja: >-
-    更新中...
+    オブジェクトをMWriteで保存されたメモリに追加する
