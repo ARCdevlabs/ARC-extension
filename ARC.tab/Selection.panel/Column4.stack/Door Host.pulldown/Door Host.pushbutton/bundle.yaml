@@ -5,7 +5,7 @@ tooltip:
   en_us:
     "Chọn sẵn cửa, cửa sổ -> click vào tool -> Tường mà cửa đang host vào sẽ được chọn "
   ja:
-    "ドアや窓を選択した状態でツールをクリックすると、ドアや窓がホストされている壁が選択される"
+    "ドアや窓を選択した状態でツールをクリックすると、ドアや窓がホストされている壁が選択されます。"
 author: 
   - "Nguyễn Thanh Sơn"
 # highlight: new
