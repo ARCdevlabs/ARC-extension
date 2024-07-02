@@ -1,14 +1,16 @@
 help_url: '{{docpath}}SrjyyGvarhw'
 title:
   en_us: Match
-  ja: 更新中...Match
+  ja: 一致
 tooltip:
-  en_us: >-
-    Pick the source object that has the element graphics override you like to match to, and then pick the destination objects one by one and this tool will match the graphics overrides
+  en_us: Pick the source object that has the element graphics override you like to match to, and then pick the destination objects one by one and this tool will match the graphics overrides
 
 
-    Shift-Click:
+    Shift Click：
 
     Shows Match Config window
-  ja: >-
-    更新中...
+  ja: 一致させたい要素のグラフィックス上書きを持つソースオブジェクトを選択し、その後、宛先オブジェクトを一つずつ選択すると、このツールがグラフィックス上書きを一致させます。
+
+    シフトクリック：
+    
+    設定画面が表示されます。
