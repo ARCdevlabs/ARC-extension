@@ -1,11 +1,12 @@
 title:   
   en_us: Ẩn hiện tường kết cấu
-  ja: 更新中.WallS
+  ja: 構造壁表示/非表示
 tooltip:
   en_us:
     Tool sẽ ẩn tường kết cấu
 
     Bấm lần nữa sẽ hiện tường kết cấu trở lại.
   ja:
-    更新中
+    このツールを使用して構造壁を非表示にします。
+    再度クリックすると、構造壁が再び表示されます。
 author: Nguyễn Thanh Sơn

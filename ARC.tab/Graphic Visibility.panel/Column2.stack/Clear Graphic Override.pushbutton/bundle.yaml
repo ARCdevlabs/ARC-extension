@@ -1,9 +1,9 @@
 title:
   en_us: Clear Graphic Override
-  ja: 更新中.Clear
+  ja: グラフィックスの上書きを削除
 tooltip:
   en_us: Hủy template của lệnh Coloring ARC
-  ja: 更新中...
+  ja: ARC Coloring コマンドのテンプレートを解除します。
 author: Nguyễn Thanh Sơn
 
 
