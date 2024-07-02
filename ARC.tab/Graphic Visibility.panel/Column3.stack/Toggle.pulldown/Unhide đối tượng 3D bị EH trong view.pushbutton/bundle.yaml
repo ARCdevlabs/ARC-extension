@@ -1,7 +1,7 @@
 title:
   en_us: Unhide đối tượng 3D bị EH trong view
-  ja: 更新中.Unhide
+  ja: ビュー内で非表示になっている3D要素を表示
 tooltip:
   en_us: Chỉ unhide đối tượng 3D, không ảnh hưởng đến đối tượng 2D
-  ja: 更新中...
+  ja: 2D要素に影響を与えずに3D要素のみを非表示解除します。
 author: Nguyễn Thanh Sơn

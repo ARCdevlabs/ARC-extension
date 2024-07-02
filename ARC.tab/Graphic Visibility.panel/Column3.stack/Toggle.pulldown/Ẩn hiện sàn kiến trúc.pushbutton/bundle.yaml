@@ -1,11 +1,12 @@
 title:   
   en_us: Ẩn hiện sàn kiến trúc
-  ja: 更新中.Floor
+  ja: 意匠床表示/非表示
 tooltip:
   en_us:
     Tool sẽ ẩn sàn kiến trúc
 
     Bấm lần nữa sẽ hiện sàn kiến trúc trở lại.
   ja:
-    更新中
+    このツールを使用して意匠床を非表示にします。
+    再度クリックすると、意匠床が再び表示されます。
 author: Nguyễn Thanh Sơn
