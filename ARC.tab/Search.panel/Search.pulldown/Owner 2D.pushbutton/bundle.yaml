@@ -1,10 +1,10 @@
 title:   
   en_us: Tìm View chứa đối tượng 2D đang chọn
-  ja: 更新中...
+  ja: 2D要素のビューを探す
 tooltip:
   en_us:
     ""
   ja:
-    ""
+    選択した2D要素を含むビューを探します。
 author: 
   - "Nguyễn Thanh Sơn"

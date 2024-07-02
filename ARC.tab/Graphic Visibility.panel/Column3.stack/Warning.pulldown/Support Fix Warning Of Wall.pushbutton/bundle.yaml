@@ -1,9 +1,9 @@
 title:
   en_us: Hỗ trợ fix Warning tường
-  ja: 更新中...
+  ja: 壁の警告を処理
 tooltip:
   en_us: Sau khi Join 2 tường bị Overlap nhưng vẫn còn warning. Hãy dùng tool này
-  ja: 更新中...
+  ja: 2つの壁を結合した後に重複が発生して警告が残っている場合は、このツールを使用します。
 Author:
   - Nguyễn Thanh Sơn
 
