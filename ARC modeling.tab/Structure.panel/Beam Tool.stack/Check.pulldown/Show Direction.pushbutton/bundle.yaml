@@ -1,0 +1,9 @@
+title:   
+  en_us: Hiển thị hướng dầm
+  ja: 更新中..Hiển thị hướng dầm
+tooltip:
+  en_us: Chọn tất cả dầm cần check hướng => chạy tool sẽ hiển thị hướng của cột bằng detail line. Tool chỉ hoạt động ở view mặt bằng.
+  ja: 更新中..
+# highlight: new      # highlight as new or update
+authors:
+  - Nguyễn Thanh Sơn
