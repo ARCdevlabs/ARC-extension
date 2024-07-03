@@ -93,10 +93,13 @@ try:
         ceiling_height = float(form.values["textbox1"])
         list_new_ceiling = []
         for i in list_ceiling:
-            type_name = Autodesk.Revit.DB.Element.Name.GetValue(i)
-            if type_name == selected_ceiling:
-                type_Id = i.Id
-                list_new_ceiling = create_ceilings(Rooms, type_Id, ceiling_height/304.8, active_level_Id)
+            try:
+                type_name = Autodesk.Revit.DB.Element.Name.GetValue(i)
+                if type_name == selected_ceiling:
+                    type_Id = i.Id
+                    list_new_ceiling = create_ceilings(Rooms, type_Id, ceiling_height/304.8, active_level_Id)
+            except:
+                pass
         t.Commit()
         select = uidoc.Selection
         list_id = []

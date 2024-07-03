@@ -1,0 +1,9 @@
+title:   
+  en_us: Check dầm bị Mirror
+  ja: 更新中..Check dầm bị Mirror
+tooltip:
+  en_us: Click vào tool, tất cả dầm đang bị mirror sẽ được isolate.
+  ja: 更新中..
+# highlight: new      # highlight as new or update
+authors:
+  - Nguyễn Thanh Sơn
