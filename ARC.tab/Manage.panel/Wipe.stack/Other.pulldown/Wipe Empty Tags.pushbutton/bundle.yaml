@@ -2,6 +2,7 @@ title:
   ru: Удалить пустые марки
   fr_fr: Enlever les étiquettes vides
   en_us: Remove Empty Tags
+  ja: 更新中..Remove Empty Tags
 tooltip:
   ru: >-
     Удаляет пустые парки на текущем виде.
@@ -17,6 +18,12 @@ tooltip:
      Supprimer les étiquettes dans les vues sélectionnées
   en_us: >-
     Removes empty tags in current view
+
+    Shift+Click:
+
+    Remove tags in selected views
+  ja: >-
+    更新中..Removes empty tags in current view
 
     Shift+Click:
 
