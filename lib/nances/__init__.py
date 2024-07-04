@@ -1621,6 +1621,9 @@ def pick_dimension_element(iuidoc,idoc):
     return idoc.GetElement(selected_dimension.ElementId) if selected_dimension else None
 
 def pick_dimension_elements(iuidoc,idoc):
-    selected_dimension = iuidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element, DimensionSelectionFilter(), "Pick Dimensions")
-    return idoc.GetElement(selected_dimension.ElementId) if selected_dimension else None
+    list_dimension = []
+    selected_dimension = iuidoc.Selection.PickObjects(Autodesk.Revit.UI.Selection.ObjectType.Element, DimensionSelectionFilter(), "Pick Dimensions")
+    for tung_dimension in selected_dimension:
+        list_dimension.append(idoc.GetElement(tung_dimension.ElementId) if tung_dimension else None)
+    return list_dimension
 

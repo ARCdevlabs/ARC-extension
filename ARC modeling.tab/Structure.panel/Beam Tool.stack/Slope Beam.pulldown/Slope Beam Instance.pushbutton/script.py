@@ -59,7 +59,7 @@ if module.AutodeskData():
             degree = angle_between_planes (XY_plane,ref_plane)
             radian = module.degrees_to_radians(degree)
 
-            t = Transaction (doc, "Change elevation of beam")
+            t = Transaction (doc, "Slope Beam_Start and End Offset")
             t.Start()
             for i in Ele:
                 try:

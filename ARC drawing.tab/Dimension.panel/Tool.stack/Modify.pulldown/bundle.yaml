@@ -5,6 +5,7 @@ layout:
   - Add W=
   - Align dim
   - Swap dim
+  - Check Odd
   # - -----
   # - Move Text Dim_LOGI
   # - Mashiuchi Column_LOGI
