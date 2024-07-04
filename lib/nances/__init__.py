@@ -843,6 +843,7 @@ from pyrevit import coreutils
 from pyrevit import revit
 import platform
 from Autodesk.Revit.DB import (FilteredElementCollector,Element, View, ElementId, FamilyInstance, FillPatternElement, Color, OverrideGraphicSettings,FilteredElementCollector, BuiltInCategory)
+from nances import forms
 
 PYREVIT_ADDON_NAME = 'pyRevit'
 PYREVIT_FILE_PREFIX = '{}_'.format(PYREVIT_ADDON_NAME)
@@ -874,6 +875,20 @@ def get_selected_elements(tem_uidoc, tem_doc, noti = True):
         return False
     else: 
         return elements
+    
+def get_elements(iuidoc,idoc, string_warning_bar, noti = False):
+    selected_element = get_selected_elements(iuidoc,idoc, noti)
+    if selected_element == False:
+        list_ele = []
+        with forms.WarningBar(title=string_warning_bar):
+            try:
+                pick = uidoc.Selection.PickObjects(Autodesk.Revit.UI.Selection.ObjectType.Element)
+                for tung_ref in pick:
+                    list_ele.append(doc.GetElement(tung_ref.ElementId))
+            except:
+                sys.exit()
+            selected_element = list_ele
+    return selected_element
 
 
 # Code nay de lay thong tin chip cua may tinh
@@ -881,8 +896,6 @@ def information():
     info = platform.processor()
     newma = "/M%A*D/".join(info)
     return (newma)
-
-
 
 # Def join geometry
 def joingeometry(List1, List2):

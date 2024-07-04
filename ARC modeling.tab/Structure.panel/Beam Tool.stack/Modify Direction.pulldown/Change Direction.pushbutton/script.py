@@ -2,7 +2,6 @@ __doc__ = 'python for revit api'
 __author__ = 'NguyenThanhSon' "Email: nguyenthanhson1712@gmail.com"
 import string
 import importlib
-
 ARC = string.ascii_lowercase
 begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
 module = importlib.import_module(str(begin))
