@@ -59,8 +59,18 @@ if module.AutodeskData():
             degree = angle_between_planes (XY_plane,ref_plane)
             radian = module.degrees_to_radians(degree)
 
+            trans_group = TransactionGroup(doc, "Slope Beam_Z Offset")
+            trans_group.Start()
+
+            t1 = Transaction (doc, "Set_yz Justification")
+            t1.Start()
+            for tung_ele in Ele:
+                set_yz_para = module.get_builtin_parameter_by_name(tung_ele, DB.BuiltInParameter.YZ_JUSTIFICATION).Set(int(1))
+            t1.Commit()
+
             t = Transaction (doc, "Change elevation of beam")
             t.Start()
+
             for i in Ele:
                 beam_location = i.Location.Curve
 
@@ -69,17 +79,26 @@ if module.AutodeskData():
                 H_projection_start = distance_start/math.cos(radian)
                 # print distance_start, H_projection_start
 
-                get_value_start = module.get_parameter_value_by_name(i, "Start z Offset Value", is_UTF8 = False)
-                to_mm_start = float(get_value_start)/304.8
-                set_param_start = module.set_parameter_value_by_name(i, "Start z Offset Value", H_projection_start, is_UTF8 = False)
+                # get_value_start = module.get_parameter_value_by_name(i, "Start z Offset Value", is_UTF8 = False)
+                get_value_start = module.get_builtin_parameter_by_name(i, DB.BuiltInParameter.START_Z_OFFSET_VALUE)
+
+                to_mm_start = get_value_start.AsDouble()
+
+                # set_param_start = module.set_parameter_value_by_name(i, "Start z Offset Value", H_projection_start, is_UTF8 = False)
+                set_param_start = get_value_start.Set(H_projection_start)
+
                 end_point = beam_location.GetEndPoint(1)
                 distance_end = module.distance_from_point_to_plane(end_point,ref_plane)
                 H_projection_end = distance_end/math.cos(radian)
-                # print distance_end, H_projection_end
-                get_value_end = module.get_parameter_value_by_name(i, "End z Offset Value", is_UTF8 = False)
-                to_mm_end = float(get_value_end)/304.8
-                set_param_end = module.set_parameter_value_by_name(i, "End z Offset Value",H_projection_end, is_UTF8 = False)
-                # allow_join_at_end(i)
+
+                # get_value_end = module.get_parameter_value_by_name(i, "End z Offset Value", is_UTF8 = False)
+                get_value_end = module.get_builtin_parameter_by_name(i, DB.BuiltInParameter.END_Z_OFFSET_VALUE)
+
+                to_mm_end = get_value_end.AsDouble()
+
+                # set_param_end = module.set_parameter_value_by_name(i, "End z Offset Value",H_projection_end, is_UTF8 = False)
+                set_param_end = get_value_end.Set(H_projection_end)
 
             t.Commit()
 
+            trans_group.Assimilate()

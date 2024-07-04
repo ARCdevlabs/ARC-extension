@@ -18,11 +18,12 @@ try:
         structural_type = Autodesk.Revit.DB.Structure.StructuralType.NonStructural
         family_instance = doc.Create.NewFamilyInstance(point,type,level,structural_type)
         return family_instance
-    Ele = module.get_selected_elements(uidoc,doc)
+    Ele = module.get_elements(uidoc,doc, "Select Column", noti = False)
     if Ele:
         t = Transaction (doc, "Đặt móng tại vị trí cột")
         t.Start()
-        module.message_box("Bây giờ hãy pick 1 móng đã vẽ sẵn, tool sẽ giúp copy ra các chân cột")
+        message = "Bây giờ hãy pick 1 móng đã vẽ sẵn, tool sẽ giúp copy ra các chân cột.\n \n既に入力された基礎を1つ選び、ツールがそれをコピーして柱脚に配置します。"
+        module.message_box(message)
         pick = uidoc.Selection.PickObject(ObjectType.Element)
         sample = doc.GetElement(pick.ElementId)
         sample_type = sample.Symbol
