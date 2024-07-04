@@ -1,14 +1,13 @@
 title:
   ru: 
-  ja: 更新中.Minify Revit UI
+  ja: 最小化
   en_us: Minify Revit UI
 tooltip:
   ja: >-
-    更新中..
+    開いているRevitタブのリストを減らします。
     
-    Shift+Click:
-    
-    更新中..
+    シフトクリック：
+    非表示にしたいタブを選択します。    
 
   en_us: >-
     Reduce the list of open Revit tabs
