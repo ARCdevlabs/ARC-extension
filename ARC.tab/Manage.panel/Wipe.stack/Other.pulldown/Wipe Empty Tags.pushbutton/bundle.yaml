@@ -1,4 +1,5 @@
 title:
+  ja: 空のタグを削除
   ru: Удалить пустые марки
   fr_fr: Enlever les étiquettes vides
   en_us: Remove Empty Tags
@@ -23,8 +24,3 @@ tooltip:
 
     Remove tags in selected views
   ja: >-
-    更新中..Removes empty tags in current view
-
-    Shift+Click:
-
-    Remove tags in selected views

@@ -1,6 +1,9 @@
 title:
-  ja: 更新中...Select Owned By Me In Current View
+  ja: 現在のビューで自分が所有する要素を選択
   en_us: Select Owned By Me In Current View
 tooltip:
-  ja: 更新中...
+  ja: 
+   こののツールを使用して、現在のビューでユーザーが所有している要素を見つけます。
+   現在のビューがシートの場合、このツールはこのシートに配置されたすべてのビューも検索します。
+   所有要素とは、最後の同期とリリース以降にユーザーが編集した要素です。
   en_us: Uses the Worksharing tooltip to find out the element "owned" by the user in the current view.If current view is a sheet, the tools searches all the views placed on this sheet as well."Owned" elements are the elements edited by the user since the last synchronize and release.

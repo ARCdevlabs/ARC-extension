@@ -1,6 +1,6 @@
 title:
-  ja: 更新中..Wipe Attached Constraints
+  ja: 添付された拘束を削除
   en_us: Wipe Attached Constraints
 tooltip:
-  ja: 更新中..
+  ja: 選択した要素に添付されているすべての拘束を削除します。
   en_us: Xóa tất cả attached_constraints đang attached vào đối tượng đang chọn.

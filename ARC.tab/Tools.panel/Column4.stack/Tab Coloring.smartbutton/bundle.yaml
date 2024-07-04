@@ -2,11 +2,11 @@ title:
   ru: Окрасить вкладки
   fr_fr: Colorer les onglets
   en_us: Tab Coloring
-  jp: Tab Coloring
+  ja: Tab Coloring
 tooltip:
   ru: Делает все возможное для визуального разделения открытых документов.
   fr_fr: Améliore la distinction entre les documents ouverts
   en_us: Does its best at visually separating open documents
-  jp: 開このツールは、異なるプロジェクトを区別できるようにプロジェクトに色を付けます。
+  ja: このツールは、異なるプロジェクトを区別できるようにプロジェクトに色を付けます。
 min_revit_version: 2019
 context: zero-doc
