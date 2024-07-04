@@ -1,0 +1,9 @@
+title:   
+  en_us: Auto check hướng cột
+  ja: 更新中..Auto check hướng cột
+tooltip:
+  en_us: Các cột đang bị sai hướng sẽ được isolate ở view tại.
+  ja: 更新中..
+# highlight: new      # highlight as new or update
+authors:
+  - Nguyễn Thanh Sơn
