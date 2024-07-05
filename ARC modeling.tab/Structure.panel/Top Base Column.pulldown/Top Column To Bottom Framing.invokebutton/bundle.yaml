@@ -1,11 +1,11 @@
 title:   
   en_us: Chỉnh Top cột tới mặt dưới dầm
-  ja: 更新中...
+  ja: 柱の上部を梁の下端まで調整
 tooltip:
   en_us:
     Theo tiêu chuẩn obayashi (Parameter "柱頭 x オフセット値") hoặc các tiêu chuẩn khác (Parameter "Top Offset")
   ja:
-    更新中...
+    大林組の基準（パラメータ「柱頭 x オフセット値」）または他の基準（「上部オフセット」）に従います。
 author: 
   - "Phan Mẫu Cường"
 assembly: ModifyTopBaseColumn

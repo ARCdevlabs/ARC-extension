@@ -1,9 +1,9 @@
 title:   
   en_us: Auto check hướng cột
-  ja: 更新中..Auto check hướng cột
+  ja: 柱の方向をチェック
 tooltip:
-  en_us: Các cột đang bị sai hướng sẽ được isolate ở view tại.
-  ja: 更新中..
+  en_us: Các cột đang bị sai hướng sẽ được isolate ở view hiện tại.
+  ja: 方向が間違っている柱は現在ビューで選択して表示されます。
 # highlight: new      # highlight as new or update
 authors:
   - Nguyễn Thanh Sơn
