@@ -1,6 +1,6 @@
 title:
-  ja: 更新中.Missing Tag
+  ja: タグが欠けている要素
   en_us: Missing Tag
 tooltip:
-  ja: 更新中..
+  ja: タグが欠けているすべての要素をカテゴリーごとに選択して表示します。
   en_us: Isolate tất cả object đang bị thiếu tag, chọn theo từng category.

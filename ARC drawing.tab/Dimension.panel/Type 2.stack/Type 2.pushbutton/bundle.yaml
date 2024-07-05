@@ -11,6 +11,8 @@ tooltip:
 
     (1.8mm là kích thước mỗi chữ sau khi in ra)
   ja:
-    更新中...
+    寸法の文字を移動して文字の重なりを避けます。
+    
+    Shift + 左クリックを押し、初回使用時に各文字のサイズを設定します。よく使われる値は1.8mmです（1.8mmは印刷後の各文字のサイズです）。
 author: 
   - "Nguyễn Thanh Sơn"

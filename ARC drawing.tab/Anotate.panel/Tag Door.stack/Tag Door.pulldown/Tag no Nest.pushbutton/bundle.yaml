@@ -1,9 +1,9 @@
 title:
   en_us: Tag no Nest
-  ja: 更新中.Tag no Nest
+  ja: ネストのないタグ
 
 tooltip:
   en_us: Tag cửa, cửa sổ mà không tag vào family nested của cửa.
-  ja: 更新中...
+  ja: ドアや窓にタグを付けますが、ドアのネストされたファミリにはタグを付けません。
 author: "Nguyễn Thanh Sơn"
 
