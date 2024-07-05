@@ -1,8 +1,8 @@
 title:   
   en_us: Join
-  ja: 更新中..Join
+  ja: ジオメトリを結合
 tooltip:
   en_us: Join danh sách đối tượng 1 và danh sách đối tượng 2.
-  ja: 更新中..
+  ja: 要素リスト1と要素リスト2のジオメトリを結合します。
 authors:
   - Nguyễn Thanh Sơn

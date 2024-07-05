@@ -1,8 +1,8 @@
 title:   
   en_us: Chỉnh level dầm_Z offset
-  ja: 更新中..Chỉnh level dầm_Z offset
+  ja: 梁レベル_Zオフセット
 tooltip:
   en_us: Chọn dầm cần chỉnh level => Click vào tool và nhập giá trị điều chỉnh.
-  ja: 更新中..
+  ja: レベルを調整する梁を選択してからツールをクリックし、調整値を入力します。
 authors:
   - Nguyễn Thanh Sơn

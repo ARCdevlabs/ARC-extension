@@ -1,9 +1,9 @@
 title:   
   en_us: Check dầm bị Mirror
-  ja: 更新中..Check dầm bị Mirror
+  ja: ミラーされている梁をチェック
 tooltip:
   en_us: Click vào tool, tất cả dầm đang bị mirror sẽ được isolate.
-  ja: 更新中..
+  ja: ツールを使用すると、ミラーされているすべての梁が選択して表示されます。
 # highlight: new      # highlight as new or update
 authors:
   - Nguyễn Thanh Sơn

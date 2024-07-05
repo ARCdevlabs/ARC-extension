@@ -1,8 +1,8 @@
 title:   
   en_us: Vẽ sàn cách nhiệt
-  ja: 更新中..Vẽ sàn cách nhiệt
+  ja: 断熱入力
 tooltip:
   en_us: Chọn sàn kết cấu cần vẽ sàn cách nhiệt => Click vào tool
-  ja: 更新中..
+  ja: 断熱材を入力する構造床を選択し、ツールをクリックします。
 authors:
   - Nguyễn Thanh Sơn

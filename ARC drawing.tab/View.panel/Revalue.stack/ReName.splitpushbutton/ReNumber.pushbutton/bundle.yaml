@@ -1,8 +1,10 @@
 title:
+  ja: 再番号付け
   ru: Перенумеровать
   fr_fr: Renuméroter
   en_us: Renumber
 tooltip:
+  ja: 選択順に番号が付けられた要素を再番号付け
   ru: Перенумеровать пронумерованные элементы в порядке выделения.
   fr_fr: Renuméroter les éléments dans l'ordre de sélection
   en_us: ReNumber numbered elements in order of selection

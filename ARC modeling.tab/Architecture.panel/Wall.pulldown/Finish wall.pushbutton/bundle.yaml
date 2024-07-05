@@ -1,8 +1,8 @@
 title:   
   en_us: Finish Wall
-  ja: 更新中..Finish Wall
+  ja: 仕上壁
 tooltip:
   en_us: Chọn room => Click vào tool. Tool giúp vẽ nhanh tường hoàn thiện theo biên dạng của room.
-  ja: 更新中..
+  ja: 部屋を選択してツールをクリックします。ツールは部屋境界に沿って迅速に仕上壁を入力するのに役立ちます。
 authors:
   - Nguyễn Thanh Sơn

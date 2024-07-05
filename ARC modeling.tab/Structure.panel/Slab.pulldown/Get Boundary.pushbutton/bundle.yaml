@@ -1,8 +1,8 @@
 title:   
   en_us: Get Boundary
-  ja: 更新中..Get Boundary
+  ja: 境界入力
 tooltip:
   en_us: Chọn sàn kết cấu => Click vào tool ở view mặt bằng, Tool sẽ giúp vẽ detail line theo biên dạng mặt dưới của sàn. 
-  ja: 更新中..
+  ja: 構造床を選択し、平面ビューでツールをクリックします。ツールはスラブの下端境界に沿って詳細線分を入力します。
 authors:
   - Nguyễn Thanh Sơn

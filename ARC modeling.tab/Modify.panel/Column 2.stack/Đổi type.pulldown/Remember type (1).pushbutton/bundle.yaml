@@ -1,8 +1,8 @@
 title:   
   en_us: Ghi nhớ type (1)
-  ja: 更新中..Ghi nhớ type (1)
+  ja: タイプ記憶（1）
 tooltip:
   en_us: Ghi nhớ type của đối tượng và lưu vào máy. Command Đổi type (1) sẽ gọi type đã được ghi nhớ sau đó đổi type.
-  ja: 更新中..
+  ja: 要素のタイプを記憶し、メモリーに保存します。コマンド「タイプを変更 (1)」は、記憶されたタイプを呼び出してタイプを変更します。
 authors:
   - Nguyễn Thanh Sơn

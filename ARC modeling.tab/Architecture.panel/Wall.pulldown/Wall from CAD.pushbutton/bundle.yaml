@@ -1,8 +1,8 @@
 title:   
   en_us: Wall from CAD
-  ja: 更新中..Wall from CAD
+  ja: CADで壁を入力
 tooltip:
   en_us: Vẽ tường theo line đã được vẽ sẵn trong CAD, nhận dạng line bằng tên layer.
-  ja: 更新中..
+  ja: CADで入力された線分に沿って壁を入力します。レイヤー名で線分を識別します。
 authors:
   - Nguyễn Thanh Sơn

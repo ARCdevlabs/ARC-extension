@@ -1,8 +1,8 @@
 title:   
   en_us: Đổi type (2)
-  ja: 更新中..Đổi type (2)
+  ja: タイプ変更（2）
 tooltip:
   en_us: Tool sẽ giúp đối type của đối tượng mà không làm ảnh hưởng tới các parameter khác, hữu ích trong việc đổi type tường kiến trúc.
-  ja: 更新中..
+  ja: ツールは他のパラメータに影響を与えずに要素のタイプを変更するのに役立ちます。意匠壁のタイプ変更に便利です。
 authors:
   - Nguyễn Thanh Sơn
