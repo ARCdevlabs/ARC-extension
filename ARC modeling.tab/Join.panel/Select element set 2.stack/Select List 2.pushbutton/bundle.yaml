@@ -1,8 +1,8 @@
 title:   
   en_us: Select List 2
-  ja: 更新中..Select List 2
+  ja: リスト選択2
 tooltip:
   en_us: Lưu danh sách đối tượng đã chọn để có thể dùng tool Join
-  ja: 更新中..
+  ja: 選択した要素のリストを保存して、結合ツールを使用できるようにします。
 authors:
   - Nguyễn Thanh Sơn

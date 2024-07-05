@@ -1,8 +1,8 @@
 title:   
   en_us: Unjoin 2 đối tượng
-  ja: 更新中..Unjoin 2 đối tượng
+  ja: 2つのジオメトリの結合を解除
 tooltip:
   en_us: Chọn 2 đối tượng đang join với nhau => Chạy tool để unjoin 2 đối tượng đó.
-  ja: 更新中..
+  ja: 結合している2つのジオメトリを選択して、ツールを実行してその2つのジオメトリの結合を解除します。
 authors:
   - Nguyễn Thanh Sơn

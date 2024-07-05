@@ -1,8 +1,8 @@
 title:   
   en_us: Pick đổi type
-  ja: 更新中..Pick đổi type
+  ja: 選択-変更
 tooltip:
   en_us: Pick đối tượng đầu tiên, đối tượng pick tiếp theo sẽ đổi type theo đối tượng đầu tiên.
-  ja: 更新中..
+  ja: 最初の要素を選択し、次に選択する要素は最初の要素のタイプに変更されます。
 authors:
   - Nguyễn Thanh Sơn
