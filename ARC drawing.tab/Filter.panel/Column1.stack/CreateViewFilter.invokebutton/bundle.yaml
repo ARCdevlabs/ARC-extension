@@ -1,11 +1,11 @@
 title:   
   en_us: Super Filter
-  ja: フィルターの作成
+  ja: フィルター作成
 tooltip:
   en_us:
     Tạo filter với nhiều category
   ja:
-    複数のカテゴリを含むフィルターを作成する
+    複数のカテゴリを含むフィルターを作成します。
 author: 
   - "Phan Mẫu Cường"
 highlight: new

@@ -1,6 +1,6 @@
 title:   
   en_us: Spot on Sub Element Floor
-  ja: 更新中...
+  ja: 床のサブ要素に指定点高さを追加
 
 tooltip:
   en_us:
@@ -9,6 +9,8 @@ tooltip:
     Hoạt động tốt ở plan View
 
   ja:
-    更新中...
+    ツールをクリックしてから指定点高さを付けたい床を選択します。
+    
+    平面ビューでの動作が良好です。
 author: 
   - "Nguyễn Thanh Sơn"

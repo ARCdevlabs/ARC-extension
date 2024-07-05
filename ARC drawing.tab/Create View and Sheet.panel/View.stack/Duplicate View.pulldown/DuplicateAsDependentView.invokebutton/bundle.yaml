@@ -1,6 +1,6 @@
 title:   
   en_us: Duplicate View
-  ja: 複製ビュー
+  ja: 従属ビューとして複製
 author: 
   - "Phan Mẫu Cường"
 assembly: DuplicateAsDependentView
