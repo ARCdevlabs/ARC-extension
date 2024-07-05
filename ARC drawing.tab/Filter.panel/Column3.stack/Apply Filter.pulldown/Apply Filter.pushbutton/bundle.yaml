@@ -1,10 +1,10 @@
 title:   
   en_us: Áp dụng filter
-  ja: 更新中...
+  ja: フィルター適用
 tooltip:
   en_us:
     Áp dụng các filter vào view hiện tại và tự động fill màu
   ja:
-    更新中...
+    現在のビューにフィルターを適用し、自動的に色を塗りつぶします。
 author: 
   - "Nguyễn Thanh Sơn"

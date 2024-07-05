@@ -1,6 +1,6 @@
 title:
-  ja: 更新中.Copy từ legend này sang legend khác
+  ja: この凡例から別の凡例にコピー
   en_us: Copy từ legend này sang legend khác
 tooltip:
-  ja: 更新中..
+  ja: 塗りつぶし領域の色が上書きされるため、通常の方法では色をコピーできません。このツールを使用してください。
   en_us: Fill region được override màu cho nên copy bằng cách thông thường sẽ không copy màu được. Hãy dùng tool này.

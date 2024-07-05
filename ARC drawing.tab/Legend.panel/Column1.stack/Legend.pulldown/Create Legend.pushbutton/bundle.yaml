@@ -1,6 +1,6 @@
 title:
-  ja: 更新中.Tạo legend từ filter có trong view hiện tại
+  ja: 現在のビューにあるフィルターから凡例を作成
   en_us: Tạo legend từ filter có trong view hiện tại
 tooltip:
-  ja: 更新中..
+  ja: 塗りつぶし領域は現在のビューにあるフィルターの設定に一致するように色とハッチングが上書きされます。
   en_us: Fill region sẽ được override màu, hatch khớp với setting của filter có trong view hiện tại

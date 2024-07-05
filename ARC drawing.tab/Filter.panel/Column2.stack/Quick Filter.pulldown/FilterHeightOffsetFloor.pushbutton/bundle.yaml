@@ -1,9 +1,9 @@
 title:   
   en_us: Height Offset Sàn Kết Cấu
-  ja: 更新中.. Height Offset Sàn Kết Cấu
-tooltip: |
+  ja: 構造床の高さオフセット
+tooltip: 
   en_us: Tạo Filter dựa vào Height Offset của tất cả sàn kết cấu có trong model. Lưu ý chỉ filter cho sàn có tick vào parameter "Structural"
-  ja: 更新中..
+  ja: モデル内のすべての構造床の高さオフセットに基づいてフィルターを作成します。パラメータ「構造」にチェックが入っている床のみをフィルターすることに注意してください。
 # highlight: new      # highlight as new or update
 authors:
   - Nguyễn Thanh Sơn

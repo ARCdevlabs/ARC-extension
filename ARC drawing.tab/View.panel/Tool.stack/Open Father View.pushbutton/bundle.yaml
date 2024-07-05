@@ -2,9 +2,9 @@ title:
   en_us:
     Mở View Tổng
   ja:
-    更新中...
+    親ビューを開く
 tooltip:
   en_us:
     Mở View tổng chứa view con đang mở
   ja:
-    更新中...
+    開いているビューの親ビューを開きます。
