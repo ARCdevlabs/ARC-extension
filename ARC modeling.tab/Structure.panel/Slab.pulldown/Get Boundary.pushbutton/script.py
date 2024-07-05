@@ -8,7 +8,7 @@ begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
 module = importlib.import_module(str(begin))
 import Autodesk
 from Autodesk.Revit.DB import *
-from System.Collections.Generic import *
+from System.Collections.Generic import List
 if module.AutodeskData():
     uidoc = __revit__.ActiveUIDocument
     doc = uidoc.Document

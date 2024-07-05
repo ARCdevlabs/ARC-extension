@@ -12,6 +12,6 @@
 				   TextAlignment="Center"
 				   VerticalAlignment="Center"
 				   FontWeight="Bold"
-				   Foreground="Black"/>
+				   Foreground="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
 	</Grid>
 </Window>
