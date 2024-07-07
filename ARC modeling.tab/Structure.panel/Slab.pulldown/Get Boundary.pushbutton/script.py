@@ -1,14 +1,14 @@
-
+# -*- coding: utf-8 -*-
+from codecs import Codec
 import string
 import importlib
-#Get UIDocument
-
 ARC = string.ascii_lowercase
-begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
+begin = ''.join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
 module = importlib.import_module(str(begin))
-import Autodesk
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import HostObjectUtils,XYZ,Line, ElementId, Transaction
+import Autodesk.Revit.DB as DB
 from System.Collections.Generic import List
+import traceback
 if module.AutodeskData():
     uidoc = __revit__.ActiveUIDocument
     doc = uidoc.Document
@@ -16,14 +16,12 @@ if module.AutodeskData():
     
     t = Transaction (doc, "Get Floor's Boundary")
     t.Start()
-    Ele = module.get_selected_elements(uidoc,doc)
+    Ele = module.get_element(uidoc,doc, "Select Floors to get boundary", noti = False)
     select = uidoc.Selection
     detailline= []
-#Choose ref of floor, now is choosing Topface
-    # for a in Ele:
     a = Ele[0]
     ref = HostObjectUtils.GetTopFaces(a)
-    # new_ref = module.flatten_list(ref)
+
     for i in ref:
         boundaryloops = a.GetGeometryObjectFromReference(i).GetEdgesAsCurveLoops()
         for loop in boundaryloops:   

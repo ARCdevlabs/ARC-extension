@@ -890,6 +890,19 @@ def get_elements(iuidoc,idoc, string_warning_bar, noti = False):
             selected_element = list_ele
     return selected_element
 
+def get_element(iuidoc,idoc, string_warning_bar, noti = False):
+    selected_element = get_selected_elements(iuidoc,idoc, noti)
+    if selected_element == False:
+        list_ele = []
+        with forms.WarningBar(title=string_warning_bar):
+            try:
+                pick = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element)
+                list_ele.append(doc.GetElement(pick.ElementId))
+            except:
+                sys.exit()
+            selected_element = list_ele
+    return selected_element
+
 
 # Code nay de lay thong tin chip cua may tinh
 def information():
