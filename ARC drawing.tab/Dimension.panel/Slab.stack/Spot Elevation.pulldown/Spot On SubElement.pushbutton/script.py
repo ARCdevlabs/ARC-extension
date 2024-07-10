@@ -82,8 +82,11 @@ try:
         start_point_curve = curve_of_edge.GetEndPoint(0)
         end_point_curve = curve_of_edge.GetEndPoint(1)
 
-        start_point_curve_key = (round((start_point_curve.X),2), round((start_point_curve.Y),2))
-        end_point_curve_key = (round((end_point_curve.X),2), round((end_point_curve.Y),2))
+        # start_point_curve_key = (round((start_point_curve.X),2), round((start_point_curve.Y),2)))
+        # end_point_curve_key = (round((end_point_curve.X),2), round((end_point_curve.Y),2))
+
+        start_point_curve_key = (round((start_point_curve.Y),2), round((start_point_curve.Z),2))
+        end_point_curve_key = (round((end_point_curve.Y),2), round((start_point_curve.Z),2))
 
         list_point_ref.append(start_point_ref)
         list_point_ref.append(end_point_ref)
@@ -177,5 +180,5 @@ try:
     transaction_group.Assimilate()
 except:
     import traceback
-    # print(traceback.format_exc())
+    print(traceback.format_exc())
     pass
