@@ -25,6 +25,7 @@ try:
             return import_instances
         
         all_import_instances = get_all_import_instances(doc)
+        # print len(all_import_instances)
 
         def get_all_views():
             collector = Autodesk.Revit.DB.FilteredElementCollector(doc)
@@ -38,15 +39,19 @@ try:
         selected_import_instance = None
         try:
             selected_import_instance = forms.select_import_instance(multiple=False)
+            # print selected_import_instance
         except:
             pass
         # color = forms.select_swatch()
         text = selected_import_instance
 
         for import_instance in all_import_instances:
+
+            get_import_instance_name = None
             try:
                 get_import_instance_name = import_instance.Category.Name
             except:
+
                 pass
             if text == get_import_instance_name:
                 owner_view = import_instance.OwnerViewId
