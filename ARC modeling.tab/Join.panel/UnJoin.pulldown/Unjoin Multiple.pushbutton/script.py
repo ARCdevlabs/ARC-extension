@@ -1,13 +1,16 @@
-__doc__ = 'python for revit api'
-__author__ = 'SonKawamura'
-from Autodesk.Revit.UI.Selection.Selection import PickObject
-from Autodesk.Revit.UI.Selection  import ObjectType
-from Autodesk.Revit.DB import*
+# -*- coding: utf-8 -*-
+from codecs import Codec
+import string
+import importlib
+ARC = string.ascii_lowercase
+begin = ''.join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
+module = importlib.import_module(str(begin))
 import Autodesk
 from Autodesk.Revit.DB import *
-from Autodesk.Revit.DB import Element
-from System.Collections.Generic import *
-import math
+import Autodesk.Revit.DB as DB
+from System.Collections.Generic import List
+from Autodesk.Revit.UI.Selection import ObjectType
+import traceback
 from rpw import ui
 from rpw.ui.forms import Alert
 #Get UIDocument
@@ -15,14 +18,8 @@ uidoc = __revit__.ActiveUIDocument
 #Get Document 
 doc = uidoc.Document
 Currentview = doc.ActiveView
-def get_selected_elements():
-    selection = uidoc.Selection
-    selection_ids = selection.GetElementIds()
-    elements = []
-    for element_id in selection_ids:
-        elements.append(doc.GetElement(element_id))
-    return elements
-Ele = get_selected_elements()
+
+Ele = module.get_elements(uidoc,doc, "Select Elements to UnJoin Geometry", noti = False)
 listele = []
 t = Transaction (doc, "Unjoin multiple")
 t.Start()

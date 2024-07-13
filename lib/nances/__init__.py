@@ -868,8 +868,13 @@ def get_selected_elements(tem_uidoc, tem_doc, noti = True):
             # module_path = Autodesk.__file__
             # print module_path
             dialog = TaskDialog("ARC")
-            tin_nhan = "Please select element before use this tool.\n \n このツールを使用する前に要素をご選択ください。"
-            dialog.MainContent = tin_nhan
+            from pyrevit.coreutils import applocales
+            current_applocale = applocales.get_current_applocale()
+            if str(current_applocale) == "日本語 / Japanese (ja)":
+                message = "このツールを使用する前に要素をご選択ください。"
+            else:
+                message = "Please select element before use this tool."
+            dialog.MainContent = message
             dialog.TitleAutoPrefix = False
             dialog.Show()
         return False
@@ -882,9 +887,9 @@ def get_elements(iuidoc,idoc, string_warning_bar, noti = False):
         list_ele = []
         with forms.WarningBar(title=string_warning_bar):
             try:
-                pick = uidoc.Selection.PickObjects(Autodesk.Revit.UI.Selection.ObjectType.Element)
+                pick = iuidoc.Selection.PickObjects(Autodesk.Revit.UI.Selection.ObjectType.Element)
                 for tung_ref in pick:
-                    list_ele.append(doc.GetElement(tung_ref.ElementId))
+                    list_ele.append(idoc.GetElement(tung_ref.ElementId))
             except:
                 sys.exit()
             selected_element = list_ele
@@ -1040,18 +1045,29 @@ def checklicense_for_info():
     return check
 def AutodeskData():
     datafile = get_document_data_file("pyrevit", "dll")
-    try:
-        f = open(datafile, 'r')
-        current_selection = pickle.load(f)
-        f.close()
-        newstring= current_selection[:-2]
-        a_string = bytes.fromhex(newstring)
-        a_string = a_string.decode("ascii")
-        if a_string == info:
-            check = "OK"
-    except Exception:
-        pass
-    return check
+    if datafile:
+        try:
+            f = open(datafile, 'r')
+            current_selection = pickle.load(f)
+            f.close()
+            newstring= current_selection[:-2]
+            a_string = bytes.fromhex(newstring)
+            a_string = a_string.decode("ascii")
+            if a_string == info:
+                check = "OK"
+            return check
+        except Exception:
+            thong_bao_loi_license()
+            pass
+            return False
+    else:
+        thong_bao_loi_license()
+    return False
+
+def thong_bao_loi_license():
+    tin_nhan = "Please Unlock the Add-in to use this tool.\nUse command [Get info] and send it to skype of Sơn\nor email: Nguyenthanhson1712@gmail.com"
+    MessageBox.Show(tin_nhan, "ARC", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
 def machine_code():
     info = platform.processor()
     newma = "/M%A*D/".join(info)

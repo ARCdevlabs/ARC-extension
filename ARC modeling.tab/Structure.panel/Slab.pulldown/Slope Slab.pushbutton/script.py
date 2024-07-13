@@ -67,8 +67,6 @@ if module.AutodeskData():
             except:
                 pass
         return arrow_element
-    trans_group = TransactionGroup(doc, "Create slope floor")
-    trans_group.Start()
 
     ele = module.get_elements(uidoc,doc, "Select all floors need to make slope", noti = False)
 
@@ -111,6 +109,8 @@ if module.AutodeskData():
                 para_height_head = module.get_builtin_parameter_by_name(arrow_element, DB.BuiltInParameter.SLOPE_END_HEIGHT)
                 height_head = para_height_head.AsDouble()
 
+        trans_group = TransactionGroup(doc, "Create slope floor")
+        trans_group.Start()
         list_new_slab =[]
         with revit.Transaction("Tạo sàn dốc", swallow_errors=True):
             for i in ele:
