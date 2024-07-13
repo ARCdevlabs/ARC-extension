@@ -30,8 +30,6 @@ if module.AutodeskData():
                 message = "Không thể vẽ sàn cách nhiệt cho sàn dốc"
             module.message_box(message) 
 
-    t = Transaction (doc, "Create Insulation")
-    t.Start()
     Ele = module.get_elements(uidoc,doc, "Select Slabs to create Insulation", noti = False)
     select = uidoc.Selection
     list_line_floor= []
@@ -55,6 +53,8 @@ if module.AutodeskData():
         type_name = Autodesk.Revit.DB.Element.Name.GetValue(i)
         if type_name == selected_floor:
             type_Id = i.Id
+    t = Transaction (doc, "Create Insulation")
+    t.Start()
     for element in Ele:
         try:
             level_id = element.LevelId

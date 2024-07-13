@@ -1,29 +1,23 @@
+# -*- coding: utf-8 -*-
+from codecs import Codec
+import string
+import importlib
+ARC = string.ascii_lowercase
+begin = ''.join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
+module = importlib.import_module(str(begin))
+import Autodesk
+from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as DB
+from System.Collections.Generic import List
+from Autodesk.Revit.UI.Selection import ObjectType
+import traceback
 import pickle
 from pyrevit import revit
 from pyrevit.coreutils import appdata
+uidoc = __revit__.ActiveUIDocument
+doc = uidoc.Document
 def get_document_data_file(file_id, file_ext, add_cmd_name=False):
-    """Return filename to be used by a user script to store data.
 
-    File name is generated in this format:
-    ``pyRevit_{Revit Version}_{file_id}_{Project Name}.{file_ext}``
-
-    Example:
-        >>> script.get_document_data_file('mydata', 'data')
-        '.../pyRevit_2018_mydata_Project1.data'
-        >>> script.get_document_data_file('mydata', 'data', add_cmd_name=True)
-        '.../pyRevit_2018_Command Name_mydata_Project1.data'
-
-    Document data files are not cleaned up at pyRevit startup.
-    Script should manage cleaning up these files.
-
-    Args:
-        file_id (str): unique id for the filename
-        file_ext (str): file extension
-        add_cmd_name (bool, optional): add command name to file name
-
-    Returns:
-        str: full file path
-    """
     proj_info = revit.query.get_project_info()
 
     if add_cmd_name:
@@ -38,9 +32,15 @@ def get_document_data_file(file_id, file_ext, add_cmd_name=False):
 
     return appdata.get_data_file(script_file_id, file_ext)
 
+
 datafile = get_document_data_file("List1", "txt")
-selection = revit.get_selection()
-selected_ids = {str(elid.IntegerValue) for elid in selection.element_ids}
+selection = module.get_elements(uidoc,doc, "Select List Element 1 to Join Geometry", noti = False)
+list_id =[]
+for tung_element in selection:
+    list_id.append(tung_element.Id)
+
+selected_ids = {str(elid.IntegerValue) for elid in list_id}
+
 f = open(datafile, 'w')
 pickle.dump(selected_ids, f)
 f.close()

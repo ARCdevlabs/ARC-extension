@@ -27,11 +27,11 @@ try:
     t0.Commit() 
 
     current_selection = module.get_selected_elements(uidoc,doc, False)
-
+    element = []
     if current_selection == False:
         collector = FilteredElementCollector(uidoc.Document, current_view.Id).OfCategory(BuiltInCategory.OST_Dimensions).WhereElementIsNotElementType()
         pick = uidoc.Selection.PickObject(ObjectType.Element)
-        element = doc.GetElement(pick.ElementId)
+        element.append (doc.GetElement(pick.ElementId))
     else:
         element = current_selection
 
@@ -40,13 +40,16 @@ try:
     t = Transaction(doc,"Reset Text Position")
     t.Start() 
     for i in element:
-        number_of_segments =  i.NumberOfSegments
-        if number_of_segments != 0:
-            segments = i.Segments
-            for tung_seg in segments:
-                tung_seg.ResetTextPosition()
-        else:
-            i.ResetTextPosition()
+        try:
+            number_of_segments =  i.NumberOfSegments
+            if number_of_segments != 0:
+                segments = i.Segments
+                for tung_seg in segments:
+                    tung_seg.ResetTextPosition()
+            else:
+                i.ResetTextPosition()
+        except:
+            pass
     t.Commit()
 except:
     # print(traceback.format_exc())
