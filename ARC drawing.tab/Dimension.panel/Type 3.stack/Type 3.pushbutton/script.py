@@ -112,8 +112,8 @@ try:
     t = Transaction(doc,"Modify Text's Position of Dimension")
     t.Start() 
     # Tat leader line
-    para_leader_line = module.get_builtin_parameter_by_name(element, DB.BuiltInParameter.DIM_LEADER)
-    para_leader_line.Set(int(0))
+    # para_leader_line = module.get_builtin_parameter_by_name(element, DB.BuiltInParameter.DIM_LEADER)
+    # para_leader_line.Set(int(0))
 
     seg_phai = []
     seg_trai = []

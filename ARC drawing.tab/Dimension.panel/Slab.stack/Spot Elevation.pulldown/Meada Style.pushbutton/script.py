@@ -18,7 +18,6 @@ import traceback
 uidoc = __revit__.ActiveUIDocument
 #Get Document 
 doc = uidoc.Document
-Currentview = doc.ActiveView
 try:
     ARC = string.ascii_lowercase
     begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
@@ -32,40 +31,40 @@ try:
         Curve = []
 except:
     sys.exit()
-#Get UIDocument
-uidoc = __revit__.ActiveUIDocument
-#Get Document 
-doc = uidoc.Document
+
 Currentview = doc.ActiveView
 
 def spot_elevation (idoc, view, ref, point, bend, end,ref_point, leader):
     spot = idoc.Create.NewSpotElevation(view, ref, point, bend, end,ref_point, leader)
     return spot
 
-Ele = module.get_selected_elements(uidoc,doc)
-t = Transaction(doc,"Spot floor follow tag")
-top_faces = []
-top_ref = []
-t.Start()
-for tag in Ele:
+Ele = module.get_elements(uidoc,doc, "Select Tag of Slabs", noti = False)
+if Ele:
     try:
-        get_element_Id = tag.TaggedLocalElementId
-        floor = doc.GetElement(get_element_Id)
-        top = HostObjectUtils.GetTopFaces(floor)
-        tag_position = tag.TagHeadPosition
-        for ref in top:
+        t = Transaction(doc,"Spot floor follow tag")
+        top_faces = []
+        top_ref = []
+        t.Start()
+        for tag in Ele:
             try:
-                top_face = floor.GetGeometryObjectFromReference(ref)
-                top_faces.append(top_face)
-                top_ref.append(ref)
-                last_ref = ref
+                get_element_Id = tag.TaggedLocalElementId
+                floor = doc.GetElement(get_element_Id)
+                top = HostObjectUtils.GetTopFaces(floor)
+                tag_position = tag.TagHeadPosition
+                for ref in top:
+                    try:
+                        top_face = floor.GetGeometryObjectFromReference(ref)
+                        top_faces.append(top_face)
+                        top_ref.append(ref)
+                        last_ref = ref
+                    except:
+                        pass
+                spot_elevation(doc, Currentview, last_ref, tag_position, tag_position, tag_position,tag_position, False)
             except:
                 pass
-        spot_elevation(doc, Currentview, last_ref, tag_position, tag_position, tag_position,tag_position, False)
+        t.Commit()
     except:
         pass
-t.Commit()
-
 
 
 
