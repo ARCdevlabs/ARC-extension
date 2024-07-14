@@ -49,20 +49,21 @@ def move_point_along_vector(point, vector, distance):
 
 
 
-Ele = module.get_selected_elements(uidoc,doc)
-t = Transaction(doc,"Tag cửa")
-
-t.Start()
-for door in Ele:
-    facing_orient = door.FacingOrientation
-    if abs(facing_orient.Y) == 1:
-        orient = TagOrientation.Horizontal
-    else:
-        orient = TagOrientation.Vertical
-    new_tag = create_tags (doc, door, Currentview, orient)
-    # new_point = move_point_along_vector(new_tag.TagHeadPosition, facing_orient, 5)
-    # new_tag.TagHeadPosition = new_point
-t.Commit()
+Ele = module.get_elements(uidoc,doc, "Select Door or Window to Tag", noti = False)
+if Ele:
+    t = Transaction(doc,"Tag Door/Window")
+    t.Start()
+    for door in Ele:
+        try:
+            facing_orient = door.FacingOrientation
+            if abs(facing_orient.Y) == 1:
+                orient = TagOrientation.Horizontal
+            else:
+                orient = TagOrientation.Vertical
+            new_tag = create_tags (doc, door, Currentview, orient)
+        except:
+            pass
+    t.Commit()
 
 
 

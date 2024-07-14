@@ -824,11 +824,6 @@ from pyrevit import labs
 
 
 
-
-
-
-
-
 """ARC"""
 import Autodesk
 from Autodesk.Revit.DB import *
@@ -901,8 +896,8 @@ def get_element(iuidoc,idoc, string_warning_bar, noti = False):
         list_ele = []
         with forms.WarningBar(title=string_warning_bar):
             try:
-                pick = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element)
-                list_ele.append(doc.GetElement(pick.ElementId))
+                pick = iuidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element)
+                list_ele.append(idoc.GetElement(pick.ElementId))
             except:
                 sys.exit()
             selected_element = list_ele
@@ -916,29 +911,29 @@ def information():
     return (newma)
 
 # Def join geometry
-def joingeometry(List1, List2):
+def joingeometry(idoc,List1, List2):
     if checklicense():
         CountSwitchJoin = []
         Join = []
         for i in List1:
             Bdb = i.get_BoundingBox(None)
             Outlineofbb = (Outline(Bdb.Min, Bdb.Max))
-            for intersected in Autodesk.Revit.DB.FilteredElementCollector(doc).WherePasses(Autodesk.Revit.DB.BoundingBoxIntersectsFilter(Outlineofbb)):
+            for intersected in Autodesk.Revit.DB.FilteredElementCollector(idoc).WherePasses(Autodesk.Revit.DB.BoundingBoxIntersectsFilter(Outlineofbb)):
             # Check xem list filter
                 for a in List2:
                     if a.Id == intersected.Id:
                 # Code join geometry
                         try:
-                            result = Autodesk.Revit.DB.JoinGeometryUtils.JoinGeometry(doc,i,intersected)
-                            checkcutting = Autodesk.Revit.DB.JoinGeometryUtils.IsCuttingElementInJoin(doc,i,intersected)
+                            result = Autodesk.Revit.DB.JoinGeometryUtils.JoinGeometry(idoc,i,intersected)
+                            checkcutting = Autodesk.Revit.DB.JoinGeometryUtils.IsCuttingElementInJoin(idoc,i,intersected)
                             Join.Add("OK")
                             if str(checkcutting) == "False":
-                                switchjoin = Autodesk.Revit.DB.JoinGeometryUtils.SwitchJoinOrder(doc,i,intersected)
+                                switchjoin = Autodesk.Revit.DB.JoinGeometryUtils.SwitchJoinOrder(idoc,i,intersected)
                         except:
                             try:
-                                checkcutting = Autodesk.Revit.DB.JoinGeometryUtils.IsCuttingElementInJoin(doc,i,intersected)
+                                checkcutting = Autodesk.Revit.DB.JoinGeometryUtils.IsCuttingElementInJoin(idoc,i,intersected)
                                 if str(checkcutting) == "False":
-                                    switchjoin = Autodesk.Revit.DB.JoinGeometryUtils.SwitchJoinOrder(doc,i,intersected)
+                                    switchjoin = Autodesk.Revit.DB.JoinGeometryUtils.SwitchJoinOrder(idoc,i,intersected)
                                     CountSwitchJoin.append("OK")
                             except:
                                 pass
@@ -1065,7 +1060,7 @@ def AutodeskData():
     return False
 
 def thong_bao_loi_license():
-    tin_nhan = "Please Unlock the Add-in to use this tool.\nUse command [Get info] and send it to skype of Sơn\nor email: Nguyenthanhson1712@gmail.com"
+    tin_nhan = "Hãy mở khóa Add-in.\nSử dụng command [Get info] và gửi nó tới skype của Sơn\nhoặc email:Nguyenthanhson1712@gmail.com\n\nPlease Unlock the Add-in.\nUse command [Get info] and send it to skype of Sơn\nor email: Nguyenthanhson1712@gmail.com"
     MessageBox.Show(tin_nhan, "ARC", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
 def machine_code():
@@ -1076,9 +1071,9 @@ def machine_code():
 def all_elements_of_category(idoc, category):
 	return FilteredElementCollector(idoc).OfCategory(category).WhereElementIsNotElementType().ToElements()
 
-def override_graphics_in_view(view, list_element_id, color):
+def override_graphics_in_view(idoc, view, list_element_id, color):
     name_pattern = "<Solid fill>"
-    patterns = FilteredElementCollector(doc).OfClass(FillPatternElement)
+    patterns = FilteredElementCollector(idoc).OfClass(FillPatternElement)
     for pattern in patterns:
         if pattern.Name == name_pattern:
             solidPatternId = pattern.Id

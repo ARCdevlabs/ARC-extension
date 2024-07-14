@@ -4,3 +4,4 @@ title:
 tooltip:
   ja: タグや寸法の引き出し線をオンまたはオフに切り替えます。この操作は非常に多く使用されますから、ショートカットキーを作成して、迅速に操作できるようにしてください。
   en_us: Bật hoặc là tắt leader line của tag hoặc dim, hãy tạo phím tắt để thao tác nhanh hơn, thao tác này được sử dụng rất nhiều lần.
+context: selection

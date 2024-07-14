@@ -32,51 +32,50 @@ try:
         Curve = []
 except:
     sys.exit()
-#Get UIDocument
-uidoc = __revit__.ActiveUIDocument
-#Get Document 
-doc = uidoc.Document
-Currentview = doc.ActiveView
+
+def get_dependent_element (element):
+    filter = Autodesk.Revit.DB.ElementClassFilter(SpotDimension)
+    get_dependent_id = element.GetDependentElements(filter)
+    return get_dependent_id
+
+def get_dependent_element_view (view):
+    filter = Autodesk.Revit.DB.ElementClassFilter(ViewPlan)
+    get_dependent_id = view.GetDependentElements(filter)
+    return get_dependent_id
+
+
+def get_dependent (idoc, view, ref, point, bend, end,ref_point, leader):
+    spot = idoc.Create.NewSpotElevation(view, ref, point, bend, end,ref_point, leader)
+    return spot
+
+def move_element (idoc, element, vector):
+    move = Autodesk.Revit.DB.ElementTransformUtils.MoveElement(idoc,element.Id,vector)
+    return move
+
 try:
-    def get_dependent_element (element):
-        filter = Autodesk.Revit.DB.ElementClassFilter(SpotDimension)
-        get_dependent_id = element.GetDependentElements(filter)
-        return get_dependent_id
-
-    def get_dependent_element_view (view):
-        filter = Autodesk.Revit.DB.ElementClassFilter(ViewPlan)
-        get_dependent_id = view.GetDependentElements(filter)
-        return get_dependent_id
-
-
-    def get_dependent (idoc, view, ref, point, bend, end,ref_point, leader):
-        spot = idoc.Create.NewSpotElevation(view, ref, point, bend, end,ref_point, leader)
-        return spot
-
-    def move_element (idoc, element, vector):
-        move = Autodesk.Revit.DB.ElementTransformUtils.MoveElement(idoc,element.Id,vector)
-        return move
-
-    Ele = module.get_selected_elements(uidoc,doc)
-    t = Transaction(doc,"Chỉnh lại vị trí spot sàn theo tag")
+    Ele = module.get_elements(uidoc,doc, "Select Tags of Slab", noti = False)
     top_faces = []
     top_ref = []
+    t = Transaction(doc,"Modify Location of Spot Elevation")
     t.Start()
     for tag in Ele:
-        get_element_Id = tag.TaggedLocalElementId
-        floor = doc.GetElement(get_element_Id)
-        spots = get_dependent_element(floor)
-        for spot_id in spots:
-            get_spot = doc.GetElement(spot_id)
-            owner_view = get_spot.OwnerViewId
-            view_tong = get_dependent_element_view(doc.GetElement(owner_view))
-            for dependent_view_tong in view_tong:
-                if Currentview.Id == dependent_view_tong:
-                    is_hidden = get_spot.IsHidden(Currentview)
-                    if not is_hidden:
-                        tag_position = tag.TagHeadPosition
-                        spot_location = get_spot.Origin
-                        move = move_element (doc, get_spot, XYZ(tag_position.X - spot_location.X,tag_position.Y - spot_location.Y,spot_location.Z))
+        try:
+            get_element_Id = tag.TaggedLocalElementId
+            floor = doc.GetElement(get_element_Id)
+            spots = get_dependent_element(floor)
+            for spot_id in spots:
+                get_spot = doc.GetElement(spot_id)
+                owner_view = get_spot.OwnerViewId
+                view_tong = get_dependent_element_view(doc.GetElement(owner_view))
+                for dependent_view_tong in view_tong:
+                    if Currentview.Id == dependent_view_tong:
+                        is_hidden = get_spot.IsHidden(Currentview)
+                        if not is_hidden:
+                            tag_position = tag.TagHeadPosition
+                            spot_location = get_spot.Origin
+                            move = move_element (doc, get_spot, XYZ(tag_position.X - spot_location.X,tag_position.Y - spot_location.Y,spot_location.Z))
+        except:
+            pass
     t.Commit()
 except:
     pass
