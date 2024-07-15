@@ -1060,7 +1060,7 @@ def AutodeskData():
     return False
 
 def thong_bao_loi_license():
-    tin_nhan = "Hãy mở khóa Add-in.\nSử dụng command [Get info] và gửi nó tới skype của Sơn\nhoặc email:Nguyenthanhson1712@gmail.com\n\nPlease Unlock the Add-in.\nUse command [Get info] and send it to skype of Sơn\nor email: Nguyenthanhson1712@gmail.com"
+    tin_nhan = "Hãy mở khóa Add-in.\nSử dụng command [Get info] và gửi mã tới skype của Sơn\nhoặc email:nguyenthanhson1712@gmail.com\n\n\nこちらのツールを使用するには、\nアドインをロック解除する必要があります。\nコマンド [Get info] を使用してコードを取得し、その後\nSonのSkypeまたは以下のメールアドレスに送信してください：nguyenthanhson1712@gmail.com"
     MessageBox.Show(tin_nhan, "ARC", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
 def machine_code():
