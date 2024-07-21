@@ -30,6 +30,7 @@ class ReValueItem(object):
         self.newvalue = ''
         self.final = final
         self.tooltip = ''
+        # self.check_type = ''
 
     def format_value(self, from_pattern, to_pattern):
         try:
@@ -54,12 +55,20 @@ class ReValueItem(object):
         except Exception:
             self.newvalue = ''
 
+
 def ChangeType(element, typeId):
     try:
         element.ChangeTypeId(typeId)
         return element
     except:
         pass
+
+class CheckType():
+    def __init__(self):
+        self.check_type = ''
+    
+    def ket_qua_check_type(self, ket_qua):
+        self.check_type = ket_qua
 
 
 def get_family_types(idoc,family_name):
@@ -82,16 +91,16 @@ def find_type_by_family_and_type_name(idoc,family_name, __type_name):
         if name == __type_name:
             return moi_type
 
-Ele = module.get_elements(uidoc,doc, 'Select Element', noti = False)
-# xac_dinh_type = find_type_by_family_and_type_name(doc,"S_G_H_3Sec", "14G1")
 
 class ReValueWindow(forms.WPFWindow):
     def __init__(self, xaml_file_name):
         # create pattern maker window and process options
         forms.WPFWindow.__init__(self, xaml_file_name)
-        self._target_elements = revit.get_selection().elements
+        self._target_elements = module.get_elements(uidoc, doc, 'Select Element', noti = False)
         self._reset_preview()
         self._setup_params()
+        # self.check_type
+        # self.ket_qua_check_type("ket qua")
 
     @property
     def selected_param(self):
@@ -108,7 +117,7 @@ class ReValueWindow(forms.WPFWindow):
     @property
     def new_format(self):
         return self.new_format_tb.Text
-
+    
     @property
     def preview_items(self):
         return self.preview_dg.ItemsSource
@@ -116,6 +125,10 @@ class ReValueWindow(forms.WPFWindow):
     @property
     def selected_preview_items(self):
         return self.preview_dg.SelectedItems
+    
+
+    # def ket_qua_check_type(self, ket_qua):
+    #     self.check_type = ket_qua
 
     def _setup_params(self):
         unique_params = set()
@@ -125,14 +138,6 @@ class ReValueWindow(forms.WPFWindow):
                 if not param.IsReadOnly \
                         and param.StorageType == DB.StorageType.String:
                     unique_params.add(param.Definition.Name)
-            # grab element family parameters
-            # if element.Family:
-            #     for param in element.Family.Parameters:
-            #         if not param.IsReadOnly \
-            #                 and param.StorageType == DB.StorageType.String:
-            #             unique_params.add(
-            #                 'Family: {}'.format(param.Definition.Name)
-            #                 )
 
         all_params = ['Name', 'Family: Name']
         all_params.extend(sorted(list(unique_params)))
@@ -155,12 +160,6 @@ class ReValueWindow(forms.WPFWindow):
             elif self.selected_param == 'Family: Name':
                 if hasattr(element, 'Family') and element.Family:
                     old_value = revit.query.get_name(element.Family)
-            # elif 'Family:' in self.selected_param:
-            #     if element.Family:
-            #         pname = self.selected_param.replace('Family: ', '')
-            #         param = element.Family.LookupParameter(pname)
-            #         if param:
-            #             old_value = param.AsString()
             else:
                 param = element.LookupParameter(self.selected_param)
                 if param:
@@ -169,7 +168,20 @@ class ReValueWindow(forms.WPFWindow):
             newitem = ReValueItem(eid=element.Id, oldvalue=old_value)
             newitem.format_value(self.old_format,
                                  self.new_format)
-            self._revalue_items.append(newitem)
+            
+
+            
+            # # Kiểm tra có type hay không?
+            # for tung_item in self._revalue_items:
+            #     tim_type_name = tung_item.newvalue
+            #     type = find_type_by_family_and_type_name(doc,"S_G_H_3Sec", str(tim_type_name))
+            #     if str(type) != "None":
+            #         newitem.ket_qua_check_type("Đã có sẵn type")
+            #     else:
+            #         newitem.ket_qua_check_type("Chưa có sẵn type")
+
+            # self._revalue_items.append(newitem)
+
         self._refresh_preview()
 
     def on_format_change(self, sender, args):
@@ -212,15 +224,23 @@ class ReValueWindow(forms.WPFWindow):
     #         forms.alert(str(ex), title='Error')
 
     def apply_new_values(self, sender, args):
-        t = DB.Transaction (doc, "Change type 1")
+        t = DB.Transaction (doc, "Change Level Type")
         t.Start()
-        for item,tung_element in zip(self._revalue_items,Ele):
+        
+        thu_check_type = CheckType()
+        
+
+        for item,tung_element in zip(self._revalue_items,self._target_elements):
             try:
                 type_name = item.newvalue
                 xac_dinh_type = find_type_by_family_and_type_name(doc,"S_G_H_3Sec", str(type_name))
-                ChangeType(tung_element, xac_dinh_type.Id)
+                if xac_dinh_type:
+                    thu_check_type.ket_qua_check_type("Đã có thai")
+                    doi_type = ChangeType(tung_element, xac_dinh_type.Id)
+                else:
+                    thu_check_type.ket_qua_check_type("Chưa có type")
             except:
                 pass
         t.Commit()
 
-ReValueWindow('ReValueWindow.xaml').show(modal=True)
+ReValueWindow('changetype.xaml').show(modal=True)
