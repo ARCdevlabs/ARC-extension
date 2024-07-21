@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Reformat parameter string values (Super handy for renaming elements)"""
 #pylint: disable=E0401,W0703,W0613
 import re
@@ -5,6 +6,21 @@ import re
 from pyrevit import coreutils
 from pyrevit import revit, DB
 from pyrevit import forms
+# -*- coding: utf-8 -*-
+from codecs import Codec
+import string
+import importlib
+ARC = string.ascii_lowercase
+begin = ''.join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
+module = importlib.import_module(str(begin))
+import Autodesk
+import Autodesk.Revit.DB as DB
+from System.Collections.Generic import List
+from Autodesk.Revit.UI.Selection import ObjectType
+
+import traceback
+uidoc = __revit__.ActiveUIDocument
+doc = uidoc.Document
 
 
 class ReValueItem(object):
@@ -38,6 +54,36 @@ class ReValueItem(object):
         except Exception:
             self.newvalue = ''
 
+def ChangeType(element, typeId):
+    try:
+        element.ChangeTypeId(typeId)
+        return element
+    except:
+        pass
+
+
+def get_family_types(idoc,family_name):
+    # Tạo một bộ lọc để lấy tất cả các đối tượng thuộc category Families
+    collector = DB.FilteredElementCollector(idoc).OfClass(DB.Family)
+
+    # Duyệt qua tất cả các đối tượng family
+    for family in collector:
+        if family.Name == family_name:
+            # Lấy tất cả các loại của family
+            family_types = family.GetFamilySymbolIds()
+            return [idoc.GetElement(ftype) for ftype in family_types]
+    return []
+
+
+def find_type_by_family_and_type_name(idoc,family_name, __type_name):
+    danh_sach_type = get_family_types(idoc,family_name)
+    for moi_type in danh_sach_type:
+        name = module.get_builtin_parameter_by_name(moi_type, DB.BuiltInParameter.ALL_MODEL_TYPE_NAME).AsString()
+        if name == __type_name:
+            return moi_type
+
+Ele = module.get_elements(uidoc,doc, 'Select Element', noti = False)
+# xac_dinh_type = find_type_by_family_and_type_name(doc,"S_G_H_3Sec", "14G1")
 
 class ReValueWindow(forms.WPFWindow):
     def __init__(self, xaml_file_name):
@@ -166,11 +212,15 @@ class ReValueWindow(forms.WPFWindow):
     #         forms.alert(str(ex), title='Error')
 
     def apply_new_values(self, sender, args):
-        try:
-            for item in self._revalue_items:
-                if item.newvalue:
-                    print item.newvalue
-        except Exception as ex:
-            forms.alert(str(ex), title='Error')
+        t = DB.Transaction (doc, "Change type 1")
+        t.Start()
+        for item,tung_element in zip(self._revalue_items,Ele):
+            try:
+                type_name = item.newvalue
+                xac_dinh_type = find_type_by_family_and_type_name(doc,"S_G_H_3Sec", str(type_name))
+                ChangeType(tung_element, xac_dinh_type.Id)
+            except:
+                pass
+        t.Commit()
 
 ReValueWindow('ReValueWindow.xaml').show(modal=True)
