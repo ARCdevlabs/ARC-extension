@@ -18,10 +18,6 @@ Ele = module.get_selected_elements(uidoc,doc)
 list_ele = []
 for i in Ele:
     element_type = module.get_type(doc, i)
-    try:
-        family = element_type.Family
-        list_ele.append(family)
-    except:
-        pass
+    list_ele.append(element_type)
 module.get_current_selection(uidoc,list_ele)
 # t.Commit()        

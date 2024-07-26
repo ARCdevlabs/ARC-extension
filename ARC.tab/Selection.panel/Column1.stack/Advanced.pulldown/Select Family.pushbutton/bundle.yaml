@@ -1,7 +1,6 @@
 title:
   en_us: Select Family
-  ja: 更新中...
+  ja: Select Family
 tooltip:
-  en_us: Chọn trước một đối tượng -> Click vào tool -> Sẽ chọn được family của đối tượng đang chọn.
-  eja: 更新中...
+  en_us: Chọn trước một đối tượng -> Click vào tool -> Sẽ chọn được Family của đối tượng đang chọn.
 context: selection
