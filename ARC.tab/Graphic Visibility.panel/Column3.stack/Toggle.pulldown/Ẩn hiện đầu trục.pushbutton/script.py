@@ -140,8 +140,8 @@ try:
 		elif elem.Category.Id.IntegerValue == int(BuiltInCategory.OST_Levels):
 			bubble_visibility_level(elem, click_point, doc.ActiveView)
 except Exception as e:
-	print("Lỗi: ", e)
-	print(traceback.format_exc())
+	# print("Lỗi: ", e)
+	# print(traceback.format_exc())
 	t.RollBack()
 else:
 	t.Commit()
