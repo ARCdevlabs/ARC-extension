@@ -117,7 +117,7 @@ if module.AutodeskData():
 						level.HideBubbleInView(DatumEnds.End1, view)
 					else:
 						level.ShowBubbleInView(DatumEnds.End1, view)
-						level.HideBubbleInView(DatumEnds.End0, view)
+						# level.HideBubbleInView(DatumEnds.End0, view)
 
 	# Bắt đầu transaction
 	t = Transaction(doc, "Toggle Grid Symbol")
