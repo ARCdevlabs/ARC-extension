@@ -1,0 +1,15 @@
+title:   
+  en_us: Ẩn Hiện Grid/Level
+  ja: 通芯・レベルの表示/非表示を切り替え
+tooltip:
+  en_us:
+    Quét chọn Grid hoặc Level => Click vào phía muốn ẩn
+
+    => Tất cả Grid hoặc Level sẽ được bật hoặc tắt symbol.
+  ja: 
+    通芯またはレベルを選択し、通芯またはレベルの片側をクリックすると、
+    
+    すべての通芯またはレベルの記号がオンまたはオフになります。
+
+author: Tô Thanh Tùng
+
