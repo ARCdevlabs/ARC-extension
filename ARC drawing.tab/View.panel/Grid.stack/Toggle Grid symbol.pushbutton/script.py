@@ -14,6 +14,18 @@ import traceback
 import sys
 from nances import forms
 if module.AutodeskData():
+	
+	from pyrevit.coreutils import applocales
+	current_applocale = applocales.get_current_applocale()
+	if str(current_applocale) == "日本語 / Japanese (ja)":
+		tin_nhan_1 = "選択された要素がありません。"
+		huong_dan_1 = "通芯またはレベルを選択するためにマウスをドラッグします。"
+		huong_dan_2 = "通芯またはレベルの端に近い点を1つ選択します。"
+	else:
+		tin_nhan_1 = "Không có đối tượng nào được chọn"
+		huong_dan_1 = "Quét chuột để chọn các grid hoặc level"
+		huong_dan_2 = "Pick 1 điểm gần đầu trục hoặc level"
+
 	# Get UIDocument
 	uidoc = __revit__.ActiveUIDocument
 	# Get Document 
@@ -27,7 +39,7 @@ if module.AutodeskData():
 
 	def pick_grid_by_rectangle():
 		try:
-			with forms.WarningBar(title='Quét chuột để chọn các grid hoặc level'):
+			with forms.WarningBar(title = huong_dan_1):
 				selection = uidoc.Selection
 				selected_elements = selection.PickElementsByRectangle(GridSelectionFilter(), "Chọn grid và level")
 			return selected_elements
@@ -40,7 +52,7 @@ if module.AutodeskData():
 	if not selection:
 		selection = pick_grid_by_rectangle()
 		if not selection:
-			TaskDialog.Show("Thông báo", "Không có đối tượng nào được chọn")
+			module.message_box(tin_nhan_1)
 			sys.exit()
 
 	# Thiết lập work plane
@@ -124,12 +136,13 @@ if module.AutodeskData():
 	t.Start()
 
 	if not set_work_plane_for_view(doc.ActiveView):
-		TaskDialog.Show("Thông báo", "Không thể thiết lập Work Plane. Vui lòng thử lại.")
+		module.message_box("Can not setting Work Plane")
 		t.RollBack()
 		sys.exit()
 
 	# Chọn điểm click chuột
-	with forms.WarningBar(title='Chọn điểm để Ẩn/Hiện đầu trục'):
+
+	with forms.WarningBar(title = huong_dan_2):
 		click_point = pick_point_with_nearest_snap(uidoc)
 
 	try:
