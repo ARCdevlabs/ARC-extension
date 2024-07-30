@@ -1,0 +1,18 @@
+title:   
+  en_us: Type 4
+  ja: タイプ4
+tooltip:
+  en_us:
+    Move text của dim để tránh chồng đè chữ
+
+    Bấm Shift + Click chuột trái và setting kích thước mỗi ký tự
+
+    cho lần đầu sử dụng, giá trị thường sử dụng là 1.8mm
+
+    (1.8mm là kích thước mỗi chữ sau khi in ra)
+  ja:
+    寸法の文字を移動して文字の重なりを避けます。
+
+    Shift + 左クリックを押し、初回使用時に各文字のサイズを設定します。よく使われる値は1.8mmです（1.8mmは印刷後の各文字のサイズです）。
+author: 
+  - "Nguyễn Thanh Sơn"

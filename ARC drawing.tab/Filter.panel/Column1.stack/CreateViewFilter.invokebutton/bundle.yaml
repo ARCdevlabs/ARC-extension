@@ -8,6 +8,5 @@ tooltip:
     複数のカテゴリを含むフィルターを作成します。
 author: 
   - "Phan Mẫu Cường"
-highlight: new
 assembly: ViewFiltersCreation
 command_class: Command

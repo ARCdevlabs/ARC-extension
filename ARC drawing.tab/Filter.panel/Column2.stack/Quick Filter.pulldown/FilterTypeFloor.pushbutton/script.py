@@ -46,7 +46,7 @@ class MyForm(Form):
         self.textBox_1 = TextBox()
         self.textBox_1.Location = Drawing.Point(10, 20)
         self.textBox_1.Size = Size(250, 20)
-        self.textBox_1.Text = "FlooA_type name_e_"
+        self.textBox_1.Text = "FloorA_type name_e_"
 
         self.label2 = Label()
         self.label2.Text = "Suffix"
