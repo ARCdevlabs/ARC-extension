@@ -19,7 +19,7 @@ if module.AutodeskData():
 	current_applocale = applocales.get_current_applocale()
 	if str(current_applocale) == "日本語 / Japanese (ja)":
 		tin_nhan_1 = "選択された要素がありません。"
-		huong_dan_1 = "通芯またはレベルを選択するためにマウスをドラッグします。"
+		huong_dan_1 = "通芯またはレベルを選択するためにマウス`をドラッグします。"
 		huong_dan_2 = "通芯またはレベルの端に近い点を1つ選択します。"
 	else:
 		tin_nhan_1 = "Không có đối tượng nào được chọn"
