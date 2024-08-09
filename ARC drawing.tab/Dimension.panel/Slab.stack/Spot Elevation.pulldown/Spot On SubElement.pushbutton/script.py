@@ -59,6 +59,13 @@ def get_new_XYZ (spot):
     cnew_XYZ = str(cnew_X) + str(cnew_Y) + str(cnew_Z)
     return cnew_XYZ
 
+def get_new_XYZ_point (input_point):
+    cnew_X = round(input_point.X,3)
+    cnew_Y = round(input_point.Y,3)
+    cnew_Z = round(input_point.Z,3)
+    cnew_XYZ = str(cnew_X) + str(cnew_Y) + str(cnew_Z)
+    return cnew_XYZ
+
 def get_new_Z (spot):
     cspot_ori = spot.Origin
     cnew_Z = round(cspot_ori.Z,3)
@@ -141,52 +148,72 @@ try:
     t_2 = Transaction (doc, "Xóa Spot Elevation dư")
     t_2.Start()
 
-    list_unique = []
+    # list_unique = []
 
-    seen = set()
-    unique_list = []
+    # seen = set()
+    # unique_list = []
+    # for tung_spot in list_new_spot:
+    #     spot_ori = tung_spot.Origin
+    #     new_X = round(spot_ori.X,3)
+    #     new_Y = round(spot_ori.Y,3)
+    #     new_Z = round(spot_ori.Z,3)
+
+    #     new_XYZ = str(new_X) + str(new_Y) + str(new_Z)
+
+    #     if new_XYZ not in seen:
+    #         unique_list.append(tung_spot)
+    #         seen.add(new_XYZ)
+
+    # last_return = []
+    # for uni_item in unique_list:
+    #     cnew_XY = get_new_XY(uni_item)
+    #     cnew_Z = get_new_Z(uni_item)
+    #     for uni_item_2 in unique_list:
+    #         cnew_XY_2 = get_new_XY(uni_item_2)
+    #         cnew_Z_2 = get_new_Z(uni_item_2)
+    #         if uni_item.Id != uni_item_2.Id:
+    #             if cnew_XY == cnew_XY_2:
+    #                 if cnew_Z > cnew_Z_2:
+    #                     last_return.append(uni_item)
+    #                 else:
+    #                     last_return.append(uni_item_2)
+
+
+    # set_list_point = list(set(list_point))
+
+    # loc_lan_cuoi = []
+    # for tung_last in last_return:
+    #     cnew_XYZ = get_new_XYZ(tung_last)
+    #     for tung_point in set_list_point:
+    #         qnew_X = round(tung_point.X,3)
+    #         qnew_Y = round(tung_point.Y,3)
+    #         qnew_Z = round(tung_point.Z,3)
+    #         qnew_XYZ = str(qnew_X) + str(qnew_Y) + str(qnew_Z)
+    #         if cnew_XYZ == qnew_XYZ:
+    #             loc_lan_cuoi.append(tung_last)
+    list_new_XYZ = []
     for tung_spot in list_new_spot:
-        spot_ori = tung_spot.Origin
-        new_X = round(spot_ori.X,3)
-        new_Y = round(spot_ori.Y,3)
-        new_Z = round(spot_ori.Z,3)
+        new_XYZ = get_new_XYZ(tung_spot)
+        # list_new_XYZ.append(new_XYZ)
 
-        new_XYZ = str(new_X) + str(new_Y) + str(new_Z)
+    list_new_XYZ_point = []
+    list_loc_lan_cuoi = []
+    for tung_point in list_point:
+        new_XYZ_point = get_new_XYZ_point(tung_point)
+        for tung_spot in list_new_spot:
+            new_XYZ_spot = get_new_XYZ(tung_spot)
+            if str(new_XYZ_spot) == str(new_XYZ_point):
+                list_loc_lan_cuoi
+        # list_new_XYZ_point.append(new_XYZ_point)
 
-        if new_XYZ not in seen:
-            unique_list.append(tung_spot)
-            seen.add(new_XYZ)
-
-    last_return = []
-    for uni_item in unique_list:
-        cnew_XY = get_new_XY(uni_item)
-        cnew_Z = get_new_Z(uni_item)
-        for uni_item_2 in unique_list:
-            cnew_XY_2 = get_new_XY(uni_item_2)
-            cnew_Z_2 = get_new_Z(uni_item_2)
-            if uni_item.Id != uni_item_2.Id:
-                if cnew_XY == cnew_XY_2:
-                    if cnew_Z > cnew_Z_2:
-                        last_return.append(uni_item)
-                    else:
-                        last_return.append(uni_item_2)
+    for moi_XYZ_point in list_new_XYZ_point:
 
 
-    set_list_point = list(set(list_point))
 
-    loc_lan_cuoi = []
-    for tung_last in last_return:
-        cnew_XYZ = get_new_XYZ(tung_last)
-        for tung_point in set_list_point:
-            qnew_X = round(tung_point.X,3)
-            qnew_Y = round(tung_point.Y,3)
-            qnew_Z = round(tung_point.Z,3)
-            qnew_XYZ = str(qnew_X) + str(qnew_Y) + str(qnew_Z)
-            if cnew_XYZ == qnew_XYZ:
-                loc_lan_cuoi.append(tung_last)
-        
 
-    set_loc_lan_cuoi = list(set(loc_lan_cuoi))
+
+
+    # set_loc_lan_cuoi = list(set(loc_lan_cuoi))
 
 
     list_delete = []
