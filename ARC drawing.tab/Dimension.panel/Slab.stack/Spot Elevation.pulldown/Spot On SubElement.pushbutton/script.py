@@ -14,7 +14,7 @@ from System.Collections.Generic import *
 from Autodesk.Revit.UI.Selection import ObjectType
 from pyrevit import revit, UI
 from pyrevit import script, forms
-
+import sys
 
 uidoc = __revit__.ActiveUIDocument
 doc = uidoc.Document
@@ -62,13 +62,19 @@ def get_new_XYZ_point (input_point):
     dnew_XYZ = str(dnew_X) + str(dnew_Y) + str(dnew_Z)
     return dnew_XYZ
 
-
-pick = uidoc.Selection.PickObject(ObjectType.Element)
-floor = doc.GetElement(pick.ElementId)
+try:
+    with module.forms.WarningBar(title="Select the floor have sub element."):
+        pick = uidoc.Selection.PickObject(ObjectType.Element)
+        floor = doc.GetElement(pick.ElementId)
+except:
+    sys.exit()
 if floor:
-    edges = get_floor_sub_element_edges_by_face(floor)
-    slab_shape_editor = floor.SlabShapeEditor.SlabShapeVertices
-
+    try:
+        edges = get_floor_sub_element_edges_by_face(floor)
+        slab_shape_editor = floor.SlabShapeEditor.SlabShapeVertices
+    except:
+        module.message_box("Please select the floor have sub element")
+        sys.exit()
 class MyPath(forms.Reactive):
     def __init__(self, path):
         self._path = path
