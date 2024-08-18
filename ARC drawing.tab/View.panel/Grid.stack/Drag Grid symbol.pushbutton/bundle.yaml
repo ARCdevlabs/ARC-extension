@@ -1,0 +1,14 @@
+title:   
+  en_us: Kéo Grid/Level
+  ja: Drag Grid/Level
+tooltip:
+  en_us:
+    Quét chọn Grid hoặc Level => Click vào một vị trí muốn lưới trục kéo đến.
+
+  ja: 
+    通芯またはレベルを選択し、通芯またはレベルの片側をクリックすると、
+    
+    すべての通芯またはレベルの記号がオンまたはオフになります。
+highlight: new
+author: Tô Thanh Tùng
+
