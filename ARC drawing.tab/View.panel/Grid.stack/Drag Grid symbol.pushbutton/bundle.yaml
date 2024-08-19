@@ -1,14 +1,12 @@
 title:   
   en_us: Kéo Grid/Level
-  ja: Drag Grid/Level
+  ja: 通芯/レベルを伸ばします
 tooltip:
   en_us:
-    Quét chọn Grid hoặc Level => Click vào một vị trí muốn lưới trục kéo đến.
+    Quét chọn Grid hoặc Level => Click vào một vị trí muốn lưới trục hoặc level kéo đến.
 
   ja: 
-    通芯またはレベルを選択し、通芯またはレベルの片側をクリックすると、
-    
-    すべての通芯またはレベルの記号がオンまたはオフになります。
+    通芯またはレベルを選択し、伸ばしたい位置をクリックして、指定の位置まで伸ばします。
 highlight: new
 author: Tô Thanh Tùng
 
