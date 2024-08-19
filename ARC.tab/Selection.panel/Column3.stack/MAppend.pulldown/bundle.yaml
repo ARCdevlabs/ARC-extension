@@ -5,3 +5,6 @@ layout:
   - MAppend
   - MClear
   - MDeduct
+  - Next
+  - Prev
+  - Purge Memory Files

@@ -1,35 +1,38 @@
 # -*- coding: utf-8 -*-
-from codecs import Codec
 import string
 import importlib
-ARC = string.ascii_lowercase
-begin = ''.join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
-module = importlib.import_module(str(begin))
 import Autodesk
 from Autodesk.Revit.DB import *
 from Autodesk.Revit.UI import *
-import Autodesk.Revit.DB as DB
 from System.Collections.Generic import *
 import traceback
 import sys
 from nances import forms
+ARC = string.ascii_lowercase
+begin = ''.join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
+module = importlib.import_module(str(begin))
+
 if module.AutodeskData():
-	
 	from pyrevit.coreutils import applocales
 	current_applocale = applocales.get_current_applocale()
+
+	# Thông báo JP/VN
 	if str(current_applocale) == "日本語 / Japanese (ja)":
 		tin_nhan_1 = "選択された要素がありません。"
 		huong_dan_1 = "通芯またはレベルを選択するためにマウスをドラッグします。"
 		huong_dan_2 = "通芯またはレベルの端に近い点を1つ選択します。"
+		huong_dan_3 = "通芯及びレベルを再度選択して、通り先端をON/OFFにする側を選択します。"
+		huong_dan_4 = "通芯又はレベルを選択します。"
 	else:
 		tin_nhan_1 = "Không có đối tượng nào được chọn"
-		huong_dan_1 = "Quét chuột để chọn các grid hoặc level"
+		huong_dan_1 = "Quét chuột để chọn các Grids hoặc Levels"
 		huong_dan_2 = "Pick 1 điểm gần đầu trục hoặc level"
-
-	# Get UIDocument
+		huong_dan_3 = "Vui lòng chọn lại Grids và Levels. Sau đó chọn phía để bật/tắt đầu trục"	
+		huong_dan_4 = "Vui lòng chọn Grids hoặc Levels."
 	uidoc = __revit__.ActiveUIDocument
-	# Get Document 
 	doc = uidoc.Document
+
+	# Filter để chọn grid và level
 	class GridSelectionFilter(Autodesk.Revit.UI.Selection.ISelectionFilter):
 		def AllowElement(self, element):
 			return element.Category.Id.IntegerValue in [int(BuiltInCategory.OST_Grids), int(BuiltInCategory.OST_Levels)]
@@ -37,25 +40,36 @@ if module.AutodeskData():
 		def AllowReference(self, reference, point):
 			return False
 
+	# Hàm để chọn grid và level bằng cách quét
 	def pick_grid_by_rectangle():
 		try:
-			with forms.WarningBar(title = huong_dan_1):
+			with forms.WarningBar(title=huong_dan_1):
 				selection = uidoc.Selection
-				selected_elements = selection.PickElementsByRectangle(GridSelectionFilter(), "Chọn grid và level")
+				selected_elements = selection.PickElementsByRectangle(GridSelectionFilter(), huong_dan_4)
 			return selected_elements
 		except:
 			sys.exit()
 
-	# Lấy danh sách các đối tượng đã được chọn từ người dùng
-	selection = uidoc.Selection.GetElementIds()
+	# Lấy grid và level đã chọn
+	selected_ids = uidoc.Selection.GetElementIds()
 
-	if not selection:
-		selection = pick_grid_by_rectangle()
-		if not selection:
+	if not selected_ids:
+		selected_elements = pick_grid_by_rectangle()
+		if not selected_elements:
 			module.message_box(tin_nhan_1)
 			sys.exit()
+	else:
+		selected_elements = [doc.GetElement(id) for id in selected_ids]
 
-	# Thiết lập work plane
+	# Lọc Grid và Level
+	grids = [e for e in selected_elements if isinstance(e, Grid)]
+	levels = [e for e in selected_elements if isinstance(e, Level)]
+
+	if not grids and not levels:
+		module.message_box(huong_dan_4)
+		sys.exit()
+
+	# Set work plane
 	def set_work_plane_for_view(view):
 		current_work_plane = view.SketchPlane
 		if current_work_plane is None:
@@ -64,27 +78,24 @@ if module.AutodeskData():
 				sketch_plane = Autodesk.Revit.DB.SketchPlane.Create(doc, plane)
 				view.SketchPlane = sketch_plane
 			except:
-				pass
 				return False
 		return True
 
-	# Hàm chọn điểm
+	# Hàm click point
 	def pick_point_with_nearest_snap(iuidoc):
 		snap_settings = Autodesk.Revit.UI.Selection.ObjectSnapTypes.None
 		prompt = "Click"
-		click_point = None
 		try:
-			click_point = iuidoc.Selection.PickPoint(snap_settings, prompt)
+			return iuidoc.Selection.PickPoint(snap_settings, prompt)
 		except:
-			pass
-		return click_point
+			return None
 
-	# Hàm ẩn/hiện đầu trục dựa trên click point
+	# Bật/tắt hiển thị đầu trục dựa trên điểm click
 	def bubble_visibility_grid(grid, click_point, view):
 		datum_extent_type = Autodesk.Revit.DB.DatumExtentType.ViewSpecific
-		list_curve = grid.GetCurvesInView(datum_extent_type, view)
-		if list_curve:
-			curve = list_curve[0]
+		curves = grid.GetCurvesInView(datum_extent_type, view)
+		if curves:
+			curve = curves[0]
 			if isinstance(curve, Line):
 				start_point = curve.GetEndPoint(0)
 				end_point = curve.GetEndPoint(1)
@@ -97,20 +108,18 @@ if module.AutodeskData():
 						grid.HideBubbleInView(DatumEnds.End0, view)
 					else:
 						grid.ShowBubbleInView(DatumEnds.End0, view)
-						# grid.HideBubbleInView(DatumEnds.End1, view)
 				else:
 					if grid.IsBubbleVisibleInView(DatumEnds.End1, view):
 						grid.HideBubbleInView(DatumEnds.End1, view)
 					else:
 						grid.ShowBubbleInView(DatumEnds.End1, view)
-						# grid.HideBubbleInView(DatumEnds.End0, view)
 
-	# Hàm chuyển đổi hiển thị đầu level dựa trên điểm click
+	# Bật/tắt hiển thị đầu level dựa trên điểm click
 	def bubble_visibility_level(level, click_point, view):
 		datum_extent_type = Autodesk.Revit.DB.DatumExtentType.ViewSpecific
-		list_curve = level.GetCurvesInView(datum_extent_type, view)
-		if list_curve:
-			curve = list_curve[0]
+		curves = level.GetCurvesInView(datum_extent_type, view)
+		if curves:
+			curve = curves[0]
 			if isinstance(curve, Line):
 				start_point = curve.GetEndPoint(0)
 				end_point = curve.GetEndPoint(1)
@@ -123,35 +132,35 @@ if module.AutodeskData():
 						level.HideBubbleInView(DatumEnds.End0, view)
 					else:
 						level.ShowBubbleInView(DatumEnds.End0, view)
-						# level.HideBubbleInView(DatumEnds.End1, view)
 				else:
 					if level.IsBubbleVisibleInView(DatumEnds.End1, view):
 						level.HideBubbleInView(DatumEnds.End1, view)
 					else:
 						level.ShowBubbleInView(DatumEnds.End1, view)
-						# level.HideBubbleInView(DatumEnds.End0, view)
 
-	# Bắt đầu transaction
-	t = Transaction(doc, "Toggle Grid Symbol")
+	t = Transaction(doc, "Toggle Grids/Levels Symbol")
 	t.Start()
 
 	if not set_work_plane_for_view(doc.ActiveView):
-		module.message_box("Can not setting Work Plane")
+		module.message_box("Cannot set Work Plane")
 		t.RollBack()
 		sys.exit()
 
-	# Chọn điểm click chuột
-
-	with forms.WarningBar(title = huong_dan_2):
+	# Chọn điểm click
+	with forms.WarningBar(title=huong_dan_2):
 		click_point = pick_point_with_nearest_snap(uidoc)
 
+	if not click_point:
+		module.message_box(huong_dan_3)
+		t.RollBack()
+		sys.exit()
+
+	# Bật/tắt hiển thị cho từng grid và level được chọn
 	try:
-		for elem in selection:
-			if isinstance(elem, ElementId):
-				elem = doc.GetElement(elem)
-			if elem.Category.Id.IntegerValue == int(BuiltInCategory.OST_Grids):
+		for elem in selected_elements:
+			if isinstance(elem, Grid):
 				bubble_visibility_grid(elem, click_point, doc.ActiveView)
-			elif elem.Category.Id.IntegerValue == int(BuiltInCategory.OST_Levels):
+			elif isinstance(elem, Level):
 				bubble_visibility_level(elem, click_point, doc.ActiveView)
 	except:
 		t.RollBack()

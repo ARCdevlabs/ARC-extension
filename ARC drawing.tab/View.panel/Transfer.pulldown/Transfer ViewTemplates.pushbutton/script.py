@@ -20,6 +20,8 @@ from pyrevit import forms
 from GUI.forms import my_WPF, ListItem
 from Snippets._context_manager import ef_Transaction
 
+# import Snippets
+# print Snippets.__file__
 #>>>>>>>>>> .NET IMPORTS
 import clr
 clr.AddReference("System.Windows.Forms")

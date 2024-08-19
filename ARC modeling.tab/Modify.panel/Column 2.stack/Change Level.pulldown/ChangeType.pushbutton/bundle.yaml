@@ -1,11 +1,4 @@
-help_url: '{{docpath}}-JDgiP3gK9Y'
+
 title:
-  ru: ПереЗначить
-  fr_fr: ReValoriser
-  en_us: ReValue
+  en_us: Đổi Type Theo Level
   ja: 名前編集
-tooltip:
-  ru: Переформировать значение строковых параметров (очень удобно для переименования элементов).
-  fr_fr: Reformater les valeurs textuelles des paramètres (Super pratique pour renommer des éléments)
-  en_us: Chỉnh sửa tên view, tên sheet hàng loạt.
-  ja: ビュー名やシート名を一括編集します。

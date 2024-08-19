@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-"""Reformat parameter string values (Super handy for renaming elements)"""
 #pylint: disable=E0401,W0703,W0613
 import re
 from pyrevit import coreutils
 from pyrevit import revit, DB
 from pyrevit import forms
-# -*- coding: utf-8 -*-
 from codecs import Codec
 import string
 import importlib
@@ -67,7 +65,14 @@ def find_type_by_family_and_type_name(idoc,family_name, __type_name):
         name = module.get_builtin_parameter_by_name(moi_type, DB.BuiltInParameter.ALL_MODEL_TYPE_NAME).AsString()
         if name == __type_name:
             return moi_type
-
+        
+def find_type_by_type_name(idoc,ele_dau_vao, __type_name):
+    family_name = revit.db.query.get_family_name(ele_dau_vao)
+    danh_sach_type = get_family_types(idoc,family_name)
+    for moi_type in danh_sach_type:
+        name = module.get_builtin_parameter_by_name(moi_type, DB.BuiltInParameter.ALL_MODEL_TYPE_NAME).AsString()
+        if name == __type_name:
+            return moi_type
 
 class ReValueItem(object):
     def __init__(self, eid, oldvalue, final=False):
@@ -95,8 +100,9 @@ class ReValueItem(object):
                     self.newvalue = \
                         re.sub(from_pattern, to_pattern, self.oldvalue)
                     
-                    check = find_type_by_family_and_type_name(doc,"RC大梁", str(self.newvalue))
-                    
+                    get_element = doc.GetElement(self.eid)
+                    # check = find_type_by_family_and_type_name(doc,"RC大梁", str(self.newvalue))
+                    check = find_type_by_type_name(doc,get_element, str(self.newvalue))
                     if str(self.oldvalue) == str(self.newvalue):
                         self.check_type = "Nothing changes"
                     elif check:
@@ -145,43 +151,28 @@ class ReValueWindow(forms.WPFWindow):
     def selected_preview_items(self):
         return self.preview_dg.SelectedItems
     
-
-    # def _setup_params(self):
-    #     unique_params = set()
-    #     for element in self._target_elements:
-    #         # grab element parameters
-    #         for param in element.Parameters:
-    #             if not param.IsReadOnly \
-    #                     and param.StorageType == DB.StorageType.String:
-    #                 unique_params.add(param.Definition.Name)
-
-    #     all_params = ['Name', 'Family: Name']
-    #     all_params.extend(sorted(list(unique_params)))
-    #     self.params_cb.ItemsSource = all_params
-    #     self.params_cb.SelectedIndex = 0
-
     def _setup_params(self):
-        family_name = []
-        all_categories = []
-        danh_sach_ele = self._target_elements
-        for __tung_ele in danh_sach_ele:
-            try:
-                all_categories.append(str(__tung_ele.Category))
-            except:
-                pass
-        set_category = unique_values(all_categories)
-        print set_category
-        if len(set_category) == 1:
-            all_family_by_catgory = get_family_by_category(doc, str(set_category[0]))
-            for __moi_family in all_family_by_catgory:
-                family_name.append(__moi_family.Name)
-            self.params_cb.ItemsSource = family_name
-            self.params_cb.SelectedIndex = 0
-        else:
-            all_family = get_family(doc)
-            for __tung_family in all_family:
-                family_name.append(__tung_family.Name)
-            self.params_cb.ItemsSource = family_name
+        # family_name = []
+        # all_categories = []
+        # danh_sach_ele = self._target_elements
+        # for __tung_ele in danh_sach_ele:
+        #     try:
+        #         all_categories.append(str(__tung_ele.Category))
+        #     except:
+        #         pass
+        # set_category = unique_values(all_categories)
+        # # print set_category
+        # if len(set_category) == 1:
+        #     all_family_by_catgory = get_family_by_category(doc, str(set_category[0]))
+        #     for __moi_family in all_family_by_catgory:
+        #         family_name.append(__moi_family.Name)
+        #     self.params_cb.ItemsSource = family_name
+        #     self.params_cb.SelectedIndex = 0
+        # else:
+        #     all_family = get_family(doc)
+        #     for __tung_family in all_family:
+        #         family_name.append(__tung_family.Name)
+            self.params_cb.ItemsSource = ["Giá trị nháp thôi, đặt tên gì cũng được"]
             self.params_cb.SelectedIndex = 0
 
     def _reset_preview(self):
@@ -192,7 +183,6 @@ class ReValueWindow(forms.WPFWindow):
         self.preview_dg.Items.Refresh()
 
     def on_param_change(self, sender, args):
-
         self._reset_preview()
         for element in self._target_elements:
             old_value = ''
@@ -230,7 +220,8 @@ class ReValueWindow(forms.WPFWindow):
         for item,tung_element in zip(self._revalue_items,self._target_elements):
             try:
                 type_name = item.newvalue
-                xac_dinh_type = find_type_by_family_and_type_name(doc,"RC大梁", str(type_name))
+                # xac_dinh_type = find_type_by_family_and_type_name(doc,"RC大梁", str(type_name))
+                xac_dinh_type = find_type_by_type_name(doc,tung_element, str(type_name))
                 check = item.check_type
                 if str(check) == "Ready":
                     doi_type = ChangeType(tung_element, xac_dinh_type.Id)

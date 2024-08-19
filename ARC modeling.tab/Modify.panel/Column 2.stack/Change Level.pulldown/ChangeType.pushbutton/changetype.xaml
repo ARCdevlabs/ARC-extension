@@ -9,41 +9,39 @@
     <DockPanel Margin="10">
         <StackPanel DockPanel.Dock="Top">
             <DockPanel>
-                <TextBlock FontSize="14" Margin="0,0,10,0" DockPanel.Dock="Left" VerticalAlignment="Center">Select Family:</TextBlock>
+                <TextBlock FontSize="1" Margin="0,0,10,0"
+                           Height="1"
+                           DockPanel.Dock="Left"
+                           VerticalAlignment="Center"
+                           Visibility="Hidden"
+                           >Select Family:</TextBlock>
                 <ComboBox x:Name="params_cb"
+                          Height="1"
                           VerticalAlignment="Center"
-                          Height="24"
+                          
+                          Visibility ="Hidden"
                           SelectionChanged="on_param_change"/>
             </DockPanel>
-            <Border Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}" CornerRadius="3" Margin="0,10,0,0" Padding="5">
+            <Border Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}"
+                    CornerRadius="3"
+                    Margin="0,10,0,0" 
+                    Padding="5">
                 <Expander Header="Hướng dẫn" Foreground="Black" Cursor="Help">
                     <TextBlock TextWrapping="WrapWithOverflow" Margin="0,3,0,0" Foreground="Black">
-                    <Bold>Ví dụ 1:</Bold>
+                    <Bold>Ví dụ: Chuyển type dầm từ 1F thành 2F</Bold>
                     <LineBreak />
-                    Tên view ban đầu là "1FL" thì cách điền như sau: 
+                    Tên type ban đầu là "S_1F_G1" thì cách điền như sau: 
                     <LineBreak />
-                        Hàng 1:  <Run FontFamily="Consolas" FontWeight="Bold">{lvl}</Run>
+                        Hàng 1:  <Run FontWeight="Bold">1F</Run>
                         <LineBreak />
-                        Hàng 2:   pla_<Run FontFamily="Consolas" FontWeight="Bold">{lvl}</Run>_elementA_all
+                        Hàng 2:  <Run FontWeight="Bold">2F</Run>
                         <LineBreak />
-                        Kết quả: pla_1F_elementA_all
+                        Kết quả: S_2F_G1
                     <LineBreak />
                     <LineBreak />
-                    <Bold>Ví dụ 2:</Bold>
-                    <LineBreak />
-                     Tên ban đầu là "pla_1FL_<Run FontWeight="Bold">floorA</Run>_all", muốn đổi floorA thành wallA thì cách điền như sau: 
-                    <LineBreak />
-                        Hàng 1:<Run FontFamily="Consolas" FontWeight="Bold">floorA</Run>
-                        <LineBreak />
-                        Hàng 2: <Run FontFamily="Consolas" FontWeight="Bold">wallA</Run>
-                        <LineBreak />
-                        Kết quả: pla_1F_wallA_all
-                    <LineBreak />
-                    <LineBreak />
-                    <Bold>Lưu ý</Bold>
-                    <LineBreak />
-                     Với tên có dấu ngoặc tròn, ví dụ (name) thì sẽ gõ thành \(name\) ở hàng 1
+      
                     </TextBlock>
+                   
                 </Expander>
             </Border>
             <DockPanel Margin="0,10,0,0">
