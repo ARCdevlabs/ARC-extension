@@ -1,11 +1,11 @@
 title:   
   en_us: Vẽ Dầm từ Link Cad
-  ja: 更新中...
+  ja: CADリンクから梁入力
 tooltip:
   en_us:
     Vẽ Dầm từ Link Cad
   ja:
-    更新中...
+    このツールを使用すると、梁がCADリンクから入力されます。
 author: 
   - "Phan Mẫu Cường"
 assembly: InputBeam

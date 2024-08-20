@@ -824,11 +824,6 @@ from pyrevit import labs
 
 
 
-
-
-
-
-
 """ARC"""
 import Autodesk
 from Autodesk.Revit.DB import *
@@ -843,6 +838,7 @@ from pyrevit import coreutils
 from pyrevit import revit
 import platform
 from Autodesk.Revit.DB import (FilteredElementCollector,Element, View, ElementId, FamilyInstance, FillPatternElement, Color, OverrideGraphicSettings,FilteredElementCollector, BuiltInCategory)
+from nances import forms
 
 PYREVIT_ADDON_NAME = 'pyRevit'
 PYREVIT_FILE_PREFIX = '{}_'.format(PYREVIT_ADDON_NAME)
@@ -867,13 +863,45 @@ def get_selected_elements(tem_uidoc, tem_doc, noti = True):
             # module_path = Autodesk.__file__
             # print module_path
             dialog = TaskDialog("ARC")
-            tin_nhan = "Please select element before use this tool.\n \n このツールを使用する前に要素をご選択ください。"
-            dialog.MainContent = tin_nhan
+            from pyrevit.coreutils import applocales
+            current_applocale = applocales.get_current_applocale()
+            if str(current_applocale) == "日本語 / Japanese (ja)":
+                message = "このツールを使用する前に要素をご選択ください。"
+            else:
+                message = "Please select element before use this tool."
+            dialog.MainContent = message
             dialog.TitleAutoPrefix = False
             dialog.Show()
         return False
     else: 
         return elements
+    
+def get_elements(iuidoc,idoc, string_warning_bar, noti = False):
+    selected_element = get_selected_elements(iuidoc,idoc, noti)
+    if selected_element == False:
+        list_ele = []
+        with forms.WarningBar(title=string_warning_bar):
+            try:
+                pick = iuidoc.Selection.PickObjects(Autodesk.Revit.UI.Selection.ObjectType.Element)
+                for tung_ref in pick:
+                    list_ele.append(idoc.GetElement(tung_ref.ElementId))
+            except:
+                sys.exit()
+            selected_element = list_ele
+    return selected_element
+
+def get_element(iuidoc,idoc, string_warning_bar, noti = False):
+    selected_element = get_selected_elements(iuidoc,idoc, noti)
+    if selected_element == False:
+        list_ele = []
+        with forms.WarningBar(title=string_warning_bar):
+            try:
+                pick = iuidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element)
+                list_ele.append(idoc.GetElement(pick.ElementId))
+            except:
+                sys.exit()
+            selected_element = list_ele
+    return selected_element
 
 
 # Code nay de lay thong tin chip cua may tinh
@@ -882,32 +910,30 @@ def information():
     newma = "/M%A*D/".join(info)
     return (newma)
 
-
-
 # Def join geometry
-def joingeometry(List1, List2):
+def joingeometry(idoc,List1, List2):
     if checklicense():
         CountSwitchJoin = []
         Join = []
         for i in List1:
             Bdb = i.get_BoundingBox(None)
             Outlineofbb = (Outline(Bdb.Min, Bdb.Max))
-            for intersected in Autodesk.Revit.DB.FilteredElementCollector(doc).WherePasses(Autodesk.Revit.DB.BoundingBoxIntersectsFilter(Outlineofbb)):
+            for intersected in Autodesk.Revit.DB.FilteredElementCollector(idoc).WherePasses(Autodesk.Revit.DB.BoundingBoxIntersectsFilter(Outlineofbb)):
             # Check xem list filter
                 for a in List2:
                     if a.Id == intersected.Id:
                 # Code join geometry
                         try:
-                            result = Autodesk.Revit.DB.JoinGeometryUtils.JoinGeometry(doc,i,intersected)
-                            checkcutting = Autodesk.Revit.DB.JoinGeometryUtils.IsCuttingElementInJoin(doc,i,intersected)
+                            result = Autodesk.Revit.DB.JoinGeometryUtils.JoinGeometry(idoc,i,intersected)
+                            checkcutting = Autodesk.Revit.DB.JoinGeometryUtils.IsCuttingElementInJoin(idoc,i,intersected)
                             Join.Add("OK")
                             if str(checkcutting) == "False":
-                                switchjoin = Autodesk.Revit.DB.JoinGeometryUtils.SwitchJoinOrder(doc,i,intersected)
+                                switchjoin = Autodesk.Revit.DB.JoinGeometryUtils.SwitchJoinOrder(idoc,i,intersected)
                         except:
                             try:
-                                checkcutting = Autodesk.Revit.DB.JoinGeometryUtils.IsCuttingElementInJoin(doc,i,intersected)
+                                checkcutting = Autodesk.Revit.DB.JoinGeometryUtils.IsCuttingElementInJoin(idoc,i,intersected)
                                 if str(checkcutting) == "False":
-                                    switchjoin = Autodesk.Revit.DB.JoinGeometryUtils.SwitchJoinOrder(doc,i,intersected)
+                                    switchjoin = Autodesk.Revit.DB.JoinGeometryUtils.SwitchJoinOrder(idoc,i,intersected)
                                     CountSwitchJoin.append("OK")
                             except:
                                 pass
@@ -1014,18 +1040,29 @@ def checklicense_for_info():
     return check
 def AutodeskData():
     datafile = get_document_data_file("pyrevit", "dll")
-    try:
-        f = open(datafile, 'r')
-        current_selection = pickle.load(f)
-        f.close()
-        newstring= current_selection[:-2]
-        a_string = bytes.fromhex(newstring)
-        a_string = a_string.decode("ascii")
-        if a_string == info:
-            check = "OK"
-    except Exception:
-        pass
-    return check
+    if datafile:
+        try:
+            f = open(datafile, 'r')
+            current_selection = pickle.load(f)
+            f.close()
+            newstring= current_selection[:-2]
+            a_string = bytes.fromhex(newstring)
+            a_string = a_string.decode("ascii")
+            if a_string == info:
+                check = "OK"
+            return check
+        except Exception:
+            thong_bao_loi_license()
+            pass
+            return False
+    else:
+        thong_bao_loi_license()
+    return False
+
+def thong_bao_loi_license():
+    tin_nhan = "Hãy mở khóa Add-in.\nSử dụng command [Get info] và gửi mã tới skype của Sơn\nhoặc email:nguyenthanhson1712@gmail.com\n\n\nこちらのツールを使用するには、\nアドインをロック解除する必要があります。\nコマンド [Get info] を使用してコードを取得し、その後\nSonのSkypeまたは以下のメールアドレスに送信してください：nguyenthanhson1712@gmail.com"
+    MessageBox.Show(tin_nhan, "ARC", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
 def machine_code():
     info = platform.processor()
     newma = "/M%A*D/".join(info)
@@ -1034,9 +1071,9 @@ def machine_code():
 def all_elements_of_category(idoc, category):
 	return FilteredElementCollector(idoc).OfCategory(category).WhereElementIsNotElementType().ToElements()
 
-def override_graphics_in_view(view, list_element_id, color):
+def override_graphics_in_view(idoc, view, list_element_id, color):
     name_pattern = "<Solid fill>"
-    patterns = FilteredElementCollector(doc).OfClass(FillPatternElement)
+    patterns = FilteredElementCollector(idoc).OfClass(FillPatternElement)
     for pattern in patterns:
         if pattern.Name == name_pattern:
             solidPatternId = pattern.Id
@@ -1413,10 +1450,6 @@ from System.Windows.Forms import MessageBox, MessageBoxButtons, MessageBoxIcon
 def message_box(message):
     MessageBox.Show(message, "ARC", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
-
-
-
-
 # math
 import Autodesk
 from Autodesk.Revit.DB import *
@@ -1593,3 +1626,28 @@ def set_work_plane_for_view(view):
         except:
             pass
     return True
+
+
+
+
+class DimensionSelectionFilter(Autodesk.Revit.UI.Selection.ISelectionFilter):
+    def AllowElement(self, element):
+        # Chỉ cho phép chọn đối tượng Dimension
+        return isinstance(element, Autodesk.Revit.DB.Dimension)
+
+    def AllowReference(self, reference, point):
+        # Không sử dụng AllowReference trong trường hợp này
+        return False
+
+# Hàm chọn một Dimension từ danh sách sử dụng ISelectionFilter
+def pick_dimension_element(iuidoc,idoc):
+    selected_dimension = iuidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element, DimensionSelectionFilter(), "Pick 1 Dimension")
+    return idoc.GetElement(selected_dimension.ElementId) if selected_dimension else None
+
+def pick_dimension_elements(iuidoc,idoc):
+    list_dimension = []
+    selected_dimension = iuidoc.Selection.PickObjects(Autodesk.Revit.UI.Selection.ObjectType.Element, DimensionSelectionFilter(), "Pick Dimensions")
+    for tung_dimension in selected_dimension:
+        list_dimension.append(idoc.GetElement(tung_dimension.ElementId) if tung_dimension else None)
+    return list_dimension
+

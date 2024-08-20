@@ -1,3 +1,6 @@
+title:
+  en_us: Duplicate View
+  ja: ビュー複製
 layout:
   - DuplicateAsDependentView
   - CopyViewToAnotherLevel

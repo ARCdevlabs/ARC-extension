@@ -1,11 +1,11 @@
 title:   
   en_us: Chọn dầm theo phương dọc
-  ja: 更新中...
+  ja: 縦方向の梁を選択
 tooltip:
   en_us:
     "Click vào tool, toàn bộ dầm theo phương dọc sẽ được chọn"
   ja:
-    "更新中..."
+    "ツールをクリックすると、縦方向のすべての梁が選択されます。"
 author: 
   - "Nguyễn Thanh Sơn"
 # highlight: new

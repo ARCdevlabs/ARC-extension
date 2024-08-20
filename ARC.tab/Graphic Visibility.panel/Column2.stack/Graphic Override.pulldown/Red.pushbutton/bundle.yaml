@@ -3,5 +3,5 @@ title:
   ja: 赤
 tooltip:
   en_us: Override đối tượng đang được chọn
-  ja: 更新中...
+  ja: 選択された要素を上書きします。
 context: selection

@@ -1,0 +1,8 @@
+title:   
+  en_us: Cut
+  ja: ジオメトリを切り取る
+tooltip:
+  en_us: cut danh sách đối tượng 1 và danh sách đối tượng 2.
+  ja: 要素リスト1と要素リスト2のジオメトリを切り取ります。
+authors:
+  - Nguyễn Thanh Sơn

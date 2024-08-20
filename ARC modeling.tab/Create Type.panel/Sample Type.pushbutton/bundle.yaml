@@ -1,6 +1,6 @@
 title:   
   en_us: Tạo Sample Type
-  ja: 更新中...
+  ja: タイプサンプル作成
 tooltip:
   en_us:
     Chọn type ở thanh Browser và Click vào tool
@@ -9,8 +9,5 @@ tooltip:
     
     Instance với type khác nhau
   ja:
-    更新中...
-
-
-
-
+    ブラウザーでタイプを選択し、ツールをクリックします。
+    既存の要素を選択します。このツールは、異なるタイプの多数の要素を複製します。

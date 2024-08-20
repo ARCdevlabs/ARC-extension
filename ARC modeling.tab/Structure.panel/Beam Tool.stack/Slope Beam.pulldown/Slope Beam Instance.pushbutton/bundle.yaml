@@ -1,0 +1,8 @@
+title:   
+  en_us: Slope Beam Instance
+  ja: 傾斜梁_拘束
+tooltip:
+  en_us: Điều chỉnh hàng loạt dốc của dầm theo ref plane, hãy sử dụng tool ở view mặt cắt.
+  ja: 参照面で梁の傾斜を一括調整します。ツールは平面ビューでのみ動作します。
+authors:
+  - Nguyễn Thanh Sơn

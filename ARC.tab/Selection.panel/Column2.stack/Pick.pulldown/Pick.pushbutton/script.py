@@ -1,10 +1,10 @@
+# -*- coding: utf-8 -*-
 """Activates selection tool that picks a specific type of element.
 
 Shift-Click:
 Pick favorites from all available categories
 """
 # pylint: disable=E0401,W0703,C0103
-# -*- coding: utf-8 -*-
 __doc__ = 'python for revit api'
 __author__ = 'NguyenThanhSon' "Email: nguyenthanhson1712@gmail.com"
 import string
@@ -20,7 +20,14 @@ from nances import revit, UI
 from nances import forms
 from nances import script
 
-
+from pyrevit.coreutils import applocales
+current_applocale = applocales.get_current_applocale()
+if str(current_applocale) == "日本語 / Japanese (ja)":
+    message = "このツールは日本語版をサポートしていません。"
+    module.message_box(message)
+    import sys
+    sys.exit()
+    
 # import this script's configurator
 import pick_config
 
@@ -30,7 +37,9 @@ logger = script.get_logger()
 my_config = script.get_config()
 
 
+
 CategoryOption = namedtuple('CategoryOption', ['name', 'revit_cat'])
+
 
 class PickByCategorySelectionFilter(UI.Selection.ISelectionFilter):
     """Selection filter implementation"""

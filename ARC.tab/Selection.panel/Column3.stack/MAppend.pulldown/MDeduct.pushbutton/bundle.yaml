@@ -1,8 +1,8 @@
 title:
   en_us: MDeduct
-  ja: 更新中...
+  ja: MDeduct
 tooltip:
   en_us: >-
     Bỏ bớt đối tượng trong bộ nhớ mà đã lưu với lệnh MWrite
   ja: >-
-    更新中...
+    MWriteで保存されたメモリからいらない要素を削除します。

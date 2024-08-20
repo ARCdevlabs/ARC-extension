@@ -1,0 +1,9 @@
+title:   
+  en_us: Type Floor
+  ja: 床タイプ
+tooltip: 
+  en_us: Tạo Filter cho type của floor có trong model
+  ja: モデル内の床タイプのフィルターを作成します。
+# highlight: new      # highlight as new or update
+authors:
+  - Nguyễn Thanh Sơn

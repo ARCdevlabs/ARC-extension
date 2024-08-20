@@ -1,13 +1,9 @@
 title:
-  ru: Кто сделал это??
-  fr_fr: Qui a fait ça??
+  ja: 誰がやったの？？
   en_us: Who did that??
 tooltip:
-  ru: Выясните, кто внес конкретные изменения в модель.
-  fr_fr: Trouver qui a fait un changement spécifique dans le modèle.
+  ja: モデルに変更を加えたのが誰かを突き止めます。
   en_us: Figure out who made specific changes in the model.
 author: >-
     Frederic Beaupere
-    
-    {{author}}
     

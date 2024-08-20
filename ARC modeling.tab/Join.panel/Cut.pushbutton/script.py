@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 __doc__ = 'python for revit api'
 __author__ = 'NguyenThanhSon' "Email: nguyenthanhson1712@gmail.com"
 import string
@@ -99,6 +100,17 @@ try:
                 Input2.append(doc.GetElement(ElementId(int(elid))))
         except Exception:
             pass
+
+        if len(Input1) == 0 or len(Input2) == 0:
+            from pyrevit.coreutils import applocales
+            current_applocale = applocales.get_current_applocale()
+            if str(current_applocale) == "日本語 / Japanese (ja)":
+                message = "このコマンドを使用する前に、リスト選択1 and リスト選択2 コマンドを使用してください。"
+            else:
+                message = "Hãy sử dụng tool Select List 1 và Select list 2 trước khi sử dụng tool này"
+            module.message_box(message)
+            import sys
+            sys.exit()
 
         # Dao nguoc input
         from rpw.ui.forms import SelectFromList

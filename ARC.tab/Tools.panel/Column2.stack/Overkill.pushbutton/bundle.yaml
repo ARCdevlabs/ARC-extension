@@ -1,11 +1,9 @@
 title:
-  ru: Подчистить
-  fr_fr: Overkill
   en_us: Overkill
+  ja: Overkill
 tooltip:
-  ru: Удаляет линии, перекрывающиеся другими линиями (аналогично AutoCAD Подчистить).
-  fr_fr: Efface les lignes qui se superposent avec d'autres lignes (Similaire à la fonction Overkill dans Autocad)
   en_us: Deletes the lines overlapped by other lines (similar to AutoCAD Overkill)
+  ja: 他の線と重複している線を削除します（AutoCADのOVERKILL[重複オブジェクト削除]と同様）。
 author: >-
   tylerk
 

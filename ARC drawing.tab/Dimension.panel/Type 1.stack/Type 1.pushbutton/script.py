@@ -20,16 +20,14 @@ import traceback
 if module.AutodeskData():
 	uidoc = __revit__.ActiveUIDocument
 	doc = uidoc.Document
-
 from Autodesk.Revit.UI.Selection import ObjectType, Selection
 
-
-import width_of_text_of_dim_config
-
-source_width_of_text_of_dim = width_of_text_of_dim_config.load_configs()
-
-out_put = float(source_width_of_text_of_dim[0][0])
-
+try:
+    import width_of_text_of_dim_config
+    source_width_of_text_of_dim = width_of_text_of_dim_config.load_configs()
+    out_put = float(source_width_of_text_of_dim[0][0])
+except:
+    out_put = 1.8
 
 try:
     t0 = Transaction(doc,"Set Work Plane")
@@ -44,9 +42,9 @@ try:
     current_selection = module.get_selected_elements(uidoc,doc, False)
 
     if current_selection == False:
-        collector = FilteredElementCollector(uidoc.Document, current_view.Id).OfCategory(BuiltInCategory.OST_Dimensions).WhereElementIsNotElementType()
-        pick = uidoc.Selection.PickObject(ObjectType.Element)
-        element = doc.GetElement(pick.ElementId)
+        pick = module.pick_dimension_element(uidoc,doc)
+        element = pick
+        # element = doc.GetElement(pick.ElementId)
     else:
         element = current_selection[0]
 

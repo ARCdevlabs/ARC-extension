@@ -1,0 +1,8 @@
+title:   
+  en_us: Disallow Join
+  ja: 結合禁止
+tooltip:
+  en_us: Chọn tường cần Disallow Join => Click vào tool => Click vào điểm đầu hoặc điểm cuối của tường để Disallow join tường.
+  ja: 結合を禁止する必要のある壁を選択し、ツールをクリックしてから、壁の始点または終点をクリックして壁の結合を禁止します。
+authors:
+  - Nguyễn Thanh Sơn

@@ -1,6 +1,6 @@
 title:   
   en_us: On/Off
-  ja: 更新中...On/Off
+  ja: 表示/非表示
 layout:
   - Unhide đối tượng 3D bị EH trong view
   - Ẩn curtain wall
@@ -13,3 +13,4 @@ layout:
   - Toggle wallA
   - Ẩn Revit Link
   - Chỉ hiện link Cad
+  - Ẩn hiện đầu trục

@@ -19,12 +19,12 @@ if module.AutodeskData():
 from Autodesk.Revit.UI.Selection import ObjectType, Selection
 
 
-import width_of_text_of_dim_config
-
-source_width_of_text_of_dim = width_of_text_of_dim_config.load_configs()
-
-out_put = float(source_width_of_text_of_dim[0][0])
-
+try:
+    import width_of_text_of_dim_config
+    source_width_of_text_of_dim = width_of_text_of_dim_config.load_configs()
+    out_put = float(source_width_of_text_of_dim[0][0])
+except:
+    out_put = 1.8
 
 def move_dim_segment_ben_trong (list_sorted,segment, vector_cua_dim, kich_co_chu, khoang_cach_dim_toi_text, huong_phai = True):
     total_value = 0
@@ -112,8 +112,8 @@ try:
     t = Transaction(doc,"Modify Text's Position of Dimension")
     t.Start() 
     # Tat leader line
-    para_leader_line = module.get_builtin_parameter_by_name(element, DB.BuiltInParameter.DIM_LEADER)
-    para_leader_line.Set(int(0))
+    # para_leader_line = module.get_builtin_parameter_by_name(element, DB.BuiltInParameter.DIM_LEADER)
+    # para_leader_line.Set(int(0))
 
     seg_phai = []
     seg_trai = []

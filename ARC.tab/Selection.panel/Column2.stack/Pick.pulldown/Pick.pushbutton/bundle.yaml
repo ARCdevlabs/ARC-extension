@@ -1,6 +1,6 @@
 title:
   en_us: Pick
-  ja: ピック
+  ja: 選び出す
 tooltip:
   en_us: >-
     Click:
@@ -10,4 +10,8 @@ tooltip:
     Chọn các category ưa thích
 
   ja: >-
-    更新中...
+    クリック：
+    ツールをクリックすると、指定されたカテゴリの要素が選択されます。
+
+    シフトクリック：
+    お気に入りのカテゴリを選択します。

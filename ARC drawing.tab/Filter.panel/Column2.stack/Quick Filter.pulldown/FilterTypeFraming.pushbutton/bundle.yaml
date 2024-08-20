@@ -1,0 +1,9 @@
+title:   
+  en_us: Type Framing
+  ja: 梁タイプ
+tooltip: 
+  en_us: Tạo Filter cho type của dầm có trong model
+  ja: モデル内の梁タイプのフィルターを作成します。
+# highlight: new      # highlight as new or update
+authors:
+  - Nguyễn Thanh Sơn

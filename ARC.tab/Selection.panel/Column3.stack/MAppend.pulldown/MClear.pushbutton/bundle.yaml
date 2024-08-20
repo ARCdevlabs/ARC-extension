@@ -1,8 +1,8 @@
 title:
   en_us: MClear
-  ja: 更新中...
+  ja: MClear
 tooltip:
   en_us: >-
     Loại bỏ hết các đối tượng khỏi bộ nhớ (điều này không ảnh hưởng tới model)
   ja: >-
-    更新中...
+    メモリからすべての要素を削除します。（これはモデルには影響しません）

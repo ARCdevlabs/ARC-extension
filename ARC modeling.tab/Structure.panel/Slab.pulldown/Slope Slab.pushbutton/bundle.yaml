@@ -1,0 +1,8 @@
+title:   
+  en_us: Sàn dốc
+  ja: 勾配床入力
+tooltip:
+  en_us: Điều chỉnh độ dốc hàng loạt miếng sàn theo độ dốc của một miếng sàn có sẵn.
+  ja: 既存の勾配床に従って、複数の勾配床を一括調整します。
+authors:
+  - Nguyễn Thanh Sơn

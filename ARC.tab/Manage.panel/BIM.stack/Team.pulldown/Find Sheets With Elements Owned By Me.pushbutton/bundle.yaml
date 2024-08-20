@@ -1,8 +1,6 @@
 title:
-  ru: Найти листы с моими элементами
-  fr_fr: Trouver les feuilles avec des éléments en ma possession
   en_us: Find Sheets With Elements Owned By Me
+  ja: シートを検索
 tooltip:
-  ru: Показывает все листы содержащие элементы текущего пользователя. "Принадлежащие" элементы - это элементы созданные пользователем с момента последней синхронизации.
-  fr_fr: Répertorie toutes les feuilles contenant des éléments actuellement « possédés » par l'utilisateur. Les éléments « possédés » sont les éléments de l'utilisateur depuis la dernière synchronisation et la dernière version.
   en_us: Lists all sheets containing elements currently "owned" by the user. "Owned" elements are the elementsby the user since the last synchronize and release.
+  ja: 現在ユーザーが「所有」している要素を含むすべてのシートをリストします。「所有」要素とは、最後の同期とリリース以降、ユーザーによって所有されている要素です。

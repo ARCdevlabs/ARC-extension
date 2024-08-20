@@ -20,12 +20,12 @@ Id = []
 warningtext, warningele = [], []
 if isinstance(warning, list):
     for i in warning:
-	    warningtext.append(i.GetDescriptionText())
-	    warningele.append(i.GetFailingElements())
+        warningtext.append(i.GetDescriptionText())
+        warningele.append(i.GetFailingElements())
 else: 
     for i in warning:
-	    warningtext.append(i.GetDescriptionText())
-	    warningele.append(i.GetFailingElements())
+        warningtext.append(i.GetDescriptionText())
+        warningele.append(i.GetFailingElements())
 for a in warningele:
     for b in a:
         Id.append(b)
@@ -34,5 +34,7 @@ Currentview.IsolateElementsTemporary(ielements)
 t.Commit()
 
     
+
+
 
 

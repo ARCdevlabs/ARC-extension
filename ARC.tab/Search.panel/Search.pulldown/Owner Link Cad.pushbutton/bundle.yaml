@@ -1,10 +1,10 @@
 title:   
   en_us: Tìm View chứa Link Cad
-  ja: 更新中...
+  ja: CADリンクのビューを探す
 tooltip:
   en_us:
     ""
   ja:
-    ""
+    CADリンクを含むビューを探します。
 author: 
   - "Nguyễn Thanh Sơn"

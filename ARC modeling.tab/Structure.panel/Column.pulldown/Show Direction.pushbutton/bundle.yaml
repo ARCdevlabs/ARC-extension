@@ -1,0 +1,9 @@
+title:   
+  en_us: Hiển thị hướng cột
+  ja: 柱の方向を表示
+tooltip:
+  en_us: Chọn tất cả cột cần check hướng => chạy tool sẽ hiển thị hướng của cột bằng detail line. Tool chỉ hoạt động ở view mặt bằng.
+  ja: 方向をチェックしたいすべての柱を選択してからツールを実行すると、詳細線分で柱の方向が表示されます。ツールは平面ビューでのみ動作します。
+# highlight: new      # highlight as new or update
+authors:
+  - Nguyễn Thanh Sơn

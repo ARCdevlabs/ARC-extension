@@ -1,0 +1,9 @@
+title:   
+  en_us: Auto check hướng dầm
+  ja: 梁の方向をチェック
+tooltip:
+  en_us: Các dầm đang bị sai hướng sẽ được isolate ở view hiện tại. Hướng đúng là từ trái qua phải, từ dưới lên trên.
+  ja: 方向が間違っている梁は現在ビューで選択して表示されます。正しい方向は左から右、下から上です。
+# highlight: new      # highlight as new or update
+authors:
+  - Nguyễn Thanh Sơn

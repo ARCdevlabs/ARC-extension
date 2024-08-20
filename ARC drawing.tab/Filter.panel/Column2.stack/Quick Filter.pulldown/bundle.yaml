@@ -1,3 +1,6 @@
+title:
+  en_us: Quick Filter
+  ja: クイックフィルター
 layout:
   - CreateViewFilter
   - FilterHeightOffsetFloor

@@ -1,3 +1,6 @@
+title:
+  en_us: ReName
+  ja: 名前変更
 layout:
   - ReValue
-  - ReNumber
+
