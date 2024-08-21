@@ -184,6 +184,8 @@ if module.AutodeskData():
     select_filter = forms.select_view_filter()
     checked_items = select_filter
     if checked_items and len(checked_items) > 0:
+        from rpw.ui.forms import SelectFromList
+        value = SelectFromList('Override Fore ground or Back ground?', ['Fore ground','Back ground'])
         t = Transaction (doc, "Apply filter to view")
         t.Start()
         list_tem = []  
@@ -196,10 +198,16 @@ if module.AutodeskData():
             override_settings = OverrideGraphicSettings()
             index_i = checked_items.index(i_name)
             random_color = list_color[index_i]
-            override_settings.SetSurfaceBackgroundPatternColor(random_color)
-            override_settings.SetSurfaceBackgroundPatternId(GetFillPattern.Id)
-            override_settings.SetCutBackgroundPatternColor(random_color)
-            override_settings.SetCutBackgroundPatternId(GetFillPattern.Id)
+            if value == "Fore ground":
+                override_settings.SetSurfaceForegroundPatternColor(random_color)
+                override_settings.SetSurfaceForegroundPatternId(GetFillPattern.Id)
+                override_settings.SetCutForegroundPatternColor(random_color)
+                override_settings.SetCutForegroundPatternId(GetFillPattern.Id)
+            else:
+                override_settings.SetSurfaceBackgroundPatternColor(random_color)
+                override_settings.SetSurfaceBackgroundPatternId(GetFillPattern.Id)
+                override_settings.SetCutBackgroundPatternColor(random_color)
+                override_settings.SetCutBackgroundPatternId(GetFillPattern.Id)
             for wall in list_tem:
                 wall_name = Autodesk.Revit.DB.Element.Name.GetValue(wall)
                 if i_name == wall_name:

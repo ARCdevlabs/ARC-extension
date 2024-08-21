@@ -52,9 +52,11 @@ class DimensionSelectionFilter(Autodesk.Revit.UI.Selection.ISelectionFilter):
 
 # Hàm chọn một Dimension từ danh sách sử dụng ISelectionFilter
 def pick_dimension_element():
-    selected_dimension = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element, DimensionSelectionFilter(), "Chọn một Dimension")
-    return doc.GetElement(selected_dimension.ElementId) if selected_dimension else None
-
+    try:
+        selected_dimension = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element, DimensionSelectionFilter(), "Chọn một Dimension")
+        return doc.GetElement(selected_dimension.ElementId) if selected_dimension else None
+    except:
+        sys.exit()
 
 
 
@@ -63,8 +65,11 @@ def main():
     # first_id = first_pick.ElementId
     # first_ele = doc.GetElement(first_id)
     first_ele =  pick_dimension_element()
-    dim_1 = first_ele
-    line_dim_1 = dim_1.Curve
+    if first_ele:
+        dim_1 = first_ele
+        line_dim_1 = dim_1.Curve
+    else:
+        sys.exit()
     while True:
         try:
             # second_pick = uidoc.Selection.PickObject(ObjectType.Element)
