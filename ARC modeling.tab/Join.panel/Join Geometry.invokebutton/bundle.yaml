@@ -8,7 +8,7 @@ tooltip:
     更新中...
 author: 
   - "Phan Mẫu Cường"
-assembly: AutoJoinGeometry2
+assembly: AutoJoinGeometry
 command_class: Command_JoinGeometry
 
 
