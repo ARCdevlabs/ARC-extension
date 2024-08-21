@@ -6,4 +6,4 @@ tooltip:
   en_us: Tag cửa, cửa sổ mà không tag vào family nested của cửa.
   ja: ドアや窓にタグを付けますが、ドアのネストされたファミリにはタグを付けません。
 author: "Nguyễn Thanh Sơn"
-
+context: active-plan-view
