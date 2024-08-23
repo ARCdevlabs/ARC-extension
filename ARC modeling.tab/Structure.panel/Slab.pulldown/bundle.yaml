@@ -1,7 +1,12 @@
 title:
   en_us: Slab
   ja: スラブ
-
+layout:
+  - Pick Create Slab
+  - Slab at Center Beam
+  - Get Boundary
+  - Insulation
+  - Slope Slab
 
 
 
