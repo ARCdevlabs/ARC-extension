@@ -26,8 +26,6 @@ trans_group = TransactionGroup(doc, "Create slab")
 trans_group.Start()
 
 
-
-
 t1 = Transaction (doc, "Create slab (step 1)")
 t1.Start()
 levels = module.get_all_elements_of_OST(doc, BuiltInCategory.OST_Levels)
@@ -42,7 +40,6 @@ curve_array = Autodesk.Revit.DB.CurveArray()
 list_wall = []
 for i in beams:
     Cur = i.Location.Curve
-    Direction = Cur.Direction
     Startpoint = Cur.GetEndPoint(0)
     Endpoint = Cur.GetEndPoint(1)
     Midpoint0 = Cur.Evaluate(0.7, True)
