@@ -1,0 +1,15 @@
+title:   
+  en_us: Post Column
+  ja: 
+tooltip:
+  en_us:
+    nhập cột phụ theo dầm có sẵn
+  ja:
+    
+author: 
+  - "Phan Mẫu Cường"
+assembly: StubColumnByBeam
+command_class: StubColumn_Command
+
+
+
