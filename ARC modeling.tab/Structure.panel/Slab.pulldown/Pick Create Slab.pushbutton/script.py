@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 import string
 import importlib
+
+import Autodesk.Revit
+import Autodesk.Revit.DB
 ARC = string.ascii_lowercase
 begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
 module = importlib.import_module(str(begin))
@@ -19,7 +22,6 @@ if module.AutodeskData():
     def all_type_of_floor():
         all_type_of_floor = FilteredElementCollector(doc).OfClass(FloorType).OfCategory(BuiltInCategory.OST_Floors)
         return all_type_of_floor
-
 
     def get_all_element_of_category_in_view (idoc, view, builtin_category):
         # Đây là sample của OST_category
