@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RevitAddIns>
+	<AddIn Type="Application">
+		<Name>CreateAndUpdateType</Name>
+		<Assembly>C:\ProgramData\Autodesk\Revit\Addins\CreateTypesTool\CreateNewType.dll</Assembly>
+		<AddInId>52E4FB89-3178-4916-BF18-DB7D8BE03B32</AddInId>
+		<FullClassName>CMS.CreateNewType.CreateAndUpdateTypeApp</FullClassName>
+		<Text>Create Types</Text>
+		<VendorId>ADSK</VendorId>
+		<VendorDescription>www.autodesk.com</VendorDescription>
+	</AddIn>
+</RevitAddIns>
