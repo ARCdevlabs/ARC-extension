@@ -6,6 +6,7 @@ import xlsxwriter
 from pyrevit import forms
 from nances import message_box
 import sys
+import os
 
 uidoc = __revit__.ActiveUIDocument
 doc = uidoc.Document
@@ -65,7 +66,7 @@ else:
 		ele = doc.GetElement(i)
 		ten_type = ele.get_Parameter (BuiltInParameter.ALL_MODEL_TYPE_NAME).AsValueString()
 		type_name.append(ten_type)
-		print("Type Name", ten_type)
+		# print("Type Name", ten_type)
 
 		worksheet.write(row+1, col+1, "Type:    " + type_name[-1],bold_red)
 		row += 1
@@ -96,7 +97,7 @@ else:
 			wrap  = lay[j].LayerCapFlag
 
 			if ele is None:
-				print(str(j+1) +"." + str(fun)+"-"*10 +"<By Category>" + "-"*10 +str(do_day))
+				# print(str(j+1) +"." + str(fun)+"-"*10 +"<By Category>" + "-"*10 +str(do_day))
 				stt= (j+1)
 				if stt == struc+1:
 					material_structural_ex.append("")
@@ -115,7 +116,7 @@ else:
 				list_fun.append(str(fun))
 
 			else:
-				print(str(j+1) +"." + str(fun)+"-"*10 + ele.Name+ "-"*10 +str(do_day))
+				# print(str(j+1) +"." + str(fun)+"-"*10 + ele.Name+ "-"*10 +str(do_day))
 				stt= (j+1)
 				if stt == struc+1:
 					material_structural_ex.append("")
@@ -150,7 +151,7 @@ else:
 		worksheet.write(row+1, col+5, "", cell_format)
 		worksheet.write(row+1, col+6, "", cell_format)
 		row += 1
-		print("Layers Above Wrap")
+		# print("Layers Above Wrap")
 		Lop_finish_co = []
 		thick_co = []
 		list_fun_co=[]
@@ -165,7 +166,7 @@ else:
 			ele = doc.GetElement(ten_vl)
 			wrap  = lay[l].LayerCapFlag
 			if ele is None:
-				print(str(l+1) +"." + str(fun)+"-"*10 +"<By Category>" + "-"*10 +str(do_day))
+				# print(str(l+1) +"." + str(fun)+"-"*10 +"<By Category>" + "-"*10 +str(do_day))
 				stt= (l+1)
 				if stt == struc+1:
 					material_structural_co.append("☑")
@@ -217,7 +218,7 @@ else:
 		worksheet.write(row+1, col+5, "", cell_format)
 		worksheet.write(row+1, col+6, "", cell_format)
 		row += 1
-		print("Layers Below Wrap")
+		# print("Layers Below Wrap")
 		Lop_finish_in = []
 		thick_in = []
 		list_fun_in=[]
@@ -232,7 +233,7 @@ else:
 			fun = lay[k].Function
 			wrap  = lay[k].LayerCapFlag
 			if ele is None:
-				print(str(k+1) +"." + str(fun)+"-"*10 +"<By Category>" + "-"*10 +str(do_day))
+				# print(str(k+1) +"." + str(fun)+"-"*10 +"<By Category>" + "-"*10 +str(do_day))
 				stt= (k+1)
 				if stt == struc+1:
 					material_structural_in.append("")
@@ -250,7 +251,7 @@ else:
 				thick_in.append(do_day)
 				list_fun_in.append(str(fun))
 			else:
-				print(str(k+1) +"." + str(fun)+"-"*10 + ele.Name+ "-"*10 +str(do_day))
+				# print(str(k+1) +"." + str(fun)+"-"*10 + ele.Name+ "-"*10 +str(do_day))
 				stt= (k+1)
 				if stt == struc+1:
 					material_structural_in.append("")
@@ -277,3 +278,4 @@ else:
 			row += 1
 		row += 3
 	workbook.close()
+	os.startfile(file_path)
