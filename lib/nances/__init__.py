@@ -821,9 +821,6 @@ else:
 # config labs modules
 # -----------------------------------------------------------------------------
 from pyrevit import labs
-
-
-
 """ARC"""
 import Autodesk
 from Autodesk.Revit.DB import *
@@ -943,8 +940,6 @@ def joingeometry(idoc,List1, List2):
         Alert(Mes,title="Mes",header= "Report number Join and Switch joined")
     return 
 
-
-
 # So sanh license
 def machinecode(input):
     info = platform.processor()
@@ -997,7 +992,6 @@ def get_document_data_file(file_id, file_ext, add_cmd_name=False):
     # print (get_data_file(script_file_id, file_ext))
     return get_data_file(script_file_id, file_ext)
 
-
 '''Check lisence'''
 info = platform.processor()
 def checklicense():
@@ -1038,6 +1032,7 @@ def checklicense_for_info():
     except Exception:
         pass
     return check
+
 def AutodeskData():
     datafile = get_document_data_file("pyrevit", "dll")
     if datafile:
@@ -1071,20 +1066,22 @@ def machine_code():
 def all_elements_of_category(idoc, category):
 	return FilteredElementCollector(idoc).OfCategory(category).WhereElementIsNotElementType().ToElements()
 
-def override_graphics_in_view(idoc, view, list_element_id, color):
-    name_pattern = "<Solid fill>"
+def override_graphics_in_view(idoc, view, list_element_id, color, color_cut):
+    name_pattern = "<Solid fill> , <塗り潰し>"
     patterns = FilteredElementCollector(idoc).OfClass(FillPatternElement)
     for pattern in patterns:
-        if pattern.Name == name_pattern:
+        if pattern.Name in name_pattern:
             solidPatternId = pattern.Id
     override = OverrideGraphicSettings()
     for i in list_element_id:
         override.SetSurfaceForegroundPatternColor(color)
         override.SetSurfaceForegroundPatternId(solidPatternId)
-        override.SetCutForegroundPatternColor(color)
+        override.SetCutForegroundPatternColor(color_cut)
         override.SetCutForegroundPatternId(solidPatternId)
         view.SetElementOverrides(i, override)
     return
+    
+
 def Active_view(idoc):
     AcView= idoc.ActiveView
     return AcView
@@ -1626,8 +1623,6 @@ def set_work_plane_for_view(view):
         except:
             pass
     return True
-
-
 
 
 class DimensionSelectionFilter(Autodesk.Revit.UI.Selection.ISelectionFilter):

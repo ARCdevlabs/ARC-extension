@@ -17,17 +17,23 @@ from Autodesk.Revit.UI.Selection import ObjectType
 from nances import forms
 import traceback
 import sys
+import nances
 if module.AutodeskData():
     uidoc = __revit__.ActiveUIDocument
     doc = uidoc.Document
+    active_view = nances.Active_view(uidoc)
     output = script.get_output()
-    with forms.WarningBar(title="Pick 1 Element"):
-        try:
-            pick = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element)
-        except:
-            sys.exit(0)
-
-    element = doc.GetElement(pick.ElementId)
+    from rpw.ui.forms import SelectFromList
+    value = SelectFromList('Select Option', ['Active View','Pick Element'])
+    if value == "Active View":
+        element = active_view
+    else:
+        with forms.WarningBar(title="Pick 1 Element"):
+            try:
+                pick = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element)
+                element = doc.GetElement(pick.ElementId)
+            except:
+                sys.exit(0) 
     get_dependent_element = element.GetDependentElements(None)
     data = []  
     for tung_nhom_doi_tuong in get_dependent_element:

@@ -26,6 +26,7 @@ try:
         module.message_box(message)
         pick = uidoc.Selection.PickObject(ObjectType.Element)
         sample = doc.GetElement(pick.ElementId)
+        sample_offset = module.get_builtin_parameter_by_name(sample, DB.BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM)
         sample_type = sample.Symbol
         sample_level = doc.GetElement(sample.LevelId)
         sample_location = sample.Location.Point
@@ -33,6 +34,8 @@ try:
             loca = i.Location.Point
             translate = XYZ(-sample_location.X + loca.X,-sample_location.Y + loca.Y,-sample_location.Z + loca.Z)
             copy_element = Autodesk.Revit.DB.ElementTransformUtils.CopyElement(doc, pick.ElementId, translate)
+            copy_element_offset = module.get_builtin_parameter_by_name(doc.GetElement(copy_element[0]), DB.BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM)
+            copy_element_offset.Set(sample_offset.AsDouble())
         t.Commit()
 except:
     pass
