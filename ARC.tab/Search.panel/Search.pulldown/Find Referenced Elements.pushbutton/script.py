@@ -24,7 +24,7 @@ if module.AutodeskData():
     active_view = nances.Active_view(uidoc)
     output = script.get_output()
     from rpw.ui.forms import SelectFromList
-    value = SelectFromList('Select Option', ['Active View','Pick Element'])
+    value = SelectFromList('Select Option', ['Pick Element','Active View'])
     if value == "Active View":
         element = active_view
     else:
@@ -63,61 +63,3 @@ if module.AutodeskData():
                     columns=["Element Id", "Type", "Owner View Id", "View Name"],
                     formats=['', '','',''])
 
-
-
-# # from pyrevit import script
-
-# # output = script.get_output()
-
-# # data = [['结构', '结构', '结构结构', 80],
-# #         ['结构', '结构', '结构', 45],
-# #         ['row3', 'data', 'data', 45],
-# #         ['结构结构', 'data', '结构', 45]]
-
-# # # formats contains formatting strings for each column
-# # # last_line_style contains css styling code for the last line
-# # output.print_table(table_data=data,
-# #                    title="Example Table",
-# #                    columns=["Row Name", "Column 1", "Column 2", "Percentage"],
-# #                    formats=['', '', '', '{}%'],
-# #                    last_line_style='color:red;')
-
-
-
-
-
-# #pylint: disable=import-error,invalid-name
-# from pyrevit import script
-# from pyrevit import revit, DB
-
-
-# selection = revit.get_selection()
-# output = script.get_output()
-
-
-# if not selection.is_empty:
-#     print("Searching for all objects tied to ELEMENT ID: {0}..."
-#           .format(selection.first.Id))
-#     with revit.DryTransaction("Search for linked elements"):
-#         linked_elements_list = revit.doc.Delete(selection.first.Id)
-
-#     for elId in linked_elements_list:
-#         el = revit.doc.GetElement(elId)
-#         if el and elId in selection.element_ids:
-#             elid_link = output.linkify(elId)
-#             print("ID: {}\t\tTYPE: {} ( selected object )"
-#                   .format(elid_link, el.GetType().Name))
-#         elif el:
-#             elid_link = output.linkify(elId)
-#             if isinstance(el, DB.FamilyInstance):
-#                 family_name = revit.query.get_family_name(el)
-#                 symbol_name = revit.query.get_symbol_name(el)
-#                 print("ID: {}\t\tTYPE: {} ({}) --> {}:{}"
-#                       .format(elid_link,
-#                               el.GetType().Name,
-#                               el.Category.Name,
-#                               family_name,
-#                               symbol_name))
-#             else:
-#                 print("ID: {}\t\tTYPE: {}"
-#                       .format(elid_link, el.GetType().Name))

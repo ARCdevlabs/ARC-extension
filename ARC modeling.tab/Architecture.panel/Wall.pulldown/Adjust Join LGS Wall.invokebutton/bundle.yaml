@@ -1,0 +1,10 @@
+title:   
+  en_us: Chỉnh Join Tường LGS
+  ja: Adjust Join LGS Wall
+tooltip:
+  en_us: Pick một mặt của tường đối diện sau đó pick tường muốn chỉnh join.
+assembly: ARC
+command_class: JoinLGSWall
+
+
+
