@@ -118,26 +118,31 @@ if module.AutodeskData():
                         # SET OFFSET
                         param = slab.get_Parameter(BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM)
                         param.Set(offset)
+                        # structure = slab.get_Parameter(BuiltInParameter.FLOOR_PARAM_IS_STRUCTURAL).AsInteger()
+                        structure = module.get_builtin_parameter_by_name(slab, DB.BuiltInParameter.FLOOR_PARAM_IS_STRUCTURAL)
+                        structure.Set(1)
                 return slabs
 
 
             # t3 = Transaction (doc, "Create slab (done)")
             # t3.Start()
+            list_type_floors = module.all_type_of_class_and_OST(doc, FloorType, BuiltInCategory.OST_Floors)
+            for floor in list_type_floors:
+                type_floor = floor
+            type_floor_id = type_floor.Id
+            height_offset = 0
+            level_id = room_level.Id
             with revit.Transaction("Tạo sàn và xóa room separator và xóa room", swallow_errors=True):
-                list_type_floors = module.all_type_of_class_and_OST(doc, FloorType, BuiltInCategory.OST_Floors)
-                for floor in list_type_floors:
-                    type_floor = floor
-                type_floor_id = type_floor.Id
-                height_offset = 0
-                level_id = room_level.Id
-                list_new_slabs = create_slabs (list_rooms_flat, type_floor_id, height_offset, level_id)
-                for delete_room_line in room_separation:
-                    Autodesk.Revit.DB.Document.Delete(doc,delete_room_line.Id)
-                # for delete_wall in list_wall:
-                #     Autodesk.Revit.DB.Document.Delete(doc,delete_wall.Id)
-                for delete_room in list_rooms_flat:
-                    Autodesk.Revit.DB.Document.Delete(doc,delete_room.Id)
-
+                try:
+                    list_new_slabs = create_slabs (list_rooms_flat, type_floor_id, height_offset, level_id)
+                    for delete_room_line in room_separation:
+                        Autodesk.Revit.DB.Document.Delete(doc,delete_room_line.Id)
+                    # for delete_wall in list_wall:
+                    #     Autodesk.Revit.DB.Document.Delete(doc,delete_wall.Id)
+                    for delete_room in list_rooms_flat:
+                        Autodesk.Revit.DB.Document.Delete(doc,delete_room.Id)
+                except:
+                    pass
             trans_group.Assimilate()
         except:
             module.message_box("Please Select Only Beam")
