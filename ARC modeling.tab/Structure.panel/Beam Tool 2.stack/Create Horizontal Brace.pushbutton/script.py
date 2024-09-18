@@ -179,7 +179,7 @@ if module.AutodeskData():
                                     for boundary_segment in area_boundary:
                                         curve = boundary_segment.GetCurve()
                                         direction_curve = curve.Direction
-                                        direction_all_bounding_line.append(str(abs(direction_curve.X)) + str(abs(direction_curve.Y)) + str(abs(direction_curve.Z)))
+                                        direction_all_bounding_line.append(  str (round( abs(direction_curve.X),1)) + str (round( abs(direction_curve.Y),1)) + str (round( abs(direction_curve.Z),1))  )
                                         all_end_point.append(curve.GetEndPoint(0))
                                         area_curve_loop.Append(curve)
                                     curve_loop_list.Add(area_curve_loop)
@@ -188,7 +188,8 @@ if module.AutodeskData():
                                 for i in range(len(corners)):
                                     for j in range(i + 1, len(corners)):
                                         boun_line =  Autodesk.Revit.DB.Line.CreateBound(corners[i],corners[j])
-                                        string_of_direction = str(abs(boun_line.Direction.X)) + str(abs(boun_line.Direction.Y)) + str(abs(boun_line.Direction.Z))
+                                        string_of_direction = str (round( abs(boun_line.Direction.X),1)) +str (round( abs(boun_line.Direction.Y),1)) + str (round( abs(boun_line.Direction.Z),1))
+                                        # print string_of_direction, direction_all_bounding_line
                                         if string_of_direction not in direction_all_bounding_line:
                                             # detail_line = idoc.Create.NewDetailCurve(active_view,boun_line)                       
                                             new_beam = create_beam(idoc, boun_line, type_beam, level, height)   

@@ -1646,3 +1646,16 @@ def pick_dimension_elements(iuidoc,idoc):
         list_dimension.append(idoc.GetElement(tung_dimension.ElementId) if tung_dimension else None)
     return list_dimension
 
+class FramingSelectionFilter(Autodesk.Revit.UI.Selection.ISelectionFilter):
+    def AllowElement(self, element):
+        return isinstance(element, FamilyInstance) and element.Category.Name == "Structural Framing"
+
+    def AllowReference(self, reference, point):
+        # Không sử dụng AllowReference trong trường hợp này
+        return False
+    
+# Hàm chọn một Dimension từ danh sách sử dụng ISelectionFilter
+def pick_framing_elements(iuidoc):
+    selected_framing = iuidoc.Selection.PickObjects(Autodesk.Revit.UI.Selection.ObjectType.Element, FramingSelectionFilter(), "Select Framing")
+    return selected_framing if selected_framing else None
+
