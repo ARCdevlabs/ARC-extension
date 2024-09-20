@@ -6,11 +6,35 @@ clr.AddReference('RevitAPI')
 from Autodesk.Revit.DB import *
 clr.AddReference("System.Windows.Forms")
 from pyrevit.forms import WPFWindow
+from System.Windows import Window, WindowStartupLocation
+from System.Windows.Controls import TextBlock, Button, StackPanel
+from System.Windows import Thickness, SizeToContent
 
 
 uidoc = __revit__.ActiveUIDocument
 doc = uidoc.Document
+class CustomMessageBox(Window):
+	def __init__(self, message):
+		self.Title = "Thông Báo"
+		self.SizeToContent = SizeToContent.WidthAndHeight  # Tự động điều chỉnh kích thước
+		self.WindowStartupLocation = WindowStartupLocation.CenterScreen
 
+		stack_panel = StackPanel()
+		self.Content = stack_panel
+
+		text_block = TextBlock()
+		text_block.Text = message
+		text_block.Margin = Thickness(10)
+		stack_panel.Children.Add(text_block)
+
+		button = Button()
+		button.Content = "CLOSE"
+		button.Margin = Thickness(10)
+		button.Click += self.close_window
+		stack_panel.Children.Add(button)
+
+	def close_window(self, sender, e):
+		self.Close()
 class ModalForm(WPFWindow):
 	def __init__(self, xaml_file_name):
 		WPFWindow.__init__(self, xaml_file_name)
@@ -112,17 +136,18 @@ class ModalForm(WPFWindow):
 		sorted_list_sheet = self.check_sheet_number(self.list_sheet, prefix, suffix)
 		zfill_length = len(kieu_seri)
 		count = so_bat_dau
-		print("-"*80)
-		print("KẾT QUẢ VAR")
+		message_lines = ["KẾT QUẢ VAR", "Kiểm tra thứ tự sắp xếp của sheet number cũ, nếu thứ tự của sheet number cũ đúng thì số thứ tự sẽ duỗi đúng !","-" * 123 ]
 		for item in sorted_list_sheet:
 			if isinstance(item, tuple):
 				sheet_number = item[0]  # Lấy sheet_number từ tuple
 			else:
 				sheet_number = item  # Nếu là chuỗi
 			sheet_number_new = str(ky_tu_ban_ve + str(count).zfill(zfill_length) + Hau_to)
-			print("Sheet number mới: {} ________ Sheet number cũ: {}".format(sheet_number_new, sheet_number))
+			message_lines.append("Sheet number mới: {} ________ Sheet number cũ: {}".format(sheet_number_new, sheet_number))
 			count += 1
-
+		message = "\n".join(message_lines)
+		custom_message_box = CustomMessageBox(message)
+		custom_message_box.ShowDialog()
 
 	def on_apply_to_view_click(self, sender, e):
 		t = Transaction(doc, 'Đánh sheet number')
@@ -133,7 +158,7 @@ class ModalForm(WPFWindow):
 		zfill_length = len(kieu_seri)
 		count = so_bat_dau
 		sheet_set =[]
-		print("="*80)
+		message_lines = ["ĐÃ ÁP DỤNG SHEET NUMBER MỚI VÀO REVIT !","-" * 52 ]
 		for item in sorted_list_sheet:
 			if isinstance(item, tuple):
 				sheet_number = item[0]  # Lấy sheet_number từ tuple
@@ -141,7 +166,7 @@ class ModalForm(WPFWindow):
 				sheet_number = item  # Nếu là chuỗi
 			sheet_number_new = str(ky_tu_ban_ve + str(count).zfill(zfill_length) + Hau_to)
 			sheet_number_new_with_z = str(ky_tu_ban_ve + str(count).zfill(zfill_length) + Hau_to+"z")
-			print("Sheet number mới: {} ________ Sheet number cũ: {}".format(sheet_number_new, sheet_number))
+			message_lines.append("Sheet number mới: {} ________ Sheet number cũ: {}".format(sheet_number_new, sheet_number))
 			count += 1
 			for i in self.selected_elements1:
 				ele = doc.GetElement(i)
@@ -155,9 +180,13 @@ class ModalForm(WPFWindow):
 				ele.LookupParameter("Sheet Number").Set(new_sheet_number)
 			else:
 				print("Lỗi sheets không có z")
-		print("ĐÃ ÁP DỤNG SHEET NUMBER MỚI VÀO REVIT")
+				break
 		t.Commit()
 		self.Close()
+		message = "\n".join(message_lines)
+		custom_message_box = CustomMessageBox(message)
+		custom_message_box.ShowDialog()
 if __name__ == "__main__":
 	form = ModalForm('DuoiSheetNumber.xaml')
 	form.ShowDialog()
+
