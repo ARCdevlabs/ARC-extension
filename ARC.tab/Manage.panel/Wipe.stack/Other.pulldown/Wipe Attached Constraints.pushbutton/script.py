@@ -41,6 +41,12 @@ def list_attached_constraints(src_element, constraints):
                               elmnt.Category.Name,
                               elid))
 
+all_constraints = DB.FilteredElementCollector(revit.doc)\
+                   .OfCategory(DB.BuiltInCategory.OST_Constraints)\
+                   .WhereElementIsNotElementType()
+
+def remove_constrants_selected_element(elements, constraints):
+    for 
 
 # collect and report the attached_constraints
 for selected_element in revit.get_selection():
@@ -59,3 +65,5 @@ if attached_constraints:
                 continue
 else:
     forms.alert("No attached_constraints found.")
+
+
