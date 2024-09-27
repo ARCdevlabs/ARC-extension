@@ -1151,7 +1151,6 @@ def get_all_elements_of_OST_in_current_view(idoc, BuiltInCategory_OST):
     collector = FilteredElementCollector(idoc, idoc.ActiveView.Id).OfCategory(BuiltInCategory_OST).WhereElementIsNotElementType().ToElements()
     return collector
 
-
 def active_symbol(family_symbol):
     try:
         if family_symbol.IsActive == False:
