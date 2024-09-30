@@ -17,6 +17,7 @@ from Autodesk.Revit.DB import *
 import Autodesk.Revit.DB as DB
 from System.Collections.Generic import *
 import traceback
+import movetextdim
 if module.AutodeskData():
 	uidoc = __revit__.ActiveUIDocument
 	doc = uidoc.Document
@@ -60,12 +61,12 @@ try:
     seg_trai = []
     none_segment = []
 
+    view_direction = current_view.ViewDirection
     dim_line = element.Curve
     vector_of_dim = dim_line.Direction
-    if round(float(vector_of_dim.Z),3):
-        vector = module.chuan_hoa_vector_mat_bang(vector_of_dim)
-    else:
-        vector = module.chuan_hoa_vector_mat_cat(vector_of_dim)
+
+    vector_da_chuan_hoa = movetextdim.chuan_hoa_vector(vector_of_dim, current_view)
+
     kich_thuoc_moi_chu = out_put
 
     kick_thuoc_tu_dim_toi_text = 1
@@ -79,18 +80,14 @@ try:
             text_ori = seg.Origin
             value = (seg.Value) * 304.8 #Don vi dang la mm
             kich_co = module.xac_dinh_kich_co_chu(current_view, value, kich_thuoc_moi_chu)
-            if round(float(vector_of_dim.Z),3) == 0:
-                xoay_vector_90_do = XYZ(-vector.Y, vector.X, vector.Z)
-                xac_dinh_phia = module.orientation_mat_bang(text_ori,return_point,xoay_vector_90_do)
-            else:
-                xoay_vector_90_do = XYZ(vector.X, vector.Z, -vector.Y)
-                xac_dinh_phia = module.orientation_mat_cat(text_ori,return_point,xoay_vector_90_do)
-            # print xac_dinh_phia
-            if xac_dinh_phia == "Bên phải":
+            xoay_vector_90_do = movetextdim.rotate_vector_around_axis(vector_da_chuan_hoa, view_direction, 90)
+
+            phia = movetextdim.xac_dinh_phia(text_ori, return_point, xoay_vector_90_do,view_direction)
+            if phia == "Bên phải":
                 seg_phai.append(seg)
-            if xac_dinh_phia == "Bên trái":
-                seg_trai.append(seg)
-        # print (len(seg_phai), len(seg_trai))
+            if phia == "Bên trái":
+                seg_trai.append(seg)            
+
         if round(float(vector_of_dim.Z),3) == 0:
             sorted_phai =  module.sort_seg_by_distance_mat_bang(return_point,seg_phai) #Sort segment xa nhất tới gần nhất tính tình point đã click
             sorted_trai =  module.sort_seg_by_distance_mat_bang(return_point,seg_trai) #Sort segment xa nhất tới gần nhất tính tình point đã click
@@ -100,31 +97,25 @@ try:
         if len(sorted_phai) > 0:
             value_phai_0 = (sorted_phai[0].Value) * 304.8 
             kich_co_phai_0 = module.xac_dinh_kich_co_chu(current_view, value_phai_0, kich_thuoc_moi_chu)
-            module.move_segment_xa_nhat(sorted_phai, vector, kich_co_phai_0,quy_doi_theo_ty_le, huong_phai = True)
+            module.move_segment_xa_nhat(sorted_phai, vector_da_chuan_hoa, kich_co_phai_0,quy_doi_theo_ty_le, huong_phai = True)
         if len(sorted_trai) > 0:
             value_trai_0 = (sorted_trai[0].Value) * 304.8 
             kich_co_trai_0 = module.xac_dinh_kich_co_chu(current_view, value_trai_0, kich_thuoc_moi_chu)
-            module.move_segment_xa_nhat(sorted_trai, vector,kich_co_trai_0,quy_doi_theo_ty_le, huong_phai = False)
+            module.move_segment_xa_nhat(sorted_trai, vector_da_chuan_hoa,kich_co_trai_0,quy_doi_theo_ty_le, huong_phai = False)
     else:
         seg = element
         none_segment.append(seg)
         text_ori = seg.Origin
         value = (seg.Value) * 304.8 #Don vi dang la mm
         kich_co = module.xac_dinh_kich_co_chu(current_view, value, kich_thuoc_moi_chu)
-        if round(float(vector_of_dim.Z),3) == 0:
-            xoay_vector_90_do = XYZ(-vector.Y, vector.X, vector.Z)
-            xac_dinh_phia = module.orientation_mat_bang(text_ori,return_point,xoay_vector_90_do)
+        xoay_vector_90_do = movetextdim.rotate_vector_around_axis(vector_da_chuan_hoa, view_direction, 90)
+        phia = movetextdim.xac_dinh_phia(text_ori, return_point, xoay_vector_90_do,view_direction)
+        if phia == "Bên trái":
+            module.move_segment_xa_nhat(none_segment, vector_da_chuan_hoa, kich_co,quy_doi_theo_ty_le, huong_phai = True)
         else:
-            xoay_vector_90_do = XYZ(vector.X, vector.Z, -vector.Y)
-            xac_dinh_phia = module.orientation_mat_cat(text_ori,return_point,xoay_vector_90_do)
-        # print xac_dinh_phia
-        if xac_dinh_phia == "Bên trái":
-            module.move_segment_xa_nhat(none_segment, vector, kich_co,quy_doi_theo_ty_le, huong_phai = True)
-        else:
-            module.move_segment_xa_nhat(none_segment, vector,kich_co,quy_doi_theo_ty_le, huong_phai = False)
+            module.move_segment_xa_nhat(none_segment, vector_da_chuan_hoa,kich_co,quy_doi_theo_ty_le, huong_phai = False)
     t.Commit()
 except:
-    # print(traceback.format_exc())
     pass
 
 
