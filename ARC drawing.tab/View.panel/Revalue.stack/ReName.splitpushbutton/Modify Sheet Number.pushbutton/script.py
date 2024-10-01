@@ -5,36 +5,40 @@ import re
 clr.AddReference('RevitAPI')
 from Autodesk.Revit.DB import *
 clr.AddReference("System.Windows.Forms")
+from System.Windows.Forms import MessageBox
 from pyrevit.forms import WPFWindow
-from System.Windows import Window, WindowStartupLocation
-from System.Windows.Controls import TextBlock, Button, StackPanel
-from System.Windows import Thickness, SizeToContent
+from System.Windows import Window, SizeToContent, WindowStartupLocation, Thickness
+from System.Windows.Controls import StackPanel, TextBlock, Button, ScrollViewer
 
 
 uidoc = __revit__.ActiveUIDocument
 doc = uidoc.Document
 class CustomMessageBox(Window):
-	def __init__(self, message):
-		self.Title = "Thông Báo"
-		self.SizeToContent = SizeToContent.WidthAndHeight  # Tự động điều chỉnh kích thước
-		self.WindowStartupLocation = WindowStartupLocation.CenterScreen
+    def __init__(self, message):
+        self.Title = "Thông Báo"
+        self.SizeToContent = SizeToContent.WidthAndHeight  # Tự động điều chỉnh kích thước
+        self.WindowStartupLocation = WindowStartupLocation.CenterScreen
 
-		stack_panel = StackPanel()
-		self.Content = stack_panel
+        scroll_viewer = ScrollViewer()
+        scroll_viewer.MaxHeight = 700  # Đặt chiều cao tối đa cho ScrollViewer
 
-		text_block = TextBlock()
-		text_block.Text = message
-		text_block.Margin = Thickness(10)
-		stack_panel.Children.Add(text_block)
+        stack_panel = StackPanel()
+        scroll_viewer.Content = stack_panel  # Đặt StackPanel vào ScrollViewer
+        self.Content = scroll_viewer  # Thay đổi nội dung của cửa sổ thành ScrollViewer
 
-		button = Button()
-		button.Content = "CLOSE"
-		button.Margin = Thickness(10)
-		button.Click += self.close_window
-		stack_panel.Children.Add(button)
+        text_block = TextBlock()
+        text_block.Text = message
+        text_block.Margin = Thickness(10)
+        stack_panel.Children.Add(text_block)
 
-	def close_window(self, sender, e):
-		self.Close()
+        button = Button()
+        button.Content = "CLOSE"
+        button.Margin = Thickness(10)
+        button.Click += self.close_window
+        stack_panel.Children.Add(button)
+
+    def close_window(self, sender, e):
+        self.Close()
 class ModalForm(WPFWindow):
 	def __init__(self, xaml_file_name):
 		WPFWindow.__init__(self, xaml_file_name)
@@ -89,6 +93,7 @@ class ModalForm(WPFWindow):
 					except ValueError:
 						continue  # Bỏ qua nếu không thể chuyển đổi
 
+
 			# Sắp xếp theo giá trị số
 			sorted_list_sheet = sorted(order_numbers, key=lambda x: x[1])
 
@@ -134,16 +139,19 @@ class ModalForm(WPFWindow):
 		if not self.list_sheet:
 			self.select_elements()
 		sorted_list_sheet = self.check_sheet_number(self.list_sheet, prefix, suffix)
+		if not sorted_list_sheet:
+			MessageBox.Show("Ký tự Prefix & Suffix của sheet number cũ không hợp lý, Vui lòng kiểm tra lại!")
+			return
 		zfill_length = len(kieu_seri)
 		count = so_bat_dau
-		message_lines = ["KẾT QUẢ VAR", "Kiểm tra thứ tự sắp xếp của sheet number cũ, nếu thứ tự của sheet number cũ đúng thì số thứ tự sẽ duỗi đúng !","-" * 123 ]
+		message_lines = ["KẾT QUẢ VAR", "Kiểm tra thứ tự sắp xếp của sheet number cũ", "Nếu thứ tự của sheet number cũ đúng thì số thứ tự sẽ duỗi đúng !","-" * 75 ]
 		for item in sorted_list_sheet:
 			if isinstance(item, tuple):
 				sheet_number = item[0]  # Lấy sheet_number từ tuple
 			else:
 				sheet_number = item  # Nếu là chuỗi
 			sheet_number_new = str(ky_tu_ban_ve + str(count).zfill(zfill_length) + Hau_to)
-			message_lines.append("Sheet number mới: {} ________ Sheet number cũ: {}".format(sheet_number_new, sheet_number))
+			message_lines.append("Sheet number cũ: {} -------> Sheet number mới: {}".format(sheet_number, sheet_number_new))
 			count += 1
 		message = "\n".join(message_lines)
 		custom_message_box = CustomMessageBox(message)
@@ -155,6 +163,10 @@ class ModalForm(WPFWindow):
 		ky_tu_ban_ve, so_bat_dau, Hau_to, kieu_seri, prefix, suffix = self.value_input()
 		self.select_elements()
 		sorted_list_sheet = self.check_sheet_number(self.list_sheet, prefix, suffix)
+		if not sorted_list_sheet:
+			MessageBox.Show("Ký tự Prefix & Suffix của sheet number cũ không hợp lý, Vui lòng kiểm tra lại!")
+			t.RollBack()  # Quay lại giao dịch nếu không hợp lệ
+			return
 		zfill_length = len(kieu_seri)
 		count = so_bat_dau
 		sheet_set =[]
@@ -165,8 +177,8 @@ class ModalForm(WPFWindow):
 			else:
 				sheet_number = item  # Nếu là chuỗi
 			sheet_number_new = str(ky_tu_ban_ve + str(count).zfill(zfill_length) + Hau_to)
-			sheet_number_new_with_z = str(ky_tu_ban_ve + str(count).zfill(zfill_length) + Hau_to+"z")
-			message_lines.append("Sheet number mới: {} ________ Sheet number cũ: {}".format(sheet_number_new, sheet_number))
+			sheet_number_new_with_z = str(ky_tu_ban_ve + str(count).zfill(zfill_length) + Hau_to +"z")
+			message_lines.append("Sheet number cũ: {} -------> Sheet number mới: {}".format(sheet_number, sheet_number_new))
 			count += 1
 			for i in self.selected_elements1:
 				ele = doc.GetElement(i)
@@ -186,6 +198,7 @@ class ModalForm(WPFWindow):
 		message = "\n".join(message_lines)
 		custom_message_box = CustomMessageBox(message)
 		custom_message_box.ShowDialog()
+	
 if __name__ == "__main__":
 	form = ModalForm('DuoiSheetNumber.xaml')
 	form.ShowDialog()

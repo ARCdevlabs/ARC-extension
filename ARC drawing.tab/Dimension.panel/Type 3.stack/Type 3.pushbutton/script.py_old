@@ -26,44 +26,6 @@ try:
 except:
     out_put = 1.8
 
-import math
-
-def normalize(vector):
-    """Hàm để chuẩn hóa một vector."""
-    norm = math.sqrt(vector[0] ** 2 + vector[1] ** 2 + vector[2] ** 2)
-    return XYZ(vector[0] / norm, vector[1] / norm, vector[2] / norm)
-
-def rotate_vector_around_axis(vector, axis, angle_degrees):
-    """Hàm để xoay một vector quanh một trục cho trước một góc nhất định."""
-    # Chuyển đổi góc từ độ sang radian
-    angle_radians = math.radians(angle_degrees)
-    
-    # Chuẩn hóa trục xoay
-    axis = normalize(axis)
-    
-    # Các thành phần của trục xoay
-    u = axis.X
-    v = axis.Y
-    w = axis.Z
-    
-    # Các thành phần của vector gốc
-    x = vector.X
-    y = vector.Y
-    z = vector.Z
-    
-    # Công thức xoay vector quanh trục (rotation matrix)
-    cos_angle = math.cos(angle_radians)
-    sin_angle = math.sin(angle_radians)
-    one_minus_cos = 1 - cos_angle
-    
-    # Ma trận xoay
-    rotated_x = (u*u*one_minus_cos + cos_angle)*x + (u*v*one_minus_cos - w*sin_angle)*y + (u*w*one_minus_cos + v*sin_angle)*z
-    rotated_y = (v*u*one_minus_cos + w*sin_angle)*x + (v*v*one_minus_cos + cos_angle)*y + (v*w*one_minus_cos - u*sin_angle)*z
-    rotated_z = (w*u*one_minus_cos - v*sin_angle)*x + (w*v*one_minus_cos + u*sin_angle)*y + (w*w*one_minus_cos + cos_angle)*z
-    
-    return XYZ(rotated_x, rotated_y, rotated_z)
-
-
 def move_dim_segment_ben_trong (list_sorted,segment, vector_cua_dim, kich_co_chu, khoang_cach_dim_toi_text, huong_phai = True):
     total_value = 0
     for i in list_sorted:
@@ -101,10 +63,10 @@ def move_dim_segment_ben_ngoai (segment, kich_co_chu_1, vector_cua_dim, kich_co_
     return 
 
 def move_dim_segment_ben_trong_len_tren (view, segment,kich_co_chu_trong, kich_co_chu_ngoai, vi_tri_text_ben_ngoai, vector_cua_dim , vector_vuong_goc, text_size, khoang_cach_dim_toi_text, huong_phai = True):
-    __view_direction = view.ViewDirection
+    view_direction = view.ViewDirection
 
-    # if __view_direction.Z == 0:
-        # vector_vuong_goc = XYZ(0,0,1)
+    if view_direction.Z == 0:
+        vector_vuong_goc = XYZ(0,0,1)
     cong_thuc_move_len_tren = khoang_cach_dim_toi_text + text_size
     cong_thuc_move_qua_phai = (kich_co_chu_trong - kich_co_chu_ngoai)/304.8/2
 
@@ -156,7 +118,6 @@ try:
     seg_phai = []
     seg_trai = []
     none_segment = []
-    view_direction = current_view.ViewDirection
 
     dim_line = element.Curve
     vector_of_dim = dim_line.Direction
@@ -180,12 +141,10 @@ try:
             value = (seg.Value) * 304.8 #Don vi dang la mm
             kich_co = module.xac_dinh_kich_co_chu(current_view, value, kich_thuoc_moi_chu)
             if round(float(vector_of_dim.Z),3) == 0:
-                # xoay_vector_90_do = XYZ(- vector.Y, vector.X, vector.Z)
-                xoay_vector_90_do = rotate_vector_around_axis(vector, view_direction, 90)
+                xoay_vector_90_do = XYZ(- vector.Y, vector.X, vector.Z)
                 xac_dinh_phia = module.orientation_mat_bang(text_ori,return_point,xoay_vector_90_do)
             else:
-                # xoay_vector_90_do = XYZ(vector.X, vector.Z, -vector.Y)
-                xoay_vector_90_do = rotate_vector_around_axis(vector, view_direction, 90)
+                xoay_vector_90_do = XYZ(vector.X, vector.Z, -vector.Y)
                 xac_dinh_phia = module.orientation_mat_cat(text_ori,return_point,xoay_vector_90_do)
             # print xac_dinh_phia
             if xac_dinh_phia == "Bên phải":
@@ -245,7 +204,7 @@ try:
 
     t.Commit()
 except:
-    print(traceback.format_exc())
+    # print(traceback.format_exc())
     pass
 
 

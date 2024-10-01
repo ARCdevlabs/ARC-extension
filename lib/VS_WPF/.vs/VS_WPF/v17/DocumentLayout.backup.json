@@ -1,0 +1,35 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\ADMIN\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\lib\\VS_WPF\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{233D9364-71B7-473F-879F-ADF9A66DB8C4}|VS_WPF\\VS_WPF.csproj|c:\\users\\admin\\appdata\\roaming\\pyrevit\\extensions\\arc-dev.extension\\arc-dev.tab\\learning wpf.panel\\wpf.stack\\test xaml_frompyrevit.pushbutton\\ui_test.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ui_test.xaml",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\AppData\\Roaming\\pyRevit\\Extensions\\ARC-dev.extension\\ARC-dev.tab\\Learning WPF.panel\\WPF.stack\\Test XAML_frompyrevit.pushbutton\\ui_test.xaml",
+              "RelativeDocumentMoniker": "..\\..\\..\\ARC-dev.extension\\ARC-dev.tab\\Learning WPF.panel\\WPF.stack\\Test XAML_frompyrevit.pushbutton\\ui_test.xaml",
+              "ToolTip": "C:\\Users\\ADMIN\\AppData\\Roaming\\pyRevit\\Extensions\\ARC-dev.extension\\ARC-dev.tab\\Learning WPF.panel\\WPF.stack\\Test XAML_frompyrevit.pushbutton\\ui_test.xaml",
+              "RelativeToolTip": "..\\..\\..\\ARC-dev.extension\\ARC-dev.tab\\Learning WPF.panel\\WPF.stack\\Test XAML_frompyrevit.pushbutton\\ui_test.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-09-22T03:17:10.991Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
