@@ -15,14 +15,23 @@ from rpw.ui.forms import Alert
 import collections
 #Get UIDocument
 uidoc = __revit__.ActiveUIDocument
-import nances
 #Get Document 
 doc = uidoc.Document
 Currentview = doc.ActiveView
-Ele = nances.get_elements(uidoc,doc, 'select tags', noti = False)
+Curve = []
+def get_selected_elements():
+    selection = uidoc.Selection
+    selection_ids = selection.GetElementIds()
+    elements = []
+    for element_id in selection_ids:
+        elements.append(doc.GetElement(element_id))
+    return elements
+Ele = get_selected_elements()
 ListDuplicate = []
 select = uidoc.Selection
 NewList = []
+t = Transaction (doc, "Check double tag")
+t.Start()
 try:
     for i in Ele:
         if i.Category.Name != "Room Tags":
@@ -37,5 +46,6 @@ try:
     select.SetElementIds(Icollection)        
 except:
     pass
+t.Commit()
 
 
