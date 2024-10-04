@@ -33,7 +33,6 @@ if module.AutodeskData():
 
     ele = module.get_elements(uidoc,doc, "Select all floors need to make slope", noti = False)
 
-    
     with forms.WarningBar(title="Select slope floor"):
         try:
             pick = uidoc.Selection.PickObject(ObjectType.Element)
@@ -92,55 +91,59 @@ if module.AutodeskData():
         trans_group = TransactionGroup(doc, "Create slope floor")
         trans_group.Start()
         list_new_slab =[]
+        try:
+            with revit.Transaction("Tạm sửa vị trí mũi tên", swallow_errors=True):
+                for tung_san in ele:
+                    try:
+                        '''Setting mũi tên dốc theo một curve có sẵn'''
+                        slope_arrow_moi = get_slope_arrow (doc,tung_san)
 
-        with revit.Transaction("Tạm sửa vị trí mũi tên", swallow_errors=True):
-            for tung_san in ele:
+                        offset_line_slope = line_slope.CreateOffset(1,XYZ(0,0,1))
 
-                '''Setting mũi tên dốc theo một curve có sẵn'''
-                slope_arrow_moi = get_slope_arrow (doc,tung_san)
+                        slope_arrow_moi.SetGeometryCurve(offset_line_slope,True)
+                    except:
+                        pass
+            with revit.Transaction("Tạo sàn dốc", swallow_errors=True):
+                for tung_san in ele:
+                    try:
+                        '''Setting mũi tên dốc theo một curve có sẵn'''
+                        slope_arrow_moi = get_slope_arrow (doc,tung_san)
 
-                offset_line_slope = line_slope.CreateOffset(1,XYZ(0,0,1))
+                        slope_arrow_moi.SetGeometryCurve(line_slope,True)
 
-                slope_arrow_moi.SetGeometryCurve(offset_line_slope,True)
+                        para_specify_moi = module.get_builtin_parameter_by_name(slope_arrow_moi, DB.BuiltInParameter.SPECIFY_SLOPE_OR_OFFSET)
 
-        with revit.Transaction("Tạo sàn dốc", swallow_errors=True):
-            for tung_san in ele:
+                        para_specify_moi.Set(para_specify.AsInteger())
 
-                '''Setting mũi tên dốc theo một curve có sẵn'''
-                slope_arrow_moi = get_slope_arrow (doc,tung_san)
+                        if para_specify_moi.AsInteger() == 0:
 
-                slope_arrow_moi.SetGeometryCurve(line_slope,True)
+                            para_height_tail_moi = module.get_builtin_parameter_by_name(slope_arrow_moi, DB.BuiltInParameter.SLOPE_START_HEIGHT)
 
-                para_specify_moi = module.get_builtin_parameter_by_name(slope_arrow_moi, DB.BuiltInParameter.SPECIFY_SLOPE_OR_OFFSET)
+                            para_height_tail_moi.Set(height_tail)
 
-                para_specify_moi.Set(para_specify.AsInteger())
+                            para_level_tail_moi = module.get_builtin_parameter_by_name(slope_arrow_moi, DB.BuiltInParameter.SLOPE_ARROW_LEVEL_START)
 
-                if para_specify_moi.AsInteger() == 0:
+                            para_level_tail_moi.Set(para_level_tail.AsElementId())
 
-                    para_height_tail_moi = module.get_builtin_parameter_by_name(slope_arrow_moi, DB.BuiltInParameter.SLOPE_START_HEIGHT)
+                            para_height_head_moi = module.get_builtin_parameter_by_name(slope_arrow_moi, DB.BuiltInParameter.SLOPE_END_HEIGHT)
 
-                    para_height_tail_moi.Set(height_tail)
+                            para_height_head_moi.Set(height_head)
 
-                    para_level_tail_moi = module.get_builtin_parameter_by_name(slope_arrow_moi, DB.BuiltInParameter.SLOPE_ARROW_LEVEL_START)
+                            para_level_head_moi = module.get_builtin_parameter_by_name(slope_arrow_moi, DB.BuiltInParameter.SLOPE_ARROW_LEVEL_END)
 
-                    para_level_tail_moi.Set(para_level_tail.AsElementId())
+                            para_level_head_moi.Set(para_level_head.AsElementId())
 
-                    para_height_head_moi = module.get_builtin_parameter_by_name(slope_arrow_moi, DB.BuiltInParameter.SLOPE_END_HEIGHT)
+                        else:
 
-                    para_height_head_moi.Set(height_head)
+                            para_height_tail_moi = module.get_builtin_parameter_by_name(slope_arrow_moi, DB.BuiltInParameter.SLOPE_START_HEIGHT)
 
-                    para_level_head_moi = module.get_builtin_parameter_by_name(slope_arrow_moi, DB.BuiltInParameter.SLOPE_ARROW_LEVEL_END)
+                            para_height_tail_moi.Set(height_tail)
 
-                    para_level_head_moi.Set(para_level_head.AsElementId())
+                            para_level_tail_moi = module.get_builtin_parameter_by_name(slope_arrow_moi, DB.BuiltInParameter.SLOPE_ARROW_LEVEL_START)
 
-                else:
-
-                    para_height_tail_moi = module.get_builtin_parameter_by_name(slope_arrow_moi, DB.BuiltInParameter.SLOPE_START_HEIGHT)
-
-                    para_height_tail_moi.Set(height_tail)
-
-                    para_level_tail_moi = module.get_builtin_parameter_by_name(slope_arrow_moi, DB.BuiltInParameter.SLOPE_ARROW_LEVEL_START)
-
-                    para_level_tail_moi.Set(para_level_tail.AsElementId())
-
-    trans_group.Assimilate()
+                            para_level_tail_moi.Set(para_level_tail.AsElementId())
+                    except:
+                        pass
+            trans_group.Assimilate()
+        except:
+            pass
