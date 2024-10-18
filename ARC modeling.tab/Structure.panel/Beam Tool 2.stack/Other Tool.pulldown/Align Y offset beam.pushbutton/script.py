@@ -144,7 +144,7 @@ if module.AutodeskData():
                 else:
                     module.message_box("Please try to cut geometry the beam with other beam")
             except:
-                print(traceback.format_exc())
+                # print(traceback.format_exc())
                 pass
             t.Commit()
     except:
