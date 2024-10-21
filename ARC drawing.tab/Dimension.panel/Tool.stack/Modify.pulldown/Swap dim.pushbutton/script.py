@@ -44,19 +44,22 @@ def tinh_toan_vector_move(line1, line2):
 Ele = module.get_selected_elements(uidoc, doc, noti = False)
 
 if not Ele:
-    pick_1 = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element)
-    dim_1 = doc.GetElement(pick_1.ElementId)
-    pick_2 = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element)
-    dim_2 = doc.GetElement(pick_2.ElementId)
-    t = Transaction(doc,"Đổi vị trí của 2 dim")
-    t.Start()
-    line_dim_1 = dim_1.Curve
-    line_dim_2 = dim_2.Curve
-    vector_move_1 = tinh_toan_vector_move (line_dim_1,line_dim_2)
-    vector_move_2 = tinh_toan_vector_move (line_dim_2,line_dim_1)
-    move_dim_1 = move_element(doc,dim_1, vector_move_1)
-    move_dim_2 = move_element(doc,dim_2, vector_move_2)
-    t.Commit()
+    try:
+        pick_1 = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element)
+        dim_1 = doc.GetElement(pick_1.ElementId)
+        pick_2 = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element)
+        dim_2 = doc.GetElement(pick_2.ElementId)
+        t = Transaction(doc,"Đổi vị trí của 2 dim")
+        t.Start()
+        line_dim_1 = dim_1.Curve
+        line_dim_2 = dim_2.Curve
+        vector_move_1 = tinh_toan_vector_move (line_dim_1,line_dim_2)
+        vector_move_2 = tinh_toan_vector_move (line_dim_2,line_dim_1)
+        move_dim_1 = move_element(doc,dim_1, vector_move_1)
+        move_dim_2 = move_element(doc,dim_2, vector_move_2)
+        t.Commit()
+    except:
+        pass
 else:
     if len(Ele) != 2:
         message = module.message_box("Chỉ chọn 2 dim thôi, không nhiều hơn, không ít hơn")
