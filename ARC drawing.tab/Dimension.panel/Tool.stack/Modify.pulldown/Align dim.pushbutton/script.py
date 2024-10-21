@@ -56,14 +56,9 @@ def pick_dimension_element():
         selected_dimension = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element, DimensionSelectionFilter(), "Chọn một Dimension")
         return doc.GetElement(selected_dimension.ElementId) if selected_dimension else None
     except:
-        sys.exit()
-
-
+        return None
 
 def main():
-    # first_pick = uidoc.Selection.PickObject(ObjectType.Element)
-    # first_id = first_pick.ElementId
-    # first_ele = doc.GetElement(first_id)
     first_ele =  pick_dimension_element()
     if first_ele:
         dim_1 = first_ele
@@ -72,23 +67,14 @@ def main():
         sys.exit()
     while True:
         try:
-            # second_pick = uidoc.Selection.PickObject(ObjectType.Element)
-            # second_id = second_pick.ElementId
-            # second_ele = doc.GetElement(second_id)
             second_ele = pick_dimension_element()
             dim_2 = second_ele
             line_dim_2 = dim_2.Curve
             vector_move_2 = tinh_toan_vector_move (line_dim_2,line_dim_1)
-            try:
-                t = Transaction(doc, "Align dim")
-                t.Start()
-                try:
-                    move_element(doc,dim_2, vector_move_2)
-                except:
-                    pass
-                t.Commit()
-            except:
-                pass
+            t = Transaction(doc, "Align dim")
+            t.Start()
+            move_element(doc,dim_2, vector_move_2)                    
+            t.Commit()
         except Exception as ex:
             if "Operation canceled by user." in str(ex):
                 break
