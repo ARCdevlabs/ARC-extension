@@ -33,33 +33,7 @@ try:
             sys.exit()
         t = Transaction (doc, "Create finish wall from room")
         t.Start()
-        def create_ceilings(rooms, ceil_type, offset, level_Id):
-            ceilings = []
-            for room in rooms:
-                # IGNORE NON-BOUNDING ROOMS
-                if not room.get_Parameter(BuiltInParameter.ROOM_AREA).AsDouble():
-                    return None
 
-                # ROOM BOUNDARIES -> List[CurveLoop]()
-                room_boundaries = room.GetBoundarySegments(SpatialElementBoundaryOptions())
-                curveLoopList   = List[CurveLoop]()
-
-                for roomBoundary in room_boundaries:
-                    room_curve_loop = CurveLoop()
-                    for boundarySegment in roomBoundary:
-                        curve = boundarySegment.GetCurve()
-                        room_curve_loop.Append(curve)
-                    curveLoopList.Add(room_curve_loop)
-
-                #  CREATE CEILINGS
-                if curveLoopList:
-                    ceiling = Autodesk.Revit.DB.Floor.Create(doc, curveLoopList, ceil_type, level_Id)
-                    ceilings.append(ceiling)
-                    # SET OFFSET
-                    param = ceiling.get_Parameter(BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM)
-                    param.Set(offset)
-
-            return ceilings
         def create_wall(doc, rooms, wall_type, level, height_offset):
             for room in rooms:
                 # IGNORE NON-BOUNDING ROOMS
