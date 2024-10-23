@@ -1,0 +1,66 @@
+﻿<Window x:Class="Input_Insulation.MainWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Input_Insulation"
+             mc:Ignorable="d" Height="500" Width="900" ResizeMode="CanMinimize">
+    <StackPanel Margin="10,10,10,10">
+        <Grid x:Name="stackpanel" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Column="0"
+                        Margin="10,10,10,10"
+                        VerticalAlignment="Stretch" 
+                        HorizontalAlignment="Stretch"
+                        >
+                <GroupBox 
+                            Header="Guide"                             
+                            HorizontalAlignment="Stretch" Height="402"
+                            />
+            </StackPanel>
+
+            <StackPanel Grid.Column="1">
+                <Button x:Name="new_button"
+                       Content= "{Binding binding_title_new_button}"
+                       HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                       Height="30" 
+                       Click="click_button_cua_son"/>
+                <TextBox x:Name="search_tb" 
+                        Height="25"
+                        VerticalContentAlignment="Center"/>
+
+                <ListView x:Name="list_lb"
+                     SelectionMode="Extended"
+                     HorizontalContentAlignment="Stretch"
+                     ScrollViewer.VerticalScrollBarVisibility="Visible"
+                     Height="350">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox VerticalAlignment="Center" 
+                                         IsChecked="{Binding IsChecked}"
+                                         Checked="check_box_Checked"
+                                         Unchecked="check_box_Unchecked"
+                                         />
+                                <TextBlock Text="{Binding Value}" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <Button x:Name="button_print"
+                       Content= "In giá trị đã chọn"
+                       HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                       Height="30" 
+                       Click="hanh_dong_button_print"/>
+
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</Window>
