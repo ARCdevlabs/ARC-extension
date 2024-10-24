@@ -45,9 +45,12 @@ if module.AutodeskData():
         return param    
 
     for i in collector_floor:
-        isstruc = module.get_builtin_parameter_by_name(i, BuiltInParameter.FLOOR_PARAM_IS_STRUCTURAL)
-        if isstruc.AsInteger() == 1:
-            list_floorS.append(i)
+        try:
+            isstruc = module.get_builtin_parameter_by_name(i, BuiltInParameter.FLOOR_PARAM_IS_STRUCTURAL)
+            if isstruc.AsInteger() == 1:
+                list_floorS.append(i)
+        except:    
+            pass
 
     height_offset = []
     for i in list_floorS:

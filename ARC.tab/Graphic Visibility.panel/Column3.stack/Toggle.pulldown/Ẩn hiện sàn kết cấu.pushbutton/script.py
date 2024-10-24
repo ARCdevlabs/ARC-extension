@@ -26,10 +26,12 @@ try:
         collector.ToElements()
         listfloorS = []
         for i in collector:
-            isstruc_floor = module.get_builtin_parameter_by_name(i, BuiltInParameter.FLOOR_PARAM_IS_STRUCTURAL)
-            # isstruc = i.LookupParameter("Structural")
-            if isstruc_floor.AsInteger() == 1:
-                listfloorS.append(i)
+            try:
+                isstruc_floor = module.get_builtin_parameter_by_name(i, BuiltInParameter.FLOOR_PARAM_IS_STRUCTURAL)
+                if isstruc_floor.AsInteger() == 1:
+                    listfloorS.append(i)
+            except:
+                pass
         t = Transaction(doc, "Hide floorA")
         t.Start()
         for floorS in listfloorS:
