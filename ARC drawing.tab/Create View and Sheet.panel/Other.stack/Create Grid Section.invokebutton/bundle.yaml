@@ -1,5 +1,6 @@
 title:   
   en_us: Create Grid Section
+  ja: 軸組の作成
 highlight: New
 assembly: CreateSectionView
 command_class: CommandController

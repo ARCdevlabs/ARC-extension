@@ -10,19 +10,6 @@ import Autodesk
 from Autodesk.Revit.DB import *
 from System.Collections.Generic import *
 
-
-# def TempIsolate(view, items):
-#     ielements = List[ElementId]([x.Id for x in items])
-#     view.HideElementsTemporary(ielements)
-
-# def hide_elements(view, items):
-#     ielements = List[ElementId]([x.Id for x in items])
-#     view.HideElements(ielements)
-#     return 
-# def unhide_elements(view, items):
-#     ielements = List[ElementId]([x.Id for x in items])
-#     view.UnhideElements(ielements)
-#     return
 try:
     if module.AutodeskData():
         import Autodesk
@@ -41,9 +28,12 @@ try:
         collector.ToElements()
         list_wallS = []
         for i in collector:
-            isstruc_wall = module.get_builtin_parameter_by_name(i, BuiltInParameter.WALL_STRUCTURAL_SIGNIFICANT)
-            if isstruc_wall.AsInteger() == 1:
-                list_wallS.append(i)
+            try:
+                isstruc_wall = module.get_builtin_parameter_by_name(i, BuiltInParameter.WALL_STRUCTURAL_SIGNIFICANT)
+                if isstruc_wall.AsInteger() == 1:
+                    list_wallS.append(i)
+            except:
+                pass
         t = Transaction(doc, "Hide wallS")
         t.Start()
         for wallS in list_wallS:
@@ -54,7 +44,5 @@ try:
                 unhide_element = AcView.HideElements(List[ElementId]([wallS.Id]))
         t.Commit()
 except:
-    import traceback
-    print(traceback.format_exc())
-
+    pass
       

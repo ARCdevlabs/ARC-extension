@@ -1,8 +1,9 @@
 title:   
   en_us: Chỉnh Join Tường LGS
-  ja: Adjust Join LGS Wall
+  ja: LGS壁の接合部の修正
 tooltip:
   en_us: Pick một mặt của tường đối diện sau đó pick tường muốn chỉnh join.
+  ja: 反対側の壁面を選択してから、結合を調整したい壁を選択します。
 assembly: ARC
 command_class: JoinLGSWall
 
