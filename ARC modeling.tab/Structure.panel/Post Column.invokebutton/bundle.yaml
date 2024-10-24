@@ -1,11 +1,9 @@
 title:   
   en_us: Post Column
-  ja: 
+  ja: 間柱
 tooltip:
-  en_us:
-    nhập cột phụ theo dầm có sẵn
-  ja:
-    
+  en_us: Nhập cột phụ theo dầm có sẵn
+  ja: 既存の梁に合わせて間柱を入力します。
 author: 
   - "Phan Mẫu Cường"
 assembly: StubColumnByBeam

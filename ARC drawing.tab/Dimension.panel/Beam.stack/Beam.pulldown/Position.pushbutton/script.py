@@ -127,9 +127,10 @@ if module.AutodeskData():
         # Nếu không tìm thấy nhóm nào, tạo nhóm mới
         if not found_group:
             parallel_groups.append([direction, tung_beam])
-
-    largest_group = max(parallel_groups, key=lambda g: len(g))
-
+    try:
+        largest_group = max(parallel_groups, key=lambda g: len(g))
+    except:
+        sys.exit()
     
     # print("Nhóm có số dầm song song nhiều nhất: ")
     # for beam in largest_group[1:]: # Bỏ qua vector đầu tiên

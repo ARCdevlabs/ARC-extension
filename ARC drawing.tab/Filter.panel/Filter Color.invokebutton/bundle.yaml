@@ -1,11 +1,11 @@
 title:   
   en_us: Filters Color 
-  ja: 更新中...
+  ja: フィルターの色
 tooltip:
   en_us:
     Thiết lập màu sắc đậm nhạt cho các filter
   ja:
-    更新中...
+    フィルターの色の濃淡を設定します。
 author: 
   - "Phan Mẫu Cường"
 assembly: SetFilterOverrides

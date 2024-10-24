@@ -10,7 +10,6 @@ import Autodesk
 from Autodesk.Revit.DB import *
 from System.Collections.Generic import *
 
-
 try:
     if module.AutodeskData():
         import Autodesk
@@ -29,9 +28,12 @@ try:
         collector.ToElements()
         list_wallA = []
         for i in collector:
-            isstruc_wall = module.get_builtin_parameter_by_name(i, BuiltInParameter.WALL_STRUCTURAL_SIGNIFICANT)
-            if isstruc_wall.AsInteger() == 0:
-                list_wallA.append(i)
+            try:
+                isstruc_wall = module.get_builtin_parameter_by_name(i, BuiltInParameter.WALL_STRUCTURAL_SIGNIFICANT)
+                if isstruc_wall.AsInteger() == 0:
+                    list_wallA.append(i)
+            except:
+                pass
         t = Transaction(doc, "Hide wallA")
         t.Start()
         for wallA in list_wallA:
@@ -42,7 +44,6 @@ try:
                 unhide_element = AcView.HideElements(List[ElementId]([wallA.Id]))
         t.Commit()
 except:
-    import traceback
-    print(traceback.format_exc())
+    pass
 
       

@@ -13,20 +13,31 @@ uidoc = __revit__.ActiveUIDocument
 doc = uidoc.Document
 
 selection = uidoc.Selection.GetElementIds()
+
+from pyrevit.coreutils import applocales
+current_applocale = applocales.get_current_applocale()
+if str(current_applocale) == '日本語 / Japanese (ja)':
+	message_1 = 'このツールを使用する前には、プロジェクトブラウザの壁、床、天井のタイプを選択します'
+	message_2 =  'Excelファイルを作成するためのパスが入力されていません。'
+	message_3 = 'Excelファイルを作成するためのパスを入力してください。'
+else:
+	message_1 = 'Chọn type tường, sàn, trần ở project browser trước khi sử dụng tool.'
+	message_2 = 'Chưa nhập đường dẫn để tạo file excel'
+	message_3 = 'Nhập đường dẫn để tạo file excel'
 if len(selection) == 0:
-	message_box("Chọn type tường, sàn, trần ở project browser trước khi sử dụng tool.")
+	message_box(message_1)
 	sys.exit()
 
 try:
 	components = [Label('GET LAYERS'),
-						Label('Chọn đường dẫn để lưu file excel'),
+						Label(message_3),
 						Button('...')]
 	form = FlexForm('ARC', components)
 	form_values = form.show()
 	form.values
-	value = TextInput('Nhập đường dẫn để tạo file excel', default= forms.pick_folder())
+	value = TextInput(message_3, default= forms.pick_folder())
 	if not value:
-		forms.alert('Chưa nhập đường dẫn để tạo file excel', exitscript=True)
+		forms.alert(message_2, exitscript=True)
 	def is_excel_file_open(file_path):
 		if not os.path.exists(file_path):
 			return False
@@ -40,7 +51,7 @@ try:
 	for i in selection:
 		ele = doc.GetElement(i)
 		category = ele.Category.Name
-		if category == "Walls" :
+		if category == "Walls" or category == "壁":
 			file_path = str(value) + r'\WallLayer.xlsx' 
 			if is_excel_file_open(file_path):
 				MessageBox.Show("File Excel đang mở. Vui lòng đóng file và thử lại.")
@@ -285,7 +296,7 @@ try:
 
 
 
-		elif category == "Floors" :	
+		elif category == "Floors" or category == '床':	
 			file_path = str(value) + r'\FloorsLayer.xlsx' 
 			if is_excel_file_open(file_path):
 				MessageBox.Show("File Excel đang mở. Vui lòng đóng file và thử lại.")
@@ -527,7 +538,7 @@ try:
 
 
 
-		elif category == "Ceilings" :	
+		elif category == "Ceilings" or category == "天井" :	
 			file_path = str(value) + r'\CeilingLayer.xlsx' 
 			if is_excel_file_open(file_path):
 				MessageBox.Show("File Excel đang mở. Vui lòng đóng file và thử lại.")
