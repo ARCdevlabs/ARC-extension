@@ -14,15 +14,9 @@ namespace Input_Insulation
 {
     public class Utility
     {
-
         public static void ColumnInsulation(Document m_doc, IList<ElementId> ids)
         {
-            //Lấy family symbol
-            //RW symbol
 
-
-
-            //Bố trí family theo vị trí cột.
             foreach (ElementId id in ids)
             {
                 Element element = m_doc.GetElement(id);
@@ -37,27 +31,25 @@ namespace Input_Insulation
                 ColumnInstanceProperties m_ColumnProperties = new ColumnInstanceProperties();
                 m_ColumnProperties = GetColumnProperties(m_doc, m_instance);
 
-
-
                 if (m_ColumnProperties.ColumnTypeName.Contains("Column_Box"))
                 {
                     ColumnBoxInsulation(m_doc, m_ColumnProperties);
                 }
-                else
+                else if ((m_ColumnProperties.ColumnTypeName.Contains("Column_H")))
                 {
-                    //none
-
-                }    
-
-
+                    ColumnHInsulation(m_doc, m_ColumnProperties);
+                }
+                   
             }
-
-            //Set parameter
+            
         }
+        /// <summary>
+        /// Nhập cách nhiệt cho cột có hình dạng box
+        /// </summary>
+        /// <param name="m_doc"></param>
+        /// <param name="properties">Thuộc tính lấy từ cột cần nhập cách nhiệt</param>
         public static void ColumnBoxInsulation(Document m_doc, ColumnInstanceProperties properties)
         {
-
-
 
             FamilySymbol RWSymbol = (from fs in new FilteredElementCollector(m_doc).
                                    OfClass(typeof(FamilySymbol)).
@@ -67,8 +59,8 @@ namespace Input_Insulation
                                      select fs).First();
 
             FamilyInstance insulation = m_doc.Create.NewFamilyInstance(properties.Location, RWSymbol, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
-            //rotate
 
+            //Xoay cách nhiệt theo hướng của cột.
             XYZ cc = new XYZ(properties.Location.X, properties.Location.Y, properties.Location.Z + 10);
             Line axis = Line.CreateBound(properties.Location, cc);
             ElementTransformUtils.RotateElement(m_doc, insulation.Id, axis, properties.Rotation);
@@ -84,12 +76,17 @@ namespace Input_Insulation
             insulation.LookupParameter("合成耐火右").Set(0);
             insulation.LookupParameter("合成耐火左").Set(0);
         }
+
+
+        /// <summary>
+        /// Nhập tấm cách nhiệt cho cột có hình dạng là H
+        /// </summary>
+        /// <param name="m_doc"></param>
+        /// <param name="properties"> Thông tin từ columnn cần nhập cách nhiệt</param>
         public static void ColumnHInsulation(Document m_doc, ColumnInstanceProperties properties)
         {
             string familyName = "gIns_柱被覆_H_RW_";
             string symbolName = "t25";
-
-
 
             FamilySymbol RWSymbol = (from fs in new FilteredElementCollector(m_doc).
                                    OfClass(typeof(FamilySymbol)).
@@ -118,7 +115,12 @@ namespace Input_Insulation
 
             insulation.LookupParameter("長さ").Set(properties.Height);
         }
-
+        /// <summary>
+        /// Lấy thông tin từ column để nhập tấm cách nhiệt
+        /// </summary>
+        /// <param name="m_doc"> Document từ project </param>
+        /// <param name="m_instance">Cột cần lấy thông tin</param>
+        /// <returns></returns>
         private static ColumnInstanceProperties GetColumnProperties(Document m_doc, FamilyInstance m_instance)
         {
             ColumnInstanceProperties m_instanceProperties = new ColumnInstanceProperties();
@@ -130,8 +132,6 @@ namespace Input_Insulation
 
             //Rotation
             m_instanceProperties.Rotation = (m_instance.Location as LocationPoint).Rotation;
-
-
 
             ElementType ColumnType = m_doc.GetElement(m_instance.GetTypeId()) as ElementType;
             m_instanceProperties.ColumnTypeName = ColumnType.Name;
@@ -174,6 +174,9 @@ namespace Input_Insulation
             return m_instanceProperties;
         }
 
+        /// <summary>
+        /// Class các thông tin từ column
+        /// </summary>
         public class ColumnInstanceProperties
         {
             private double m_H;
@@ -224,14 +227,14 @@ namespace Input_Insulation
                 get { return m_FamilyName; }
                 set { m_FamilyName = value; }
 
-            }
+            }  
+        }
 
-            public enum TypeOfInsulation
-            {
-                けいカル = 1,
-                巻き付け = 1,
-            }
 
+        public enum TypeOfInsulation
+        {
+            けいカル = 1,
+            巻き付け = 1,
         }
     }
 }
