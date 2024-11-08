@@ -1,19 +1,11 @@
 # -*- coding: utf-8 -*-
-__doc__ = 'python for revit api'
-__author__ = 'NguyenThanhSon' "Email: nguyenthanhson1712@gmail.com"
-
 import Autodesk
 import Autodesk.Revit.DB as DB
-from Autodesk.Revit.DB import *
-from System.Collections.Generic import *
-from Autodesk.Revit.UI.Selection import ObjectType
 import math
-
 
 def move_point_along_vector(point, vector, distance):
     new_point = point + vector.Normalize() * distance
     return new_point
-
 
 def normalize(vector):
     """Hàm để chuẩn hóa một vector."""
@@ -74,6 +66,31 @@ def rotate_vector(vector_A, vector_B, angle_degrees):
 
 
 
+'''Biến một vector bất kì thành vector từ dưới lên trên, từ trái qua phải
+    Mục đích là để xác định hướng trái và hướng phải của vector'''
+def chuan_hoa_vector(vector, view): #vector tu trai qua phai, tu duoi len tren
+    # view_direction = view.ViewDirection
+    view_updirection = view.UpDirection
+    view_rightdirection = view.RightDirection
+
+    xac_dinh_goc_voi_vector_right = angle_between_vectors(vector, view_rightdirection)
+    xac_dinh_goc_voi_vector_up = angle_between_vectors(vector, view_updirection)
+    if xac_dinh_goc_voi_vector_right <= 45:
+        if xac_dinh_goc_voi_vector_up <= 135:
+            return vector
+        else: 
+            return -vector
+    elif xac_dinh_goc_voi_vector_right > 45 and xac_dinh_goc_voi_vector_right < 135:
+        if xac_dinh_goc_voi_vector_up <= 45:
+            return vector
+        else:
+            return -vector
+    else:
+        return -vector
+    
+'''Cách chuẩn hóa vector mặt bằng, mặt cắt hơi nông dân, hãy dùng hàm 
+chuan_hoa_vector(vector, view)'''
+
 def chuan_hoa_vector_mat_cat(vector): #vector tu trai qua phai, tu duoi len tren
     point_start = DB.XYZ(0,0,0)
     point_end = move_point_along_vector(point_start, vector, 1)
@@ -89,7 +106,7 @@ def chuan_hoa_vector_mat_cat(vector): #vector tu trai qua phai, tu duoi len tren
         return - vector
 
 
-def chuan_hoa_vector_mat_bang(vector): #vector tu trai qua phai, tu duoi len tren
+def chuan_hoa_vector_mat_bang(vector): #vector tu trai qua phai, tu duoi len tren 
     point_start = DB.XYZ(0,0,0)
     point_end = move_point_along_vector(point_start, vector, 1)
 
@@ -102,6 +119,7 @@ def chuan_hoa_vector_mat_bang(vector): #vector tu trai qua phai, tu duoi len tre
         return vector 
     else: 
         return - vector
+    
     
 def move_segment_xa_nhat (list_sorted, vector_cua_dim, kich_co_chu, khoang_cach_dim_toi_text, huong_phai = True):
 
@@ -120,6 +138,7 @@ def move_segment_xa_nhat (list_sorted, vector_cua_dim, kich_co_chu, khoang_cach_
     seg_xa_nhat.TextPosition = move
 
     return 
+
 
 def distance_mat_bang(point1, point2):
     return ((point2.X - point1.X)**2 + (point2.Y - point1.Y)**2)**0.5
@@ -245,3 +264,112 @@ def distance_between_planes(normal1, point_on_plane1, normal2):
     vector_between_planes = point_on_plane1 - (point_on_plane1.DotProduct(normal2) - normal2.DotProduct(normal1)) / normal1.DotProduct(normal2) * normal1
     distance = vector_between_planes.GetLength()
     return distance
+
+def rotate_vector_around_axis(vector, axis, angle_degrees):
+    """Hàm để xoay một vector quanh một trục cho trước một góc nhất định."""
+    # Chuyển đổi góc từ độ sang radian
+    angle_radians = math.radians(angle_degrees)
+    
+    # Chuẩn hóa trục xoay
+    axis = normalize(axis)
+    
+    # Các thành phần của trục xoay
+    u = axis.X
+    v = axis.Y
+    w = axis.Z
+    
+    # Các thành phần của vector gốc
+    x = vector.X
+    y = vector.Y
+    z = vector.Z
+    
+    # Công thức xoay vector quanh trục (rotation matrix)
+    cos_angle = math.cos(angle_radians)
+    sin_angle = math.sin(angle_radians)
+    one_minus_cos = 1 - cos_angle
+    
+    # Ma trận xoay
+    rotated_x = (u*u*one_minus_cos + cos_angle)*x + (u*v*one_minus_cos - w*sin_angle)*y + (u*w*one_minus_cos + v*sin_angle)*z
+    rotated_y = (v*u*one_minus_cos + w*sin_angle)*x + (v*v*one_minus_cos + cos_angle)*y + (v*w*one_minus_cos - u*sin_angle)*z
+    rotated_z = (w*u*one_minus_cos - v*sin_angle)*x + (w*v*one_minus_cos + u*sin_angle)*y + (w*w*one_minus_cos + cos_angle)*z
+    
+    return DB.XYZ(rotated_x, rotated_y, rotated_z)
+
+def angle_between_vectors(vector1, vector2):
+    # Tích vô hướng của 2 vector
+    dot_prod = vector1.DotProduct(vector2)
+    # Tính độ lớn của hai vector
+    magnitude1 = vector1.GetLength()
+    magnitude2 = vector2.GetLength()
+    # Tính cos(theta)
+    cos_theta = dot_prod / (magnitude1 * magnitude2)
+    # Trả về góc (theo độ)
+    goc_theo_do = math.degrees(math.acos(cos_theta))
+
+    return goc_theo_do
+
+'''Tìm điểm giao nhau giữa một line và một plane (lưu ý là line chứ không phải curve bởi vì curve không có thể cong)
+line_point: là một điểm thuộc line => Chắc là lấy Line.EndPoint(0) được
+line_direction: là vector của line => Line.Direction
+plane_point: là một điểm thuộc plane => Plane.Origin()
+plane_normal: là vector pháp tuyến của plane => Plane.Normalize()
+'''
+def line_plane_intersection(line_point, line_direction, plane_point, plane_normal):
+    # Vector từ điểm trên mặt phẳng đến điểm trên đường thẳng
+    vector_plane_to_line = [
+        line_point[0] - plane_point[0],
+        line_point[1] - plane_point[1],
+        line_point[2] - plane_point[2]
+    ]
+    
+    # Tính dot product giữa plane_normal và line_direction
+    dot_product = (
+        plane_normal[0] * line_direction[0] +
+        plane_normal[1] * line_direction[1] +
+        plane_normal[2] * line_direction[2]
+    )
+    
+    # Kiểm tra nếu dot_product bằng 0, line và plane là song song, không có giao điểm
+    if dot_product == 0:
+        return None  # Không có giao điểm
+
+    # Tính toán tham số t cho điểm giao nhau
+    t = -(
+        plane_normal[0] * vector_plane_to_line[0] +
+        plane_normal[1] * vector_plane_to_line[1] +
+        plane_normal[2] * vector_plane_to_line[2]
+    ) / dot_product
+    
+    # Tọa độ giao điểm
+    intersection = [
+        line_point[0] + t * line_direction[0],
+        line_point[1] + t * line_direction[1],
+        line_point[2] + t * line_direction[2]
+    ]
+    return_point = DB.XYZ(intersection[0],intersection[1],intersection[2])
+
+    return return_point
+
+'''Cho 2 điểm start point, end point và một điểm bất kỳ A, tìm xem điểm start point và end point điểm nào gần điểm A hơn'''
+def nearest_point(point_goc, point_muc_tieu_1, point_muc_tieu_2):
+    string_1 = "StartPoint"
+    string_2 = "EndPoint"
+    distance_1 = distance_2_point(point_goc,point_muc_tieu_1)
+    distance_2 = distance_2_point(point_goc,point_muc_tieu_2)
+    if distance_1 < distance_2:
+        return string_1
+    elif distance_1 > distance_2:
+        return string_2
+    
+'''Transform giống như một vector, có thể lấy bằng cách element.GetTransform() hoặc element.GetTotalTransform(), 
+(chưa tìm hiểu sự khác nhau giữa 2 phương thức)
+Cách dịch chuyển một line là hãy dịch chuyển 2 point của 2 đầu của Line ban đầu => tạo lại Line mới là được '''
+def transform_line(transform, line):
+    start_point = line.GetEndPoint(0)  # Điểm đầu của Line
+    end_point = line.GetEndPoint(1)    # Điểm cuối của Line
+    # Áp dụng Transform cho cả điểm đầu và điểm cuối
+    new_start_point = transform.OfPoint(start_point)
+    new_end_point = transform.OfPoint(end_point)
+    # Tạo Line mới từ các điểm đã dịch chuyển
+    transformed_line = DB.Line.CreateBound(new_start_point, new_end_point)
+    return transformed_line
