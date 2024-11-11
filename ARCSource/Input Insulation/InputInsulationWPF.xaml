@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Input_Insulation"
-             mc:Ignorable="d" Height="380"Height="347" Width="792"Width="773" ResizeMode="NoResize"
+             mc:Ignorable="d" Height="347" Width="792" ResizeMode="NoResize"
             Background="#FFEDEDED"
 	        Foreground="#FF0F0202"
         >
@@ -22,7 +22,7 @@
                         >
             <GroupBox 
                         Header="Guide"                             
-                        Height="280"
+                        Height="280" BorderBrush="Black"
                         />
         </StackPanel>
 
