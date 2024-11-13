@@ -26,7 +26,6 @@ namespace Input_Insulation
             UIDocument uIDocument = commandData.Application.ActiveUIDocument;
             m_doc =uIDocument.Document;
             ICollection<ElementId> ids = uIDocument.Selection.GetElementIds();
-
             
             try
             {
