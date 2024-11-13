@@ -1,9 +1,9 @@
 title:   
   en_us: Slope Beam By Pick Two Beam
-  ja: 傾斜梁_拘束
+  ja: 両端の2本の梁を選択して作成される斜め梁
 tooltip:
   en_us: Điều chỉnh hàng loạt độ dốc của dầm theo 2 cây dầm ở 2 đầu dốc.
-  ja: 参照面で梁の傾斜を一括調整します。ツールは平面ビューでのみ動作します。
+  ja: 両端の2本の梁に基づいて、複数の梁の傾斜を一括調整します。
 highlight: New
 authors:
   - Nguyễn Thanh Sơn
