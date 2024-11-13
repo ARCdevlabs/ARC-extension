@@ -78,8 +78,10 @@ if module.AutodeskData():
     uidoc = __revit__.ActiveUIDocument
     doc = uidoc.Document
     active_view = module.Active_view(doc)
-
+    
     Ele = module.get_elements(uidoc,doc, "Pick Beams Need To Modify", noti = False)
+
+    
 
     if Ele: 
         with forms.WarningBar(title='Pick Target Beam Top and Bottom'):
@@ -91,6 +93,11 @@ if module.AutodeskData():
         XY_plane = Autodesk.Revit.DB.Plane.CreateByThreePoints(XYZ(0,0,0),XYZ(0,1,0), XYZ(1,1,0))
         degree = angle_between_planes (XY_plane,ref_plane)
         radian = module.degrees_to_radians(degree)
+
+        from rpw.ui.forms import SelectFromList
+        value = SelectFromList('Z Offset or Start End Level Offset?', ['Z Offset','Start End Level Offset'])
+        # if value == "Z Offset":
+        # if value == "Start End Offset":    
 
         trans_group = TransactionGroup(doc, 'Slope Beam_Start and End Offset')
         trans_group.Start()
@@ -131,14 +138,44 @@ if module.AutodeskData():
                             H_projection_end = distance_end/math.cos(radian)
 
                             get_value_end = module.get_builtin_parameter_by_name(i, DB.BuiltInParameter.STRUCTURAL_BEAM_END1_ELEVATION)
+
                             to_mm_end = get_value_end.AsDouble()
 
                             set_param_end = module.get_builtin_parameter_by_name(i, DB.BuiltInParameter.STRUCTURAL_BEAM_END1_ELEVATION).Set(H_projection_end + to_mm_end)
+                            
+                            try:
+                                start_z_offset = module.get_builtin_parameter_by_name(i, DB.BuiltInParameter.START_Z_OFFSET_VALUE).Set(0)
+                            except:
+                                pass
+                            try:
+                                end_z_offset = module.get_builtin_parameter_by_name(i, DB.BuiltInParameter.END_Z_OFFSET_VALUE).Set(0)
+                            except:
+                                pass
+                            try:
+                                all_z_offset = module.get_builtin_parameter_by_name(i, DB.BuiltInParameter.Z_OFFSET_VALUE).Set(0)
+                            except:
+                                pass
                         except:
                             pass
                     t.Commit()
                 except:
-                    t.RollBack()        
+                    t.RollBack()  
+
+                if value == "Z Offset":
+                    t2 = Transaction (doc, "Change to YZ dependent")
+                    t2.Start()
+                    set_yz_dependent = module.get_builtin_parameter_by_name(i, DB.BuiltInParameter.YZ_JUSTIFICATION).Set(1)
+                    t2.Commit()
+                    t3 = Transaction (doc, "Change to Z offset")
+                    t3.Start()
+                    get_value_start = module.get_builtin_parameter_by_name(i, DB.BuiltInParameter.STRUCTURAL_BEAM_END0_ELEVATION).AsDouble()
+                    get_value_end = module.get_builtin_parameter_by_name(i, DB.BuiltInParameter.STRUCTURAL_BEAM_END1_ELEVATION).AsDouble()
+                    start_z_offset = module.get_builtin_parameter_by_name(i, DB.BuiltInParameter.START_Z_OFFSET_VALUE).Set(get_value_start)
+                    end_z_offset = module.get_builtin_parameter_by_name(i, DB.BuiltInParameter.END_Z_OFFSET_VALUE).Set(get_value_end)
+                    module.get_builtin_parameter_by_name(i, DB.BuiltInParameter.STRUCTURAL_BEAM_END0_ELEVATION).Set(0)
+                    module.get_builtin_parameter_by_name(i, DB.BuiltInParameter.STRUCTURAL_BEAM_END1_ELEVATION).Set(0)
+                    t3.Commit()
+            
             trans_group.Assimilate()
         except:
             trans_group.RollBack()
