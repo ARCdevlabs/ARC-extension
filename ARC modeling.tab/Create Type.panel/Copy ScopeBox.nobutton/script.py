@@ -52,7 +52,7 @@ try:
             from rpw.ui.forms import (FlexForm, Label, ComboBox, TextBox, TextBox,
                                         Separator, Button, CheckBox)
             components = [Label('Nhập khoảng cách'),
-                            TextBox('textbox1', Text="7000"),
+                            TextBox('textbox1', Text="6700"),
                         #   CheckBox('checkbox1', 'Check this'), (khong can check box)
                             Separator(),
                             Button('Ok')]
@@ -64,7 +64,7 @@ try:
                 # print dir(i)
                 name_ban_dau = module.get_builtin_parameter_by_name(i, DB.BuiltInParameter.VOLUME_OF_INTEREST_NAME)
                 name_ban_dau_value = name_ban_dau.AsString()
-                new_name = name_ban_dau_value + "_2F"
+                new_name = name_ban_dau_value + "_3F"
                 khoang_cach = (khoang_cach_dau_vao/304.8)
                 new_position = XYZ(0, 0, khoang_cach)
                 copy_element = Autodesk.Revit.DB.ElementTransformUtils.CopyElement(doc, i.Id, new_position)
