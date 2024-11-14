@@ -1278,6 +1278,7 @@ def get_all_grid():
     collector = FilteredElementCollector(doc).OfClass(Grid)
     grids = collector.ToElements()
     return grids
+    
 def get_all_geometry_of_grids(grid, DatumExtentType = DatumExtentType.ViewSpecific):
     all_geometry = []
     DatumExtentType = DatumExtentType.ViewSpecific

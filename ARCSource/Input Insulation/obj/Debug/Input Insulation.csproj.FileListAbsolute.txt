@@ -95,3 +95,16 @@ G:\My Drive\Lưu Trữ\Visual\Kawa\CMS\Input Insulation\obj\Debug\Input Insulati
 \\server-pc\H\◆3-Team Addin\Source\Input Insulation\obj\Debug\Input Insulation_MarkupCompile.lref
 \\server-pc\H\◆3-Team Addin\Source\Input Insulation\obj\Debug\InputInsulationWPF.baml
 \\server-pc\H\◆3-Team Addin\Source\Input Insulation\obj\Debug\Input Insulation.g.resources
+C:\Users\Admin\AppData\Roaming\pyRevit\Extensions\ARC extension.extension\ARCSource\Input Insulation\obj\Debug\Input Insulation.csproj.AssemblyReference.cache
+C:\Users\Admin\AppData\Roaming\pyRevit\Extensions\ARC extension.extension\ARCSource\Input Insulation\obj\Debug\InputInsulationWPF.g.cs
+C:\Users\Admin\AppData\Roaming\pyRevit\Extensions\ARC extension.extension\ARCSource\Input Insulation\obj\Debug\Input Insulation_MarkupCompile.cache
+C:\Users\Admin\AppData\Roaming\pyRevit\Extensions\ARC extension.extension\ARCSource\Input Insulation\obj\Debug\Input Insulation_MarkupCompile.lref
+C:\Users\Admin\AppData\Roaming\pyRevit\Extensions\ARC extension.extension\ARCSource\Input Insulation\obj\Debug\Input Insulation.dll
+C:\Users\Admin\AppData\Roaming\pyRevit\Extensions\ARC extension.extension\ARCSource\Input Insulation\obj\Debug\Input Insulation.pdb
+C:\Users\Admin\AppData\Roaming\pyRevit\Extensions\ARC extension.extension\ARCSource\Input Insulation\bin\Debug\Input Insulation.dll
+C:\Users\Admin\AppData\Roaming\pyRevit\Extensions\ARC extension.extension\ARCSource\Input Insulation\bin\Debug\Input Insulation.pdb
+C:\Users\Admin\AppData\Roaming\pyRevit\Extensions\ARC extension.extension\ARCSource\Input Insulation\obj\Debug\InputInsulationWPF.baml
+C:\Users\Admin\AppData\Roaming\pyRevit\Extensions\ARC extension.extension\ARCSource\Input Insulation\obj\Debug\Input Insulation.g.resources
+C:\Users\Admin\AppData\Roaming\pyRevit\Extensions\ARC extension.extension\ARCSource\Input Insulation\obj\Debug\Input_Insulation.FormTest.resources
+C:\Users\Admin\AppData\Roaming\pyRevit\Extensions\ARC extension.extension\ARCSource\Input Insulation\obj\Debug\Input Insulation.csproj.GenerateResource.cache
+C:\Users\Admin\AppData\Roaming\pyRevit\Extensions\ARC extension.extension\ARCSource\Input Insulation\obj\Debug\Input Insulation.csproj.CoreCompileInputs.cache

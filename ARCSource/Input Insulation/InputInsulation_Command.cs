@@ -17,30 +17,46 @@ namespace Input_Insulation
         #region Properties
 
         Document m_doc=null;
-        
 
         #endregion
-        
-        public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
+
+        public Result Execute(ExternalCommandData revit, ref string message, ElementSet elements)
         {
-            UIDocument uIDocument = commandData.Application.ActiveUIDocument;
-            m_doc =uIDocument.Document;
-            ICollection<ElementId> ids = uIDocument.Selection.GetElementIds();
-            
+            UIDocument iuidoc = revit.Application.ActiveUIDocument;
+
+            Document idoc = iuidoc.Document;
+
+            ARCLibrary lib = new ARCLibrary();
+
+            List<Element> listElement = null;
+
+            List<Element> selectedElement = lib.CurrentSelection(iuidoc, idoc);
+
+            if (selectedElement == null)
+            {
+                List<Element> pickElements = lib.PickElements(iuidoc, idoc);
+
+                listElement = pickElements;
+            }
+            else
+            {
+                listElement = selectedElement;
+            }
             try
             {
-                
-                FormTest m_form = new FormTest(m_doc, ids);
+
+                MainWindow m_form = new MainWindow(idoc, listElement);
+
                 m_form.ShowDialog();
-                return Autodesk.Revit.UI.Result.Succeeded;
+
+                return Result.Succeeded;
 
             }
             catch (Exception ex)
             {
                 message = ex.Message;
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
-            
         }
     }
 }
