@@ -11,7 +11,7 @@ using System.Windows.Controls;
 
 namespace Input_Insulation
 {
-    public class LibARC
+    public class ARCLibrary
     {
         public static Parameter GetBuiltInParameterByName(Element element, BuiltInParameter builtInParameter)
         {
@@ -19,7 +19,6 @@ namespace Input_Insulation
 
             return param;
         }
-
 
         public static string GetParameterValueByName(Element element, string name)
         {
@@ -64,7 +63,6 @@ namespace Input_Insulation
             }
             catch
             {
-
             }
 
             return null;

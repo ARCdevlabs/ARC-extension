@@ -3,28 +3,36 @@
   "WorkspaceRootPath": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|c:\\users\\admin\\appdata\\roaming\\pyrevit\\extensions\\arc extension.extension\\arcsource\\input insulation\\beaminsulation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|c:\\users\\admin\\appdata\\roaming\\pyrevit\\extensions\\arc extension.extension\\arcsource\\input insulation\\formtest.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|solutionrelative:input insulation\\formtest.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|c:\\users\\admin\\appdata\\roaming\\pyrevit\\extensions\\arc extension.extension\\arcsource\\input insulation\\ultility.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|solutionrelative:input insulation\\ultility.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\input insulation\\inputinsulationwpf.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|solutionrelative:input insulation\\inputinsulationwpf.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\input insulation\\inputinsulation_command.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|solutionrelative:input insulation\\inputinsulation_command.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\input insulation\\beaminsulation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|solutionrelative:input insulation\\beaminsulation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|c:\\users\\admin\\appdata\\roaming\\pyrevit\\extensions\\arc extension.extension\\arcsource\\input insulation\\formtest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|solutionrelative:input insulation\\formtest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\input insulation\\inputinsulationwpf.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|solutionrelative:input insulation\\inputinsulationwpf.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|c:\\users\\admin\\appdata\\roaming\\pyrevit\\extensions\\arc extension.extension\\arcsource\\input insulation\\libarc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|solutionrelative:input insulation\\libarc.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|c:\\users\\admin\\appdata\\roaming\\pyrevit\\extensions\\arc extension.extension\\arcsource\\input insulation\\inputinsulation_command.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|solutionrelative:input insulation\\inputinsulation_command.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|c:\\users\\admin\\appdata\\roaming\\pyrevit\\extensions\\arc extension.extension\\arcsource\\input insulation\\inputinsulationwpf.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|solutionrelative:input insulation\\inputinsulationwpf.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|c:\\users\\admin\\appdata\\roaming\\pyrevit\\extensions\\arc extension.extension\\arcsource\\input insulation\\ultility_copy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|solutionrelative:input insulation\\ultility_copy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|c:\\users\\admin\\appdata\\roaming\\pyrevit\\extensions\\arc extension.extension\\arcsource\\input insulation\\inputinsulationwpf.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{0770A0B0-4563-4B69-B150-5762ACAE25D4}|Input Insulation\\Input Insulation.csproj|solutionrelative:input insulation\\inputinsulationwpf.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,83 +42,108 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "InputInsulation_Command.cs",
-              "DocumentMoniker": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\InputInsulation_Command.cs",
-              "RelativeDocumentMoniker": "Input Insulation\\InputInsulation_Command.cs",
-              "ToolTip": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\InputInsulation_Command.cs",
-              "RelativeToolTip": "Input Insulation\\InputInsulation_Command.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAACIAAAA6AAAAAAAAAA==",
+              "DocumentIndex": 5,
+              "Title": "FormTest.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\FormTest.cs",
+              "RelativeDocumentMoniker": "Input Insulation\\FormTest.cs",
+              "ToolTip": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\FormTest.cs [Design]",
+              "RelativeToolTip": "Input Insulation\\FormTest.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-12T04:38:34.637Z",
+              "WhenOpened": "2024-11-14T08:18:10.958Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FormTest.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\FormTest.Designer.cs",
+              "RelativeDocumentMoniker": "Input Insulation\\FormTest.Designer.cs",
+              "ToolTip": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\FormTest.Designer.cs",
+              "RelativeToolTip": "Input Insulation\\FormTest.Designer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-14T08:17:49.575Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 2,
               "Title": "InputInsulationWPF.xaml.cs",
               "DocumentMoniker": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\InputInsulationWPF.xaml.cs",
               "RelativeDocumentMoniker": "Input Insulation\\InputInsulationWPF.xaml.cs",
               "ToolTip": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\InputInsulationWPF.xaml.cs",
               "RelativeToolTip": "Input Insulation\\InputInsulationWPF.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-12T07:43:56.943Z",
+              "WhenOpened": "2024-11-14T03:39:23.502Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "InputInsulationWPF.xaml",
               "DocumentMoniker": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\InputInsulationWPF.xaml",
               "RelativeDocumentMoniker": "Input Insulation\\InputInsulationWPF.xaml",
               "ToolTip": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\InputInsulationWPF.xaml",
               "RelativeToolTip": "Input Insulation\\InputInsulationWPF.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-11-12T07:43:54.501Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Ultility_Copy.cs",
-              "DocumentMoniker": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\Ultility_Copy.cs",
-              "RelativeDocumentMoniker": "Input Insulation\\Ultility_Copy.cs",
-              "ToolTip": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\Ultility_Copy.cs",
-              "RelativeToolTip": "Input Insulation\\Ultility_Copy.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAAlAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-12T07:42:21.612Z",
+              "WhenOpened": "2024-11-14T03:35:32.175Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "LibARC.cs",
-              "DocumentMoniker": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\LibARC.cs",
-              "RelativeDocumentMoniker": "Input Insulation\\LibARC.cs",
-              "ToolTip": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\LibARC.cs",
-              "RelativeToolTip": "Input Insulation\\LibARC.cs",
-              "ViewState": "AgIAAIAAAAAAAAAAAAAIwIgAAAAAAAAAAAAAAA==",
+              "Title": "Ultility.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\Ultility.cs",
+              "RelativeDocumentMoniker": "Input Insulation\\Ultility.cs",
+              "ToolTip": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\Ultility.cs",
+              "RelativeToolTip": "Input Insulation\\Ultility.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-12T04:45:44.715Z",
+              "WhenOpened": "2024-11-14T03:26:21.682Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "BeamInsulation.cs",
               "DocumentMoniker": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\BeamInsulation.cs",
               "RelativeDocumentMoniker": "Input Insulation\\BeamInsulation.cs",
               "ToolTip": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\BeamInsulation.cs",
               "RelativeToolTip": "Input Insulation\\BeamInsulation.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAZAAAAAAAAAA==",
+              "ViewState": "AgIAAHkAAAAAAAAAAAAgwA0AAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-12T03:51:20.53Z",
+              "WhenOpened": "2024-11-14T03:25:39.778Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "InputInsulation_Command.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\InputInsulation_Command.cs",
+              "RelativeDocumentMoniker": "Input Insulation\\InputInsulation_Command.cs",
+              "ToolTip": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\InputInsulation_Command.cs",
+              "RelativeToolTip": "Input Insulation\\InputInsulation_Command.cs",
+              "ViewState": "AgIAABoAAAAAAAAAAAAAACoAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-14T03:24:17.834Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "LibARC.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\LibARC.cs",
+              "RelativeDocumentMoniker": "Input Insulation\\LibARC.cs",
+              "ToolTip": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARCSource\\Input Insulation\\LibARC.cs",
+              "RelativeToolTip": "Input Insulation\\LibARC.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEAAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-12T04:45:44.715Z",
               "EditorCaption": ""
             }
           ]
