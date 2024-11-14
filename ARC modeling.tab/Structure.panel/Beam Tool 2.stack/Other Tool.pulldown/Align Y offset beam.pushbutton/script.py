@@ -14,6 +14,7 @@ import traceback
 from nances import forms
 import math
 import sys
+from nances import vectortransform
 if module.AutodeskData():
 
     def check_huong_dam(dam):
@@ -77,6 +78,16 @@ if module.AutodeskData():
                 edge_curve = edge.AsCurve()
                 start_point_edge_curve = edge_curve.GetEndPoint(0)
                 end_point_edge_curve = edge_curve.GetEndPoint(1)
+                line = DB.Line.CreateBound(start_point_edge_curve,end_point_edge_curve)
+                transform = beam.GetTransform()
+                if beam.HasModifiedGeometry():
+                    transformed_line = line
+                else:
+                    transformed_line = vectortransform.transform_line(transform, line)
+
+                transformed_start_point_edge_curve = transformed_line.GetEndPoint(0)
+                transformed_end_point_edge_curve = transformed_line.GetEndPoint(1)
+
             else:
                 module.message_box("Please select edge of beam")
                 sys.exit()
@@ -97,15 +108,19 @@ if module.AutodeskData():
             degree = angle_between_planes (detail_line_plane,beam_plane)
             radian = module.degrees_to_radians(degree)
             start_distance = module.distance_from_point_to_plane(start_point,detail_line_plane)
-            start_distance_from_edge = module.distance_from_point_to_plane(start_point_edge_curve,beam_plane)
+            start_distance_from_edge = module.distance_from_point_to_plane(transformed_start_point_edge_curve,beam_plane)
 
             end_distance = module.distance_from_point_to_plane(end_point,detail_line_plane)
-            end_distance_from_edge = module.distance_from_point_to_plane(end_point_edge_curve,beam_plane)
+            end_distance_from_edge = module.distance_from_point_to_plane(transformed_end_point_edge_curve,beam_plane)
+
+            trans_group = TransactionGroup(doc, 'Align Beam')
+            trans_group.Start()
 
             t = Transaction (doc, "Align Beam")
             t.Start()
             try:
                 yz_jus = module.get_builtin_parameter_by_name(beam, DB.BuiltInParameter.YZ_JUSTIFICATION)
+                clone_yz_jus_value = yz_jus.AsInteger()
                 yz_jus.Set(1)
                 get_para_start = module.get_builtin_parameter_by_name(beam, DB.BuiltInParameter.START_Y_OFFSET_VALUE)
                 if get_para_start.AsDouble() != 0:
@@ -115,37 +130,46 @@ if module.AutodeskData():
                 if get_para_end.AsDouble() != 0:
                     module.message_box("Please set end y offset = 0")
                     sys.exit()
+                                   
+                dieu_kien_1 = check_huong_dam(beam) and check_huong_dam(detail_line[0])
+                dieu_kien_2 = not check_huong_dam(beam) and not check_huong_dam(detail_line[0])
+                dieu_kien_3 = check_huong_dam(beam) and not check_huong_dam(detail_line[0])
+                dieu_kien_4 = not check_huong_dam(beam) and check_huong_dam(detail_line[0])
 
-                if beam.HasModifiedGeometry():
-                    dieu_kien_1 = check_huong_dam(beam) and check_huong_dam(detail_line[0])
-                    dieu_kien_2 = not check_huong_dam(beam) and not check_huong_dam(detail_line[0])
-                    dieu_kien_3 = check_huong_dam(beam) and not check_huong_dam(detail_line[0])
-                    dieu_kien_4 = not check_huong_dam(beam) and check_huong_dam(detail_line[0])
-                    if dieu_kien_1 or dieu_kien_2:
-                        gia_tri_start = (start_distance + start_distance_from_edge )/math.cos(radian)
-                        gia_tri_end = (end_distance + end_distance_from_edge)/math.cos(radian)
-                        # print ("true, trường hợp tổng 1"),  (start_distance*304.8), (start_distance_from_edge*304.8), (gia_tri_start*304.8), math.cos(radian)
+                if dieu_kien_1 or dieu_kien_2:
+                    gia_tri_start = (start_distance + start_distance_from_edge )/math.cos(radian)
+                    gia_tri_end = (end_distance + end_distance_from_edge)/math.cos(radian)
+                    # print ("true, trường hợp tổng 1"),  (start_distance*304.8), (start_distance_from_edge*304.8), (gia_tri_start*304.8), math.cos(radian)
 
-                    elif dieu_kien_3 or dieu_kien_4:
-                        gia_tri_start = (start_distance - start_distance_from_edge )/math.cos(radian)
-                        gia_tri_end = (end_distance - end_distance_from_edge)/math.cos(radian)
-                        # print ("true, trường hợp tổng 2"),  (start_distance*304.8), (start_distance_from_edge*304.8), (gia_tri_start*304.8), math.cos(radian)
+                elif dieu_kien_3 or dieu_kien_4:
+                    gia_tri_start = (start_distance - start_distance_from_edge )/math.cos(radian)
+                    gia_tri_end = (end_distance - end_distance_from_edge)/math.cos(radian)
+                    # print ("true, trường hợp tổng 2"),  (start_distance*304.8), (start_distance_from_edge*304.8), (gia_tri_start*304.8), math.cos(radian)
 
-                    get_para_start = module.get_builtin_parameter_by_name(beam, DB.BuiltInParameter.START_Y_OFFSET_VALUE)
-                    
-                    if gia_tri_start > 50 or gia_tri_end > 50 :
-                        module.message_box("Please try again")
-                    else:
-                        get_para_start.Set(gia_tri_start)
-
-                        get_para_end = module.get_builtin_parameter_by_name(beam, DB.BuiltInParameter.END_Y_OFFSET_VALUE)
-
-                        get_para_end.Set(gia_tri_end)
+                get_para_start = module.get_builtin_parameter_by_name(beam, DB.BuiltInParameter.START_Y_OFFSET_VALUE)
+                
+                if gia_tri_start > 50 or gia_tri_end > 50 :
+                    module.message_box("Please try again")
                 else:
-                    module.message_box("Please try to cut geometry the beam with other beam")
+                    get_para_start.Set(gia_tri_start)
+
+                    get_para_end = module.get_builtin_parameter_by_name(beam, DB.BuiltInParameter.END_Y_OFFSET_VALUE)
+
+                    get_para_end.Set(gia_tri_end)
+
             except:
                 # print(traceback.format_exc())
                 pass
             t.Commit()
+
+            t2 = Transaction (doc, "Setting")
+            t2.Start()
+
+            if clone_yz_jus_value == 0:
+                if round(gia_tri_start,5) == round(gia_tri_end,5):
+                    yz_jus.Set(0)
+                    module.get_builtin_parameter_by_name(beam, DB.BuiltInParameter.Y_OFFSET_VALUE).Set(gia_tri_start)
+            t2.Commit()
+            trans_group.Assimilate()
     except:
         pass
