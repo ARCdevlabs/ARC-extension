@@ -39,13 +39,15 @@
                     HorizontalAlignment ="Stretch"
                     >
                 <RadioButton
+                        x:Name="Radiobtn_ColumnInsulation"
+                    
 						Width="76"
 						Content="Column"
 						Foreground="#FF0A0000"
 						Height="26"
 						VerticalAlignment="Center"
 						Margin="30,10,10,10" />
-                <RadioButton
+                <RadioButton x:Name="RadioBtn_BeamInsolutation"
 						Width="65"
 						Content="Beam"
 						Foreground="#FF0A0000"
@@ -53,6 +55,7 @@
 						VerticalAlignment="Center"
 						Margin="0,10,10,10" />
                 <RadioButton
+                        x:Name="RadioBtn_HorizontalBeamInsulation"
 						Content="Horizontal Beam"
 						Foreground="#FF0A0000"
 						Height="26"
@@ -90,7 +93,7 @@
 
                     <ComboBox	
                     Grid.Column="1" 
-                        x:Name="CbSelectFamily"
+                        x:Name="Cbb_SelectTypeOfInsulation"
 						HorizontalAlignment="Stretch"
 						Foreground="#FF0A0000"
                         Width="200"
