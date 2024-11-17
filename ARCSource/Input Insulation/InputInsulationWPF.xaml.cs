@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,8 +23,11 @@ namespace Input_Insulation
         public MainWindow(Document doc, List<Element> listElement)
         {
             InitializeComponent();
+            
             _doc = doc;
             _listElement = listElement;
+
+            InitializeControls();
             _beamInsulationForm = new BeamInsulation_Form(); // Khởi tạo BeamInsulation_Form
         }
 
@@ -54,6 +58,25 @@ namespace Input_Insulation
 
             _beamInsulationForm.ChayChuongTrinh(_doc, _listElement, beamTypeSymbol, covertToDouble);
 
+        }
+        private void InitializeControls()
+        {
+            
+            Cbb_SelectTypeOfInsulation.Items.Add(Utility.TypeOfInsulation.けいカル);
+            Cbb_SelectTypeOfInsulation.Items.Add(Utility.TypeOfInsulation.巻き付け);
+            Cbb_SelectTypeOfInsulation.SelectedIndex = 0;
+
+            if (_listElement.First().Category.Id == new ElementId(BuiltInCategory.OST_StructuralColumns))
+            {
+                Radiobtn_ColumnInsulation.IsChecked = true;
+            }
+            else if (_listElement.First().Category.Id== new ElementId(BuiltInCategory.OST_StructuralFraming))
+            {
+               double angle= _listElement.First().get_Parameter(BuiltInParameter.STRUCTURAL_BEND_DIR_ANGLE).AsDouble();
+                if (angle == 0) { RadioBtn_BeamInsolutation.IsChecked = true; }
+                else {  RadioBtn_HorizontalBeamInsulation.IsChecked = true; }
+            }
+             
         }
     }
 

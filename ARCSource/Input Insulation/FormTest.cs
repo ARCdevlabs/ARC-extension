@@ -28,7 +28,7 @@ namespace Input_Insulation
         {
             Transaction t= new Transaction(m_doc, "Input Column Insulation");
             t.Start();
-            Ultility.ColumnInsulation(m_doc, elementIds);
+            Utility.ColumnInsulation(m_doc, elementIds);
             t.Commit();
         }
     }

@@ -233,7 +233,7 @@ namespace Input_Insulation
 
         public enum TypeOfInsulation
         {
-            けいカル = 1,
+            けいカル = 0,
             巻き付け = 1,
         }
     }
