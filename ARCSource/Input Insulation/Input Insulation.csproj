@@ -56,19 +56,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BeamInsulation.cs" />
+    <Compile Include="Ultility.cs" />
     <Compile Include="LibARC.cs" />
     <Compile Include="InputInsulationWPF.xaml.cs">
       <DependentUpon>InputInsulationWPF.xaml</DependentUpon>
     </Compile>
     <Compile Include="InputInsulation_Command.cs" />
-    <Compile Include="FormTest.cs">
+    <None Include="FormTest.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormTest.Designer.cs">
+    </None>
+    <None Include="FormTest.Designer.cs">
       <DependentUpon>FormTest.cs</DependentUpon>
-    </Compile>
+    </None>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FormTest.resx">
