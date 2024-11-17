@@ -56,7 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BeamInsulation.cs" />
-    <Compile Include="Ultility_Copy.cs" />
     <Compile Include="LibARC.cs" />
     <Compile Include="InputInsulationWPF.xaml.cs">
       <DependentUpon>InputInsulationWPF.xaml</DependentUpon>
@@ -69,7 +68,7 @@
       <DependentUpon>FormTest.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Ultility.cs" />
+    <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FormTest.resx">
