@@ -13,30 +13,6 @@ namespace Input_Insulation
 {
     public class ARCLibrary
     {
-        public static Parameter GetBuiltInParameterByName(Element element, BuiltInParameter builtInParameter)
-        {
-            Parameter param = element.get_Parameter(builtInParameter);
-
-            return param;
-        }
-
-        public static string GetParameterValueByName(Element element, string name)
-        {
-            // Lấy danh sách các tham số có tên tương ứng
-            IList<Parameter> listParam = element.GetParameters(name);
-
-            // Nếu không tìm thấy tham số, trả về null hoặc xử lý lỗi tùy ý
-            if (listParam == null || listParam.Count == 0)
-            {
-                return null;
-            }
-
-            // Lấy tham số đầu tiên từ danh sách
-            Parameter param = listParam[0];
-
-            // Trả về giá trị của tham số dưới dạng chuỗi
-            return param.AsValueString();
-        }
         public Element PickElement(UIDocument uidoc, Document doc)
         {
 
@@ -67,7 +43,6 @@ namespace Input_Insulation
 
             return null;
         }
-
         public List<Element> PickElements(UIDocument uidoc, Document doc)
         {
 

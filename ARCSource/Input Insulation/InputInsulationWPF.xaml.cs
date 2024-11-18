@@ -12,23 +12,22 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
+
 namespace Input_Insulation
 {
     public partial class MainWindow : Window
     {
         private Document _doc;
         private List<Element> _listElement;
-        private BeamInsulation_Form _beamInsulationForm;
+        private Utility _utility;
 
         public MainWindow(Document doc, List<Element> listElement)
         {
-            InitializeComponent();
-            
+            InitializeComponent();       
             _doc = doc;
             _listElement = listElement;
 
-            InitializeControls();
-            _beamInsulationForm = new BeamInsulation_Form(); // Khởi tạo BeamInsulation_Form
+            Utility _utility = new Utility();
         }
 
         private void NumberTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -56,7 +55,7 @@ namespace Input_Insulation
 
             FamilySymbol beamTypeSymbol = beamType as FamilySymbol;
 
-            _beamInsulationForm.ChayChuongTrinh(_doc, _listElement, beamTypeSymbol, covertToDouble);
+            _utility.InputBeamInsulation(_doc, _listElement, beamTypeSymbol, covertToDouble);
 
         }
         private void InitializeControls()
@@ -75,9 +74,7 @@ namespace Input_Insulation
                double angle= _listElement.First().get_Parameter(BuiltInParameter.STRUCTURAL_BEND_DIR_ANGLE).AsDouble();
                 if (angle == 0) { RadioBtn_BeamInsolutation.IsChecked = true; }
                 else {  RadioBtn_HorizontalBeamInsulation.IsChecked = true; }
-            }
-             
+            }           
         }
     }
-
 }
