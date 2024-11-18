@@ -55,7 +55,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BeamInsulation.cs" />
     <Compile Include="LibARC.cs" />
     <Compile Include="InputInsulationWPF.xaml.cs">
       <DependentUpon>InputInsulationWPF.xaml</DependentUpon>
