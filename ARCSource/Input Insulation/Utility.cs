@@ -14,12 +14,181 @@ namespace Input_Insulation
 {
     public class Utility
     {
-        public static void ColumnInsulation(Document m_doc, IList<ElementId> ids)
+        public void InputBeamInsulation(Document doc, List<Element> listElement, FamilySymbol familySymbol, double thickness)
         {
+            FamilyInstance newBeam = null;
 
-            foreach (ElementId id in ids)
+
+            ARCLibrary lib = new ARCLibrary();
+
+            double H_c = 2;
+            double B_c = 1;
+            double tw_c = 0.1;
+            double tf_c = 0.1;
+
+            TransactionGroup trangroup = new TransactionGroup(doc, "Input Beam Insulation Group Trans");
             {
-                Element element = m_doc.GetElement(id);
+
+                try
+                {
+
+                    foreach (Element ele in listElement)
+                    {
+                        ElementId categoryId = ele.Category.Id;
+
+                        if (categoryId.IntegerValue != (int)BuiltInCategory.OST_StructuralFraming)
+                        {
+                            //TaskDialog.Show("Beam Information", categoryBuiltinId.ToString());
+                            continue;
+                        }
+                        else
+                        {
+                            double lastStartLevelOffset = 0;
+                            double lastEndLevelOffset = 0;
+
+                            double startLevelOffset = ele.get_Parameter(BuiltInParameter.STRUCTURAL_BEAM_END0_ELEVATION).AsDouble();
+                            double endLevelOffset = ele.get_Parameter(BuiltInParameter.STRUCTURAL_BEAM_END1_ELEVATION).AsDouble();
+
+                            Element type = doc.GetElement(ele.GetTypeId());
+
+                            //Parameter kích thước
+                            try
+                            {
+                                H_c = type.LookupParameter("H_c").AsDouble();
+                                B_c = type.LookupParameter("B_c").AsDouble();
+                                tw_c = type.LookupParameter("tw_c").AsDouble();
+                                tf_c = type.LookupParameter("tf_c").AsDouble();
+                            }
+                            catch
+                            {
+                                //TaskDialog.Show("Beam Information", "Đã có lỗi xảy ra");
+                                //throw new Exception("Đã xảy ra lỗi!");
+
+                                continue;
+                            }
+
+                            int yz_jus = ele.get_Parameter(BuiltInParameter.YZ_JUSTIFICATION).AsInteger();
+                            if (yz_jus == 0)
+                            {
+                                double zOffset = ele.get_Parameter(BuiltInParameter.Z_OFFSET_VALUE).AsDouble();
+                                lastStartLevelOffset = startLevelOffset + zOffset;
+                                lastEndLevelOffset = endLevelOffset + zOffset;
+                            }
+                            if (yz_jus == 1)
+                            {
+                                double startZOffset = ele.get_Parameter(BuiltInParameter.START_Z_OFFSET_VALUE).AsDouble();
+                                lastStartLevelOffset = startLevelOffset + startZOffset;
+                                double endZOffset = ele.get_Parameter(BuiltInParameter.END_Z_OFFSET_VALUE).AsDouble();
+                                lastEndLevelOffset = endLevelOffset + endZOffset;
+                            }
+
+                            Line location = lib.GetBeamLocation(ele);
+
+                            FamilySymbol beamTypeSymbol = familySymbol;
+
+                            lib.ActivateSymbol(doc, beamTypeSymbol);
+
+                            ElementId levelId = ele.get_Parameter(BuiltInParameter.INSTANCE_REFERENCE_LEVEL_PARAM).AsElementId();
+
+                            Level level = doc.GetElement(levelId) as Level;
+
+                            Transaction trans1 = new Transaction(doc, "Input Beam Insulation");
+                            {
+                                trans1.Start();
+
+                                newBeam = lib.CreateBeam(doc, location, beamTypeSymbol, level);  //Cần điều chỉnh lại beamTypeSymbol dựa vào form WPF
+
+
+
+                                trans1.Commit();
+
+                            }
+                            Transaction trans2 = new Transaction(doc, "Setting Shape Insulation");
+                            {
+                                trans2.Start();
+                                Parameter paramStartLevelOffset = newBeam.get_Parameter(BuiltInParameter.STRUCTURAL_BEAM_END0_ELEVATION);
+                                Parameter paramEndLevelOffset = newBeam.get_Parameter(BuiltInParameter.STRUCTURAL_BEAM_END1_ELEVATION);
+
+                                paramStartLevelOffset.Set(lastStartLevelOffset);
+                                paramEndLevelOffset.Set(lastEndLevelOffset);
+
+                                newBeam.LookupParameter("H").Set(H_c);
+                                newBeam.LookupParameter("B").Set(B_c);
+                                newBeam.LookupParameter("tw").Set(tw_c);
+                                newBeam.LookupParameter("tf").Set(tf_c);
+                                try
+                                {
+                                    Parameter paramStartJoinCutBack = newBeam.get_Parameter(BuiltInParameter.START_JOIN_CUTBACK);
+                                    paramStartJoinCutBack.Set(0);
+                                }
+                                catch { }
+
+                                try
+                                {
+                                    Parameter paramEndJoinCutBack = newBeam.get_Parameter(BuiltInParameter.END_JOIN_CUTBACK);
+                                    paramEndJoinCutBack.Set(0);
+                                }
+                                catch { }
+
+                                try
+                                {
+                                    Parameter paramStartExtend = newBeam.get_Parameter(BuiltInParameter.START_EXTENSION);
+                                    paramStartExtend.Set(0);
+                                }
+                                catch { }
+
+                                try
+                                {
+                                    Parameter paramEndExtend = newBeam.get_Parameter(BuiltInParameter.END_EXTENSION);
+                                    paramEndExtend.Set(0);
+                                }
+                                catch { }
+
+                                newBeam.get_Parameter(BuiltInParameter.Z_JUSTIFICATION).Set(2);
+
+                                //TaskDialog.Show("Beam Information", "Last Start Level Offset: " + lastStartLevelOffset.ToString());
+
+                                trans2.Commit();
+                            }
+                            Transaction trans3 = new Transaction(doc, "Setting Start End Level Offset");
+                            {
+                                trans3.Start();
+                                newBeam.LookupParameter("Start_Level_Offset").Set(lastStartLevelOffset);
+                                newBeam.LookupParameter("End_Level_Offset").Set(lastEndLevelOffset);
+                                trans3.Commit();
+                                //listInsulation.Add(newBeam);
+                            }
+                            Transaction trans4 = new Transaction(doc, "Setting Cut Length");
+                            {
+                                trans4.Start();
+                                double cutLength = newBeam.get_Parameter(BuiltInParameter.STRUCTURAL_FRAME_CUT_LENGTH).AsDouble();
+                                //TaskDialog.Show("Beam Information", "Cut Length trước: " + cutLength.ToString());
+                                // Phương pháp chỉnh Cut_Length thất bại vì nếu chỉnh
+                                // Cut_Length thì chiều dài dầm thay đổi => BuiltIn Cut Legnth lại bị thay đổi => Cần phải có công thức để BuiltIn Cut Legnth không ảnh hưởng 
+                                newBeam.LookupParameter("Cut_Length").Set(cutLength);
+                                trans4.Commit();
+                            }
+                        }
+                    }
+
+                    trangroup.Assimilate();
+                }
+                catch
+                {
+                    trangroup.RollBack();
+                }
+            }
+            return;
+        }
+
+        public static void ColumnInsulation(Document m_doc, IList<Element> ids, TypeOfInsulation typeOfInsulation,string InsulationThickness)
+        {
+            Transaction t = new Transaction(m_doc, "Column Insulation");
+
+            t.Start();
+            foreach (Element element in ids)
+            {
+                //Element element = m_doc.GetElement(id);
 
                 if (element.Category.Id != new ElementId(BuiltInCategory.OST_StructuralColumns))
                 {
@@ -29,20 +198,93 @@ namespace Input_Insulation
                 //Data ColumnInstance
                 FamilyInstance m_instance = element as FamilyInstance;
                 ColumnInstanceProperties m_ColumnProperties = new ColumnInstanceProperties();
+                
                 m_ColumnProperties = GetColumnProperties(m_doc, m_instance);
 
-                if (m_ColumnProperties.ColumnTypeName.Contains("Column_Box"))
+                
+                try
                 {
-                    ColumnBoxInsulation(m_doc, m_ColumnProperties);
+                    ColumnInsulation(m_doc, m_ColumnProperties, typeOfInsulation, InsulationThickness);
+                    
                 }
-                else if ((m_ColumnProperties.ColumnTypeName.Contains("Column_H")))
+                catch 
                 {
-                    ColumnHInsulation(m_doc, m_ColumnProperties);
+                   
+                    
+
                 }
+                
+
+                
                    
             }
+            t.Commit();
             
         }
+
+        /// <summary>
+        /// Nhập tấm cách nhiệt cho cột có hình dạng là H
+        /// </summary>
+        /// <param name="m_doc"></param>
+        /// <param name="properties"> Thông tin từ columnn cần nhập cách nhiệt</param>
+        public static void ColumnInsulation(Document m_doc, ColumnInstanceProperties properties, TypeOfInsulation typeOfInsulation, string InsulationThickness)
+        {
+            string familyName = "gIns_Column-ver4";
+            string symbolName ="t"+ InsulationThickness;
+            
+
+            Family family = (from f in new FilteredElementCollector(m_doc).OfClass(typeof(Family)).
+                                Cast<Family>()
+                                where (f.Name == familyName)
+                                select f).First(); 
+            
+            FamilySymbol RWSymbol = (from fs in new FilteredElementCollector(m_doc).
+                                   OfClass(typeof(FamilySymbol)).
+                                   Cast<FamilySymbol>()
+
+                                     where (fs.Family.Name.Contains(familyName) && fs.Name == symbolName)
+                                     select fs).First();
+
+            FamilyInstance insulation = m_doc.Create.NewFamilyInstance(properties.Location, RWSymbol, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+            //rotate
+
+            XYZ cc = new XYZ(properties.Location.X, properties.Location.Y, properties.Location.Z + 10);
+            Line axis = Line.CreateBound(properties.Location, cc);
+            ElementTransformUtils.RotateElement(m_doc, insulation.Id, axis, properties.Rotation);
+
+            insulation.LookupParameter("H").Set(properties.H);
+            insulation.LookupParameter("B").Set(properties.B);
+
+            try
+            {
+                insulation.LookupParameter("tw").Set(properties.tw.Value);
+                insulation.LookupParameter("tf").Set(properties.tf.Value);
+
+            }
+            catch
+            {
+
+
+            }
+
+            insulation.LookupParameter("合成耐火上").Set(0);
+            insulation.LookupParameter("合成耐火下").Set(0);
+            insulation.LookupParameter("合成耐火右").Set(0);
+            insulation.LookupParameter("合成耐火左").Set(0);
+
+            if (typeOfInsulation==TypeOfInsulation.けいカル||!properties.IsColumnH)
+            {
+                insulation.LookupParameter("H_type").Set(0);
+            }
+            else 
+            {
+                insulation.LookupParameter("H_type").Set(1);
+            }
+
+            insulation.LookupParameter("長さ__").Set(properties.Height);
+
+        }
+
         /// <summary>
         /// Nhập cách nhiệt cho cột có hình dạng box
         /// </summary>
@@ -126,8 +368,24 @@ namespace Input_Insulation
             ColumnInstanceProperties m_instanceProperties = new ColumnInstanceProperties();
             //LocationPoint
             XYZ m_ColumnlocationPoint = (m_instance.Location as LocationPoint).Point;
-            double offsetX = m_instance.LookupParameter("ex_project").AsDouble();
-            double offsetY = m_instance.LookupParameter("ey_project").AsDouble();
+            double offsetX, offsetY;
+            try
+            {
+                offsetX = m_instance.LookupParameter("ex_project").AsDouble();
+                offsetY = m_instance.LookupParameter("ey_project").AsDouble();
+            }
+            catch 
+            {
+
+                offsetX = m_instance.LookupParameter("フランジ方向_柱偏芯").AsDouble();
+                offsetY = m_instance.LookupParameter("ウェブ方向_柱偏芯").AsDouble();
+            }
+
+
+            
+
+
+
             m_instanceProperties.Location = new XYZ(m_ColumnlocationPoint.X + offsetX, m_ColumnlocationPoint.Y + offsetY, m_ColumnlocationPoint.Z);
 
             //Rotation
@@ -160,13 +418,15 @@ namespace Input_Insulation
             m_instanceProperties.B = ColumnType.LookupParameter("B").AsDouble();
             try
             {
+                
                 m_instanceProperties.tw = ColumnType.LookupParameter("tw").AsDouble();
                 m_instanceProperties.tf = ColumnType.LookupParameter("tf").AsDouble();
+                m_instanceProperties.IsColumnH = true;
             }
-            catch (Exception)
+            catch 
             {
 
-                throw;
+                m_instanceProperties.IsColumnH= false;
             }
 
             //double r = ColumnType.LookupParameter("r").AsDouble();
@@ -189,6 +449,7 @@ namespace Input_Insulation
             private ElementId m_BaseLevelId;
             private string m_TypeName;
             private string m_FamilyName;
+            private bool m_IsColumnH;
 
             public double H
             {
@@ -227,7 +488,13 @@ namespace Input_Insulation
                 get { return m_FamilyName; }
                 set { m_FamilyName = value; }
 
-            }  
+            } 
+            public bool IsColumnH
+            {
+                get { return m_IsColumnH; }
+                set { m_IsColumnH = value; }
+            }
+            
         }
 
 
