@@ -51,6 +51,23 @@ if module.AutodeskData():
 			sys.exit()
 
 	# Lấy grid và level đã chọn
+	selected_ids = uidoc.Selection.GetElementIds()
+
+	if not selected_ids:
+		selected_elements = pick_grid_by_rectangle()
+		if not selected_elements:
+			module.message_box(tin_nhan_1)
+			sys.exit()
+	else:
+		selected_elements = [doc.GetElement(id) for id in selected_ids]
+
+	# Lọc Grid và Level
+	grids = [e for e in selected_elements if isinstance(e, Grid)]
+	levels = [e for e in selected_elements if isinstance(e, Level)]
+
+	if not grids and not levels:
+		module.message_box(huong_dan_4)
+		sys.exit()
 
 	# Set work plane
 	def set_work_plane_for_view(view):
@@ -120,58 +137,32 @@ if module.AutodeskData():
 						level.HideBubbleInView(DatumEnds.End1, view)
 					else:
 						level.ShowBubbleInView(DatumEnds.End1, view)
-while True:
+
+	t = Transaction(doc, "Toggle Grids/Levels Symbol")
+	t.Start()
+
+	if not set_work_plane_for_view(doc.ActiveView):
+		module.message_box("Cannot set Work Plane")
+		t.RollBack()
+		sys.exit()
+
+	# Chọn điểm click
+	with forms.WarningBar(title=huong_dan_2):
+		click_point = pick_point_with_nearest_snap(uidoc)
+
+	if not click_point:
+		module.message_box(huong_dan_3)
+		t.RollBack()
+		sys.exit()
+
+	# Bật/tắt hiển thị cho từng grid và level được chọn
 	try:
-		try:
-			selected_ids = uidoc.Selection.GetElementIds()
-
-			if not selected_ids:
-				selected_elements = pick_grid_by_rectangle()
-				if not selected_elements:
-					module.message_box(tin_nhan_1)
-					sys.exit()
-			else:
-				selected_elements = [doc.GetElement(id) for id in selected_ids]
-
-			# Lọc Grid và Level
-			grids = [e for e in selected_elements if isinstance(e, Grid)]
-			levels = [e for e in selected_elements if isinstance(e, Level)]
-
-			if not grids and not levels:
-				module.message_box(huong_dan_4)
-				sys.exit()
-		except:
-			break
-		t = Transaction(doc, "Toggle Grids/Levels Symbol")
-		t.Start()
-
-		if not set_work_plane_for_view(doc.ActiveView):
-			module.message_box("Cannot set Work Plane")
-			t.RollBack()
-			# sys.exit()
-
-		# Chọn điểm click
-		with forms.WarningBar(title=huong_dan_2):
-			click_point = pick_point_with_nearest_snap(uidoc)
-
-		if not click_point:
-			module.message_box(huong_dan_3)
-			t.RollBack()
-			# sys.exit()
-
-		# Bật/tắt hiển thị cho từng grid và level được chọn
-		try:
-			for elem in selected_elements:
-				if isinstance(elem, Grid):
-					bubble_visibility_grid(elem, click_point, doc.ActiveView)
-				elif isinstance(elem, Level):
-					bubble_visibility_level(elem, click_point, doc.ActiveView)
-		except:
-			t.RollBack()
-		else:
-			t.Commit()
-	except Exception as ex:
-		if "Operation canceled by user." in str(ex):
-			break
-		else:
-			break
+		for elem in selected_elements:
+			if isinstance(elem, Grid):
+				bubble_visibility_grid(elem, click_point, doc.ActiveView)
+			elif isinstance(elem, Level):
+				bubble_visibility_level(elem, click_point, doc.ActiveView)
+	except:
+		t.RollBack()
+	else:
+		t.Commit()
