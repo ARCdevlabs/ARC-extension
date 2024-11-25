@@ -19,6 +19,7 @@ namespace Input_Insulation
         {
             FamilyInstance newBeam = null;
 
+
             ARCLibrary lib = new ARCLibrary();
 
             double H_c = 2;
@@ -180,12 +181,14 @@ namespace Input_Insulation
             return;
         }
 
-        public static void ColumnInsulation(Document m_doc, IList<ElementId> ids)
+        public static void ColumnInsulation(Document m_doc, IList<Element> ids, TypeOfInsulation typeOfInsulation,string InsulationThickness)
         {
+            Transaction t = new Transaction(m_doc, "Column Insulation");
 
-            foreach (ElementId id in ids)
+            t.Start();
+            foreach (Element element in ids)
             {
-                Element element = m_doc.GetElement(id);
+                //Element element = m_doc.GetElement(id);
 
                 if (element.Category.Id != new ElementId(BuiltInCategory.OST_StructuralColumns))
                 {
@@ -195,20 +198,93 @@ namespace Input_Insulation
                 //Data ColumnInstance
                 FamilyInstance m_instance = element as FamilyInstance;
                 ColumnInstanceProperties m_ColumnProperties = new ColumnInstanceProperties();
+                
                 m_ColumnProperties = GetColumnProperties(m_doc, m_instance);
 
-                if (m_ColumnProperties.ColumnTypeName.Contains("Column_Box"))
+                
+                try
                 {
-                    ColumnBoxInsulation(m_doc, m_ColumnProperties);
+                    ColumnInsulation(m_doc, m_ColumnProperties, typeOfInsulation, InsulationThickness);
+                    
                 }
-                else if ((m_ColumnProperties.ColumnTypeName.Contains("Column_H")))
+                catch 
                 {
-                    ColumnHInsulation(m_doc, m_ColumnProperties);
+                   
+                    
+
                 }
+                
+
+                
                    
             }
+            t.Commit();
             
         }
+
+        /// <summary>
+        /// Nhập tấm cách nhiệt cho cột có hình dạng là H
+        /// </summary>
+        /// <param name="m_doc"></param>
+        /// <param name="properties"> Thông tin từ columnn cần nhập cách nhiệt</param>
+        public static void ColumnInsulation(Document m_doc, ColumnInstanceProperties properties, TypeOfInsulation typeOfInsulation, string InsulationThickness)
+        {
+            string familyName = "gIns_Column-ver4";
+            string symbolName ="t"+ InsulationThickness;
+            
+
+            Family family = (from f in new FilteredElementCollector(m_doc).OfClass(typeof(Family)).
+                                Cast<Family>()
+                                where (f.Name == familyName)
+                                select f).First(); 
+            
+            FamilySymbol RWSymbol = (from fs in new FilteredElementCollector(m_doc).
+                                   OfClass(typeof(FamilySymbol)).
+                                   Cast<FamilySymbol>()
+
+                                     where (fs.Family.Name.Contains(familyName) && fs.Name == symbolName)
+                                     select fs).First();
+
+            FamilyInstance insulation = m_doc.Create.NewFamilyInstance(properties.Location, RWSymbol, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+            //rotate
+
+            XYZ cc = new XYZ(properties.Location.X, properties.Location.Y, properties.Location.Z + 10);
+            Line axis = Line.CreateBound(properties.Location, cc);
+            ElementTransformUtils.RotateElement(m_doc, insulation.Id, axis, properties.Rotation);
+
+            insulation.LookupParameter("H").Set(properties.H);
+            insulation.LookupParameter("B").Set(properties.B);
+
+            try
+            {
+                insulation.LookupParameter("tw").Set(properties.tw.Value);
+                insulation.LookupParameter("tf").Set(properties.tf.Value);
+
+            }
+            catch
+            {
+
+
+            }
+
+            insulation.LookupParameter("合成耐火上").Set(0);
+            insulation.LookupParameter("合成耐火下").Set(0);
+            insulation.LookupParameter("合成耐火右").Set(0);
+            insulation.LookupParameter("合成耐火左").Set(0);
+
+            if (typeOfInsulation==TypeOfInsulation.けいカル||!properties.IsColumnH)
+            {
+                insulation.LookupParameter("H_type").Set(0);
+            }
+            else 
+            {
+                insulation.LookupParameter("H_type").Set(1);
+            }
+
+            insulation.LookupParameter("長さ__").Set(properties.Height);
+
+        }
+
         /// <summary>
         /// Nhập cách nhiệt cho cột có hình dạng box
         /// </summary>
@@ -292,8 +368,24 @@ namespace Input_Insulation
             ColumnInstanceProperties m_instanceProperties = new ColumnInstanceProperties();
             //LocationPoint
             XYZ m_ColumnlocationPoint = (m_instance.Location as LocationPoint).Point;
-            double offsetX = m_instance.LookupParameter("ex_project").AsDouble();
-            double offsetY = m_instance.LookupParameter("ey_project").AsDouble();
+            double offsetX, offsetY;
+            try
+            {
+                offsetX = m_instance.LookupParameter("ex_project").AsDouble();
+                offsetY = m_instance.LookupParameter("ey_project").AsDouble();
+            }
+            catch 
+            {
+
+                offsetX = m_instance.LookupParameter("フランジ方向_柱偏芯").AsDouble();
+                offsetY = m_instance.LookupParameter("ウェブ方向_柱偏芯").AsDouble();
+            }
+
+
+            
+
+
+
             m_instanceProperties.Location = new XYZ(m_ColumnlocationPoint.X + offsetX, m_ColumnlocationPoint.Y + offsetY, m_ColumnlocationPoint.Z);
 
             //Rotation
@@ -326,13 +418,15 @@ namespace Input_Insulation
             m_instanceProperties.B = ColumnType.LookupParameter("B").AsDouble();
             try
             {
+                
                 m_instanceProperties.tw = ColumnType.LookupParameter("tw").AsDouble();
                 m_instanceProperties.tf = ColumnType.LookupParameter("tf").AsDouble();
+                m_instanceProperties.IsColumnH = true;
             }
-            catch (Exception)
+            catch 
             {
 
-                throw;
+                m_instanceProperties.IsColumnH= false;
             }
 
             //double r = ColumnType.LookupParameter("r").AsDouble();
@@ -355,6 +449,7 @@ namespace Input_Insulation
             private ElementId m_BaseLevelId;
             private string m_TypeName;
             private string m_FamilyName;
+            private bool m_IsColumnH;
 
             public double H
             {
@@ -393,7 +488,13 @@ namespace Input_Insulation
                 get { return m_FamilyName; }
                 set { m_FamilyName = value; }
 
-            }  
+            } 
+            public bool IsColumnH
+            {
+                get { return m_IsColumnH; }
+                set { m_IsColumnH = value; }
+            }
+            
         }
 
 

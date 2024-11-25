@@ -20,17 +20,19 @@ namespace Input_Insulation
         private Document _doc;
         private List<Element> _listElement;
         private Utility _utility;
+        
+       
 
         public MainWindow(Document doc, List<Element> listElement)
         {
             InitializeComponent();       
             _doc = doc;
             _listElement = listElement;
-
+            InitializeControls();
             Utility _utility = new Utility();
         }
 
-        private void NumberTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void TbThickness_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             // Regular expression for numbers with optional decimal separator (dot or comma)
             Regex regex = new Regex(@"^[0-9]*(?:[.]?[0-9]*)$");
@@ -45,17 +47,31 @@ namespace Input_Insulation
 
         private void OnCreateInsulationButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            
+            FamilySymbol m_FamilySymbol = null;
+
+            Utility.TypeOfInsulation _typeOfInsulation = (Utility.TypeOfInsulation)Cbb_SelectTypeOfInsulation.SelectedValue;
 
             string textBoxValue = TbThickness.Text;
 
             double covertToDouble = double.Parse(textBoxValue) / 304.8;
 
-            Element beamType = _doc.GetElement(new ElementId(13042529)); //Cần điều chỉnh lại beamTypeSymbol dựa vào form WPF
 
-            FamilySymbol beamTypeSymbol = beamType as FamilySymbol;
+            this.Close();
+            if (RadioBtn_BeamInsolutation.IsChecked==true)
+            {
+                
+                Element beamType = _doc.GetElement(new ElementId(13042529)); //Cần điều chỉnh lại beamTypeSymbol dựa vào form WPF
 
-            _utility.InputBeamInsulation(_doc, _listElement, beamTypeSymbol, covertToDouble);
+                FamilySymbol beamTypeSymbol = beamType as FamilySymbol;
+
+                _utility.InputBeamInsulation(_doc, _listElement, beamTypeSymbol, covertToDouble);
+            }
+            else if(Radiobtn_ColumnInsulation.IsChecked==true) 
+            {
+                Utility.ColumnInsulation(_doc, _listElement, _typeOfInsulation, textBoxValue);
+            } 
+                
 
         }
         private void InitializeControls()
@@ -76,5 +92,7 @@ namespace Input_Insulation
                 else {  RadioBtn_HorizontalBeamInsulation.IsChecked = true; }
             }           
         }
+
+        
     }
 }
