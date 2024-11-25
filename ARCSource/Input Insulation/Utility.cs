@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Forms.PropertyGridInternal;
 using System.Xml.Linq;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Structure;
 using Autodesk.Revit.UI;
 
 namespace Input_Insulation
@@ -28,10 +29,8 @@ namespace Input_Insulation
 
             TransactionGroup trangroup = new TransactionGroup(doc, "Input Beam Insulation Group Trans");
             {
-
                 try
                 {
-
                     foreach (Element ele in listElement)
                     {
                         ElementId categoryId = ele.Category.Id;
@@ -98,8 +97,6 @@ namespace Input_Insulation
 
                                 newBeam = lib.CreateBeam(doc, location, beamTypeSymbol, level);  //Cần điều chỉnh lại beamTypeSymbol dựa vào form WPF
 
-
-
                                 trans1.Commit();
 
                             }
@@ -116,6 +113,9 @@ namespace Input_Insulation
                                 newBeam.LookupParameter("B").Set(B_c);
                                 newBeam.LookupParameter("tw").Set(tw_c);
                                 newBeam.LookupParameter("tf").Set(tf_c);
+
+                                StructuralFramingUtils.DisallowJoinAtEnd(newBeam, 0);
+                                StructuralFramingUtils.DisallowJoinAtEnd(newBeam, 1);
                                 try
                                 {
                                     Parameter paramStartJoinCutBack = newBeam.get_Parameter(BuiltInParameter.START_JOIN_CUTBACK);
@@ -150,7 +150,7 @@ namespace Input_Insulation
 
                                 trans2.Commit();
                             }
-                            Transaction trans3 = new Transaction(doc, "Setting Start End Level Offset");
+                            Transaction trans3 = new Transaction(doc, "Setting Start End Level Offset and Cut Length");
                             {
                                 trans3.Start();
                                 newBeam.LookupParameter("Start_Level_Offset").Set(lastStartLevelOffset);
@@ -169,9 +169,9 @@ namespace Input_Insulation
                                 trans4.Commit();
                             }
                         }
-                    }
 
-                    trangroup.Assimilate();
+                        trangroup.Assimilate();
+                    }
                 }
                 catch
                 {
