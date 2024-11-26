@@ -15,6 +15,11 @@ import traceback
 if module.AutodeskData():
 	uidoc = __revit__.ActiveUIDocument
 	doc = uidoc.Document
+
+import clr
+clr.AddReference("DefResetTextPosition241125Ver1.dll")
+import DefResetTextPosition241125Ver1 #Load Assembly
+
 from Autodesk.Revit.UI.Selection import ObjectType, Selection
 try:
     t0 = Transaction(doc,"Set Work Plane")
@@ -35,21 +40,10 @@ try:
     else:
         element = current_selection
 
-    # print return_point
-    
     t = Transaction(doc,"Reset Text Position")
     t.Start() 
     for i in element:
-        try:
-            number_of_segments =  i.NumberOfSegments
-            if number_of_segments != 0:
-                segments = i.Segments
-                for tung_seg in segments:
-                    tung_seg.ResetTextPosition()
-            else:
-                i.ResetTextPosition()
-        except:
-            pass
+        DefResetTextPosition241125Ver1.reset_text_position(i) #Gọi def từ assembly luôn, không cần thông qua class nữa
     t.Commit()
 except:
     # print(traceback.format_exc())
