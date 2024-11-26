@@ -900,60 +900,37 @@ def get_element(iuidoc,idoc, string_warning_bar, noti = False):
             selected_element = list_ele
     return selected_element
 
-
-# Code nay de lay thong tin chip cua may tinh
-def information():
-    info = platform.processor()
-    newma = "/M%A*D/".join(info)
-    return (newma)
-
 # Def join geometry
 def joingeometry(idoc,List1, List2):
-    if checklicense():
-        CountSwitchJoin = []
-        Join = []
-        for i in List1:
-            Bdb = i.get_BoundingBox(None)
-            Outlineofbb = (Outline(Bdb.Min, Bdb.Max))
-            for intersected in Autodesk.Revit.DB.FilteredElementCollector(idoc).WherePasses(Autodesk.Revit.DB.BoundingBoxIntersectsFilter(Outlineofbb)):
-            # Check xem list filter
-                for a in List2:
-                    if a.Id == intersected.Id:
-                # Code join geometry
+    CountSwitchJoin = []
+    Join = []
+    for i in List1:
+        Bdb = i.get_BoundingBox(None)
+        Outlineofbb = (Outline(Bdb.Min, Bdb.Max))
+        for intersected in Autodesk.Revit.DB.FilteredElementCollector(idoc).WherePasses(Autodesk.Revit.DB.BoundingBoxIntersectsFilter(Outlineofbb)):
+        # Check xem list filter
+            for a in List2:
+                if a.Id == intersected.Id:
+            # Code join geometry
+                    try:
+                        result = Autodesk.Revit.DB.JoinGeometryUtils.JoinGeometry(idoc,i,intersected)
+                        checkcutting = Autodesk.Revit.DB.JoinGeometryUtils.IsCuttingElementInJoin(idoc,i,intersected)
+                        Join.Add("OK")
+                        if str(checkcutting) == "False":
+                            switchjoin = Autodesk.Revit.DB.JoinGeometryUtils.SwitchJoinOrder(idoc,i,intersected)
+                    except:
                         try:
-                            result = Autodesk.Revit.DB.JoinGeometryUtils.JoinGeometry(idoc,i,intersected)
                             checkcutting = Autodesk.Revit.DB.JoinGeometryUtils.IsCuttingElementInJoin(idoc,i,intersected)
-                            Join.Add("OK")
                             if str(checkcutting) == "False":
                                 switchjoin = Autodesk.Revit.DB.JoinGeometryUtils.SwitchJoinOrder(idoc,i,intersected)
+                                CountSwitchJoin.append("OK")
                         except:
-                            try:
-                                checkcutting = Autodesk.Revit.DB.JoinGeometryUtils.IsCuttingElementInJoin(idoc,i,intersected)
-                                if str(checkcutting) == "False":
-                                    switchjoin = Autodesk.Revit.DB.JoinGeometryUtils.SwitchJoinOrder(idoc,i,intersected)
-                                    CountSwitchJoin.append("OK")
-                            except:
-                                pass
-        LenJoin = str(len (Join))
-        LenSwitchjoin = str(len (CountSwitchJoin))
-        Mes = "Joined: " + LenJoin + " and Switch join: " + LenSwitchjoin
-        Alert(Mes,title="Mes",header= "Report number Join and Switch joined")
+                            pass
+    LenJoin = str(len (Join))
+    LenSwitchjoin = str(len (CountSwitchJoin))
+    Mes = "Joined: " + LenJoin + " and Switch join: " + LenSwitchjoin
+    Alert(Mes,title="Mes",header= "Report number Join and Switch joined")
     return 
-
-# So sanh license
-def machinecode(input):
-    info = platform.processor()
-    a_string = bytes.fromhex(input)
-    a_string = a_string.decode("ascii")
-    if a_string == info:
-        check = "OK"
-    else:
-        check = "Not OK"
-    return check
-
-
-
-'''cai nay check key'''
 
 def _get_app_file(file_id, file_ext,
                 filename_only=False, stamped=False, universal=False):
@@ -992,76 +969,41 @@ def get_document_data_file(file_id, file_ext, add_cmd_name=False):
     # print (get_data_file(script_file_id, file_ext))
     return get_data_file(script_file_id, file_ext)
 
-'''Check lisence'''
-info = platform.processor()
-def checklicense():
-    check =''
-    datafile = get_document_data_file("pyrevit", "dll")
-    try:
-        f = open(datafile, 'r')
-        current_selection = pickle.load(f)
-        f.close()
-        newstring= current_selection[:-2]
-        a_string = bytes.fromhex(newstring)
-        a_string = a_string.decode("ascii")
-        if a_string == info:
-            check = 'OK'
-        else:
-            check = "Not OK"
-            sys.exit()
-    except Exception:
-        pass
-    return check
 
-
-'''check lisence, giong cai check lisence nhung no khong co dong sys.exit()'''
 def checklicense_for_info():
-    check =''
-    datafile = get_document_data_file("pyrevit", "dll")
-    try:
-        f = open(datafile, 'r')
-        current_selection = pickle.load(f)
-        f.close()
-        newstring= current_selection[:-2]
-        a_string = bytes.fromhex(newstring)
-        a_string = a_string.decode("ascii")
-        if a_string == info:
-            check = 'OK'
-        else:
-            check = "Not OK"
-    except Exception:
-        pass
-    return check
+    import clr
+    clr.AddReference("ReadPassCode241125Ver1.dll")
+    import ReadPassCode241125Ver1 
+    import_class = ReadPassCode241125Ver1.ClassReadPassCode() 
+    check = import_class.check_license()
+    if check:
+        return "OK"
+    else:
+        "Not OK"
+
 
 def AutodeskData():
-    datafile = get_document_data_file("pyrevit", "dll")
-    if datafile:
-        try:
-            f = open(datafile, 'r')
-            current_selection = pickle.load(f)
-            f.close()
-            newstring= current_selection[:-2]
-            a_string = bytes.fromhex(newstring)
-            a_string = a_string.decode("ascii")
-            if a_string == info:
-                check = "OK"
-            return check
-        except Exception:
-            thong_bao_loi_license()
-            pass
-            return False
+    import clr
+    clr.AddReference("ReadPassCode241125Ver1.dll")
+    import ReadPassCode241125Ver1 
+    import_class = ReadPassCode241125Ver1.ClassReadPassCode() 
+    check = import_class.check_license()
+    if check:
+        return check
     else:
         thong_bao_loi_license()
-    return False
+
+def AutodeskDataInCode():
+    import clr
+    clr.AddReference("ReadPassCode241125Ver1.dll")
+    import ReadPassCode241125Ver1 
+    import_class = ReadPassCode241125Ver1.ClassReadPassCode() 
+    return import_class
 
 def thong_bao_loi_license():
     tin_nhan = "Hãy mở khóa Add-in.\nSử dụng command [Get info] và gửi mã tới skype của Sơn\nhoặc email:nguyenthanhson1712@gmail.com\n\n\nこちらのツールを使用するには、\nアドインをロック解除する必要があります。\nコマンド [Get info] を使用してコードを取得し、その後\nSonのSkypeまたは以下のメールアドレスに送信してください：nguyenthanhson1712@gmail.com"
     MessageBox.Show(tin_nhan, "ARC", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
-def machine_code():
-    info = platform.processor()
-    newma = "/M%A*D/".join(info)
-    return newma
 
 def all_elements_of_category(idoc, category):
 	return FilteredElementCollector(idoc).OfCategory(category).WhereElementIsNotElementType().ToElements()
