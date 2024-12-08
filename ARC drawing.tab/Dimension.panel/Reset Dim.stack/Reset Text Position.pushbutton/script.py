@@ -17,8 +17,8 @@ if module.AutodeskData():
 	doc = uidoc.Document
 
 import clr
-clr.AddReference("DefResetTextPosition241125Ver1.dll")
-import DefResetTextPosition241125Ver1 #Load Assembly
+clr.AddReference("DefResetTextPosition241208Ver2.dll")
+import DefResetTextPosition241208Ver2 #Load Assembly
 
 from Autodesk.Revit.UI.Selection import ObjectType, Selection
 try:
@@ -40,13 +40,15 @@ try:
     else:
         element = current_selection
 
+
+
     t = Transaction(doc,"Reset Text Position")
     t.Start() 
     for i in element:
-        DefResetTextPosition241125Ver1.reset_text_position(i) #Gọi def từ assembly luôn, không cần thông qua class nữa
+        DefResetTextPosition241208Ver2.reset_text_position(i) #Gọi def từ assembly luôn, không cần thông qua class nữa
     t.Commit()
 except:
-    # print(traceback.format_exc())
+    print(traceback.format_exc())
     pass
 
 
