@@ -17,9 +17,6 @@ if nances.AutodeskData():
         pick_edge = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Edge)
         element_of_edge = doc.GetElement(pick_edge.ElementId)
         geometry_object_of_edge = element_of_edge.GetGeometryObjectFromReference(pick_edge)
-        if element_of_edge.HasModifiedGeometry() == False:
-            import sys
-            sys.exit()
         if isinstance(geometry_object_of_edge, Edge):
             t = Transaction (doc, "Create Model Line from Edge")
             t.Start()
