@@ -1,0 +1,8 @@
+title: 
+  en-us: Gióng 2D line lên mặt phẳng
+  ja: Projection Detail Line To Surface
+min_revit_version: 2020
+max_revit_version: 2024
+engine:
+  clean: true
+  automate: false
