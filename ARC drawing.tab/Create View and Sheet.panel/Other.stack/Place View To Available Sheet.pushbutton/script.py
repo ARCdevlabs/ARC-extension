@@ -1,16 +1,11 @@
 # -*- coding: utf-8 -*-
-import string
-import codecs
-import importlib
-ARC = string.ascii_lowercase
-begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
-module = importlib.import_module(str(begin))
+import nances
 from pyrevit import revit, DB
 from nances import forms
 from pyrevit import script
-if module.AutodeskData():
+if nances.AutodeskData():
     logger = script.get_logger()
-    selected_views = forms.select_views(use_selection=True)
+    selected_views = forms.select_sheets(use_selection=True)
     # module.message_box("Tiếp theo, chỉ được 1 sheet mà muốn add view vào thôi")
     if selected_views:
         logger.debug('View đã chọn {}'.format(len(selected_views)))
@@ -34,4 +29,4 @@ if module.AutodeskData():
                         logger.debug('Lỗi đặt view vào sheet {} -> {}'
                                     .format(selected_view.Id, dest_sheets.Id))
     else:
-        forms.alert('Không có view nào được chọn')
+        nances.message_box("Không có view nào được chọn")

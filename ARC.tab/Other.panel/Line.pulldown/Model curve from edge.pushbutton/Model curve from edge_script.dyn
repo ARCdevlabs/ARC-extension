@@ -1,0 +1,156 @@
+{
+  "Uuid": "aafcf106-31c4-4ba1-99ce-431de13002ad",
+  "IsCustomNode": false,
+  "Description": "",
+  "Name": "Model curve from edge_script",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "NodeType": "PythonScriptNode",
+      "Code": "import clr\r\n\r\nclr.AddReference(\"RevitAPIUI\")\r\nfrom  Autodesk.Revit.UI import *\r\n\r\nclr.AddReference(\"RevitServices\")\r\nimport RevitServices\r\nfrom RevitServices.Persistence import DocumentManager\r\ndoc = DocumentManager.Instance.CurrentDBDocument\r\nuidoc=DocumentManager.Instance.CurrentUIApplication.ActiveUIDocument\r\n\r\nclr.AddReference(\"RevitNodes\")\r\nimport Revit\r\nclr.ImportExtensions(Revit.Elements)\r\nclr.ImportExtensions(Revit.GeometryConversion)\r\n\r\nclr.AddReference('RevitAPI')\r\nfrom Autodesk.Revit.DB import *\r\n\r\nselect = uidoc.Selection\r\noption = Selection.ObjectType.Edge\r\nref = select.PickObject(option, \"Select the Edge\")\r\nget_element = doc.GetElement(ref.ElementId)\r\nedge = get_element.GetGeometryObjectFromReference(ref)\r\n\r\nif isinstance(get_element, FamilyInstance):\r\n\tif get_element.HasModifiedGeometry():\r\n\t\tgeo_curve = edge.AsCurve()\r\n\t\treturn_edge = geo_curve.ToProtoType(True)\r\n\telse:\r\n\t\ttransform = get_element.GetTransform().ToCoordinateSystem()\t\r\n\t\treturn_edge = edge.Convert(ref, transform)\r\nelse:\r\n\tgeo_curve = edge.AsCurve()\r\n\treturn_edge = geo_curve.ToProtoType(True)\r\n\r\n\r\nOUT = return_edge",
+      "Engine": "IronPython2",
+      "VariableInputPorts": true,
+      "Id": "34b88245183f4620b4cc564a030b7a80",
+      "Inputs": [
+        {
+          "Id": "e04312cb889848038bd5a51f4f2ac0a6",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "5be272855ed244f095b32a34ddb767e8",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded Python script."
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "Revit.Elements.ModelCurve.ByCurve@Autodesk.DesignScript.Geometry.Curve",
+      "Id": "d8779bca68594dd99f8d39a6f41e4ba0",
+      "Inputs": [
+        {
+          "Id": "c4e6d608d87c48c1ac73201777612b31",
+          "Name": "curve",
+          "Description": "Curve",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "5ca58c7024ec4d858310ac24c6250668",
+          "Name": "ModelCurve",
+          "Description": "ModelCurve",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Construct a Revit ModelCurve element from a Curve\n\nModelCurve.ByCurve (curve: Curve): ModelCurve"
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "5be272855ed244f095b32a34ddb767e8",
+      "End": "c4e6d608d87c48c1ac73201777612b31",
+      "Id": "cfcd3cdfc25345c4a2193e9d698c8b57"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [],
+  "Thumbnail": "",
+  "GraphDocumentationURL": null,
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Properties",
+      "Version": "2.12",
+      "Data": {}
+    },
+    {
+      "ExtensionGuid": "DFBD9CC0-DB40-457A-939E-8C8555555A9D",
+      "Name": "Generative Design",
+      "Version": "8.1",
+      "Data": {}
+    }
+  ],
+  "Author": "",
+  "Linting": {
+    "activeLinter": "None",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "2.12.1.8246",
+      "RunType": "Manual",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "Background Preview",
+      "EyeX": -17.0,
+      "EyeY": 24.0,
+      "EyeZ": 50.0,
+      "LookX": 12.0,
+      "LookY": -13.0,
+      "LookZ": -58.0,
+      "UpX": 0.0,
+      "UpY": 1.0,
+      "UpZ": 0.0
+    },
+    "NodeViews": [
+      {
+        "ShowGeometry": true,
+        "Name": "Python Script",
+        "Id": "34b88245183f4620b4cc564a030b7a80",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 184.46760108807723,
+        "Y": 352.17494570357655
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "ModelCurve.ByCurve",
+        "Id": "d8779bca68594dd99f8d39a6f41e4ba0",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 420.23326133909279,
+        "Y": 351.14902807775377
+      }
+    ],
+    "Annotations": [],
+    "X": -22.134238852596013,
+    "Y": -226.91896476572788,
+    "Zoom": 1.442589092933134
+  }
+}

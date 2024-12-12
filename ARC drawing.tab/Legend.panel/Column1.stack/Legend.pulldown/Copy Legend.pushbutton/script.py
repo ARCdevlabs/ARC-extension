@@ -1,16 +1,10 @@
 # -*- coding: utf-8 -*-
-from codecs import Codec
-import string
-import importlib
-ARC = string.ascii_lowercase
-begin = ''.join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
-module = importlib.import_module(str(begin))
+import nances
 from nances import forms
 import Autodesk
 from Autodesk.Revit.DB import *
 import Autodesk.Revit.DB as DB
 from System.Collections.Generic import *
-import traceback
 uidoc = __revit__.ActiveUIDocument
 doc = uidoc.Document
 active_view = doc.ActiveView
@@ -53,34 +47,73 @@ def override_graphics_in_view(target_view_name, element_id, override_setting):
     return
 
 all_legends = get_all_legends(doc)
-return_legend_view_name = \
+
+select_origin_view_name = \
     forms.SelectFromList.show(
         all_legends,
-        title = 'Select Legend Need Paste to',
+        title = 'Select Origin Legend',
         width = 500,
-        button_name = 'Select Legend',
+        button_name = 'Select Origin View',
         multiselect = False
         )
 
-get_all_views = FilteredElementCollector(doc).OfClass(View).ToElements()
-for tung_view in get_all_views:
-    if str(tung_view.Name) == str(return_legend_view_name):
-        return_legend_view = tung_view
+if select_origin_view_name:
+    return_legend_view_name = \
+        forms.SelectFromList.show(
+            all_legends,
+            title = 'Select Legend Need Paste to',
+            width = 500,
+            button_name = 'Select Legend',
+            multiselect = False
+            )
+else:
+    nances.message_box("Please select source legend")
+    import sys
+    sys.exit()
+if select_origin_view_name:
+    get_all_views = FilteredElementCollector(doc).OfClass(View).ToElements()
 
-fill_regions_in_active_view = get_fill_regions_and_text_in_active_view(doc, active_view)
-fill_regions_id = []
-try:
-    t = Transaction (doc, "Copy Fill Region")
-    t.Start()
-    for fill_region in fill_regions_in_active_view:
-        fill_regions_id.append(fill_region.Id)
-        get_override = active_view.GetElementOverrides(fill_region.Id)
-        list_element_id = List[ElementId](fill_regions_id)
-        copied_element = copy_elements_to_view(list_element_id, active_view , return_legend_view)
-        override_graphics_in_view(return_legend_view_name, copied_element[0], get_override)
-        fill_regions_id.remove(fill_region.Id)     
-    t.Commit()
-except:
-    pass
-if return_legend_view:
-    uidoc.ActiveView = return_legend_view
+    for tung_view in get_all_views:
+        if str(tung_view.Name) == str(select_origin_view_name):
+            origin_view = tung_view
+
+    for tung_view in get_all_views:
+        if str(tung_view.Name) == str(return_legend_view_name):
+            return_legend_view = tung_view
+
+    fill_regions_in_origin_view = get_fill_regions_and_text_in_active_view(doc, origin_view)
+    fill_regions_id = []
+
+    trans_group = TransactionGroup(doc, 'Copy Fill Region')
+    trans_group.Start()
+    try:
+        try:
+            t = Transaction (doc, "Copy Fill Region_step 1")
+            t.Start()
+            for fill_region in fill_regions_in_origin_view:
+                fill_regions_id.append(fill_region.Id)
+                get_override = origin_view.GetElementOverrides(fill_region.Id)
+                list_element_id = List[ElementId](fill_regions_id)
+                copied_element = copy_elements_to_view(list_element_id, origin_view , return_legend_view)
+                override_graphics_in_view(return_legend_view_name, copied_element[0], get_override)
+                fill_regions_id.remove(fill_region.Id)     
+            t.Commit()
+            if return_legend_view:
+                uidoc.ActiveView = return_legend_view
+        except:
+            t.RollBack()
+            pass
+        try:
+            get_all_views_lan_2 = FilteredElementCollector(doc).OfClass(View).ToElements()
+            t2 = Transaction (doc, "Delete Legend")
+            t2.Start()
+            new_origin_view = origin_view.Name + "1"
+            for tung_view in get_all_views_lan_2:
+                if str(tung_view.Name) == str(new_origin_view):
+                    doc.Delete(tung_view.Id)
+            t2.Commit()
+        except:
+            pass
+        trans_group.Assimilate()
+    except:
+        trans_group.RollBack
