@@ -142,6 +142,12 @@ if module.AutodeskData():
                             para_level_tail_moi = module.get_builtin_parameter_by_name(slope_arrow_moi, DB.BuiltInParameter.SLOPE_ARROW_LEVEL_START)
 
                             para_level_tail_moi.Set(para_level_tail.AsElementId())
+
+                            para_slope_number_moi = module.get_builtin_parameter_by_name(slope_arrow_moi, DB.BuiltInParameter.ROOF_SLOPE)
+
+                            para_slope_number = module.get_builtin_parameter_by_name(arrow_element, DB.BuiltInParameter.ROOF_SLOPE)
+
+                            para_slope_number_moi.Set(para_slope_number.AsDouble())
                     except:
                         pass
             trans_group.Assimilate()
