@@ -47,7 +47,6 @@ namespace Input_Insulation
             {
 
                 MainWindow m_form = new MainWindow(idoc, listElement);
-
                
                 m_form.ShowDialog();
 

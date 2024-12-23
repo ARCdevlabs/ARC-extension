@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Input_Insulation"
-             mc:Ignorable="d" Height="380" Width="792"
+             mc:Ignorable="d" Height="400" Width="792"
             WindowStartupLocation="CenterScreen"
             ResizeMode="NoResize"
             Background="#FFEDEDED"
@@ -42,8 +42,7 @@
                     HorizontalAlignment ="Stretch"
                     >
                 <RadioButton
-                        x:Name="Radiobtn_ColumnInsulation"
-                    
+                        x:Name="Radiobtn_ColumnInsulation"                 
 						Width="76"
 						Content="Column"
 						Foreground="#FF0A0000"
@@ -51,6 +50,7 @@
 						VerticalAlignment="Center"
 						Margin="30,10,10,10" />
                 <RadioButton x:Name="RadioBtn_BeamInsolutation"
+                        IsChecked="True"
 						Width="65"
 						Content="Beam"
 						Foreground="#FF0A0000"
@@ -98,12 +98,14 @@
                     Grid.Column="1" 
                         x:Name="Cbb_SelectTypeOfInsulation"
 						HorizontalAlignment="Stretch"
-						Foreground="#FF0A0000"
+						Foreground="Black" 
+                        Background="White" 
                         Width="200"
 						Height="30"
 						VerticalAlignment="Center"
                         VerticalContentAlignment="Center"
-                        />
+                        SelectedIndex="0">
+                    </ComboBox>
                 </Grid>
             </StackPanel>
 
@@ -126,33 +128,73 @@
 						Margin="10,10,10,10" />
 
                     <Grid Grid.Column="1">
-                        <TextBox
-    
-                        Grid.Column="1" 
-    
-                        x:Name="TbThickness"
-    
-				                    Width="200"
-				                    Height="30"
-				                    VerticalAlignment="Center"
+                        <TextBox   
+                        Grid.Column="1"     
+                        x:Name="TbThickness"    
+				        Width="200"
+				        Height="30"
+				        VerticalAlignment="Center"
                         HorizontalAlignment="Center"
-                        TextAlignment="Right"
+                        TextAlignment="Center"
                         VerticalContentAlignment="Center"
                         Foreground="Black" 
                         Background="White" 
                         Text="25" 
                         Focusable="True" 
-                        AllowDrop="True" PreviewTextInput="TbThickness_PreviewTextInput"
-    
-                         />
+                        AllowDrop="True" PreviewTextInput="TbThickness_PreviewTextInput"    
+                        />
                     </Grid>
+                </Grid>
+            </StackPanel>
 
-                    
+            <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Top" 
+                    HorizontalAlignment ="Stretch"
+                    >
+                <Grid x:Name="SubStackPanel_3" Margin="10" Width="336">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label 
+                        Grid.Column="0" 
+						HorizontalAlignment="Left"
+						Content="Shape:"
+						Foreground="#FF0A0000"
+						Height="26"
+						VerticalAlignment="Center"
+						Margin="10,10,10,15" />
+
+                    <Grid Grid.Column="1">
+                        <RadioButton
+                        x:Name="ShapeType1"   
+                        GroupName="ShapeGroup"
+                        IsChecked="True"
+						Width="76"
+						Content="H Shape"
+						Foreground="#FF0A0000"
+						Height="26"
+						VerticalAlignment="Center"
+						Margin="10,10,10,0" />
+
+                    </Grid>
+                    <Grid Grid.Column="2">
+                        <RadioButton
+                        x:Name="ShapeType2"    
+                        GroupName="ShapeGroup"
+						Width="76"
+						Content="ロ Shape"
+						Foreground="#FF0A0000"
+						Height="26"
+						VerticalAlignment="Center"
+						Margin="30,10,10,0" />
+                    </Grid>
                 </Grid>
             </StackPanel>
 
             <Button x:Name="ButtonInsulationColumn"
-                    Margin="10,20,20,10"
+                    Margin="10,10,20,10"
                     Content= "Create Insulation"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
@@ -160,7 +202,5 @@
                     Width="200"
                     Click="OnCreateInsulationButton_Click"/>
         </StackPanel>
-
-        
     </Grid>
 </Window>

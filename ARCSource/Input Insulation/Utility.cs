@@ -15,10 +15,9 @@ namespace Input_Insulation
 {
     public class Utility
     {
-        public void InputBeamInsulation(Document doc, List<Element> listElement, FamilySymbol familySymbol, double thickness)
+        public void InputBeamInsulation(Document doc, List<Element> listElement, FamilySymbol familySymbol, bool H_type, double thickness)
         {
             FamilyInstance newBeam = null;
-
 
             ARCLibrary lib = new ARCLibrary();
 
@@ -27,8 +26,10 @@ namespace Input_Insulation
             double tw_c = 0.1;
             double tf_c = 0.1;
 
-            TransactionGroup trangroup = new TransactionGroup(doc, "Input Beam Insulation Group Trans");
+            TransactionGroup trangroup = new TransactionGroup(doc, "Input Beam Insulation");
             {
+                trangroup.Start();
+
                 try
                 {
                     foreach (Element ele in listElement)
@@ -143,6 +144,228 @@ namespace Input_Insulation
                                     paramEndExtend.Set(0);
                                 }
                                 catch { }
+                                try
+                                {
+                                    Parameter paramThickness = newBeam.LookupParameter("耐火被覆t");
+                                    paramThickness.Set(thickness);
+                                }
+                                catch { }
+
+                                try
+                                {
+                                    Parameter paramShapeH = newBeam.LookupParameter("H_type");
+                                    Parameter paramShapeO = newBeam.LookupParameter("ロ_type");
+                                    if (H_type == true)
+                                    { 
+                                        paramShapeH.Set(1);
+                                        paramShapeO.Set(0);
+                                    }    
+                                    else
+                                    {
+                                        paramShapeH.Set(0);
+                                        paramShapeO.Set(1);
+                                    }    
+                                    
+                                }
+                                catch { }
+
+                                newBeam.get_Parameter(BuiltInParameter.Z_JUSTIFICATION).Set(2);
+
+                                //TaskDialog.Show("Beam Information", "Last Start Level Offset: " + lastStartLevelOffset.ToString());
+
+                                trans2.Commit();
+                            }
+                            Transaction trans3 = new Transaction(doc, "Setting Start End Level Offset and Cut Length");
+                            {
+                                trans3.Start();
+                                newBeam.LookupParameter("Start_Level_Offset").Set(lastStartLevelOffset);
+                                newBeam.LookupParameter("End_Level_Offset").Set(lastEndLevelOffset);
+                                trans3.Commit();
+                                //listInsulation.Add(newBeam);
+                            }
+                            Transaction trans4 = new Transaction(doc, "Setting Cut Length");
+                            {
+                                trans4.Start();
+                                double cutLength = newBeam.get_Parameter(BuiltInParameter.STRUCTURAL_FRAME_CUT_LENGTH).AsDouble();
+                                //TaskDialog.Show("Beam Information", "Cut Length trước: " + cutLength.ToString());
+                                // Phương pháp chỉnh Cut_Length thất bại vì nếu chỉnh
+                                // Cut_Length thì chiều dài dầm thay đổi => BuiltIn Cut Legnth lại bị thay đổi => Cần phải có công thức để BuiltIn Cut Legnth không ảnh hưởng 
+                                newBeam.LookupParameter("Cut_Length").Set(cutLength);
+                                trans4.Commit();
+                            }
+                        }                       
+                    }
+                    trangroup.Assimilate();
+                }
+                catch
+                {
+                    trangroup.RollBack();
+                }
+            }
+            return;
+        }
+
+        public void InputBeamHorizontalInsulation(Document doc, List<Element> listElement, FamilySymbol familySymbol, bool H_type, double thickness)
+        {
+
+            FamilyInstance newBeam = null;
+
+
+            ARCLibrary lib = new ARCLibrary();
+
+            double H_c = 2;
+            double B_c = 1;
+            double tw_c = 0.1;
+            double tf_c = 0.1;
+
+            TransactionGroup trangroup = new TransactionGroup(doc, "Input Horizontal Beam Insulation");
+            {
+                trangroup.Start();
+
+                try
+                {
+                    foreach (Element ele in listElement)
+                    {
+                        ElementId categoryId = ele.Category.Id;
+
+                        if (categoryId.IntegerValue != (int)BuiltInCategory.OST_StructuralFraming)
+                        {
+                            //TaskDialog.Show("Beam Information", categoryBuiltinId.ToString());
+                            continue;
+                        }
+                        else
+                        {
+                            double lastStartLevelOffset = 0;
+                            double lastEndLevelOffset = 0;
+                            double zOffset = 0;                        
+
+                            double startLevelOffset = ele.get_Parameter(BuiltInParameter.STRUCTURAL_BEAM_END0_ELEVATION).AsDouble();
+                            double endLevelOffset = ele.get_Parameter(BuiltInParameter.STRUCTURAL_BEAM_END1_ELEVATION).AsDouble();
+                            double crossSectionRotation = ele.get_Parameter(BuiltInParameter.STRUCTURAL_BEND_DIR_ANGLE).AsDouble();
+
+                            Element type = doc.GetElement(ele.GetTypeId());
+
+                            //Parameter kích thước
+                            try
+                            {
+                                H_c = type.LookupParameter("H_c").AsDouble();
+                                B_c = type.LookupParameter("B_c").AsDouble();
+                                tw_c = type.LookupParameter("tw_c").AsDouble();
+                                tf_c = type.LookupParameter("tf_c").AsDouble();
+                            }
+                            catch
+                            {
+                                //TaskDialog.Show("Beam Information", "Đã có lỗi xảy ra");
+                                //throw new Exception("Đã xảy ra lỗi!");
+                                continue;
+                            }
+                            int yz_jus = ele.get_Parameter(BuiltInParameter.YZ_JUSTIFICATION).AsInteger();
+                            if (yz_jus == 0)
+                            {
+                                zOffset = ele.get_Parameter(BuiltInParameter.Z_OFFSET_VALUE).AsDouble();
+                                lastStartLevelOffset = startLevelOffset;
+                                lastEndLevelOffset = endLevelOffset;
+
+                            }
+                            if (yz_jus == 1)
+                            {
+                                double startZOffset = ele.get_Parameter(BuiltInParameter.START_Z_OFFSET_VALUE).AsDouble();
+                                lastStartLevelOffset = startLevelOffset;
+                                double endZOffset = ele.get_Parameter(BuiltInParameter.END_Z_OFFSET_VALUE).AsDouble();
+                                lastEndLevelOffset = endLevelOffset;
+                            }
+
+                            Line location = lib.GetBeamLocation(ele);
+
+                            FamilySymbol beamTypeSymbol = familySymbol;
+
+                            lib.ActivateSymbol(doc, beamTypeSymbol);
+
+                            ElementId levelId = ele.get_Parameter(BuiltInParameter.INSTANCE_REFERENCE_LEVEL_PARAM).AsElementId();
+
+                            Level level = doc.GetElement(levelId) as Level;
+
+                            Transaction trans1 = new Transaction(doc, "Input Beam Insulation");
+                            {
+                                trans1.Start();
+
+                                newBeam = lib.CreateBeam(doc, location, beamTypeSymbol, level);  //Cần điều chỉnh lại beamTypeSymbol dựa vào form WPF
+
+                                trans1.Commit();
+
+                            }
+                            Transaction trans2 = new Transaction(doc, "Setting Shape Insulation");
+                            {
+                                trans2.Start();
+                                Parameter paramStartLevelOffset = newBeam.get_Parameter(BuiltInParameter.STRUCTURAL_BEAM_END0_ELEVATION);
+                                Parameter paramEndLevelOffset = newBeam.get_Parameter(BuiltInParameter.STRUCTURAL_BEAM_END1_ELEVATION);
+
+                                paramStartLevelOffset.Set(lastStartLevelOffset);
+                                paramEndLevelOffset.Set(lastEndLevelOffset);
+
+                                Parameter paramZLevelOffset = newBeam.get_Parameter(BuiltInParameter.Z_OFFSET_VALUE);
+                                paramZLevelOffset.Set(zOffset);
+
+                                Parameter paramcrossSectionRotation = newBeam.get_Parameter(BuiltInParameter.STRUCTURAL_BEND_DIR_ANGLE);
+                                paramcrossSectionRotation.Set(crossSectionRotation);
+
+
+                                newBeam.LookupParameter("H").Set(H_c);
+                                newBeam.LookupParameter("B").Set(B_c);
+                                newBeam.LookupParameter("tw").Set(tw_c);
+                                newBeam.LookupParameter("tf").Set(tf_c);
+
+                                StructuralFramingUtils.DisallowJoinAtEnd(newBeam, 0);
+                                StructuralFramingUtils.DisallowJoinAtEnd(newBeam, 1);
+                                try
+                                {
+                                    Parameter paramStartJoinCutBack = newBeam.get_Parameter(BuiltInParameter.START_JOIN_CUTBACK);
+                                    paramStartJoinCutBack.Set(0);
+                                }
+                                catch { }
+
+                                try
+                                {
+                                    Parameter paramEndJoinCutBack = newBeam.get_Parameter(BuiltInParameter.END_JOIN_CUTBACK);
+                                    paramEndJoinCutBack.Set(0);
+                                }
+                                catch { }
+
+                                try
+                                {
+                                    Parameter paramStartExtend = newBeam.get_Parameter(BuiltInParameter.START_EXTENSION);
+                                    paramStartExtend.Set(0);
+                                }
+                                catch { }
+
+                                try
+                                {
+                                    Parameter paramEndExtend = newBeam.get_Parameter(BuiltInParameter.END_EXTENSION);
+                                    paramEndExtend.Set(0);
+                                }
+                                catch { }
+                                try
+                                {
+                                    Parameter paramThickness = newBeam.LookupParameter("耐火被覆t");
+                                    paramThickness.Set(thickness);
+                                }
+                                catch { }
+                                try
+                                {
+                                    Parameter paramShapeH = newBeam.LookupParameter("H_type");
+                                    Parameter paramShapeO = newBeam.LookupParameter("ロ_type");
+                                    if (H_type == true)
+                                    {
+                                        paramShapeH.Set(1);
+                                        paramShapeO.Set(0);
+                                    }
+                                    else
+                                    {
+                                        paramShapeH.Set(0);
+                                        paramShapeO.Set(1);
+                                    }
+                                }
+                                catch { }
 
                                 newBeam.get_Parameter(BuiltInParameter.Z_JUSTIFICATION).Set(2);
 
@@ -169,9 +392,9 @@ namespace Input_Insulation
                                 trans4.Commit();
                             }
                         }
-
-                        trangroup.Assimilate();
+                
                     }
+                trangroup.Assimilate();
                 }
                 catch
                 {
@@ -208,14 +431,10 @@ namespace Input_Insulation
                     
                 }
                 catch 
-                {
-                   
-                    
+                {                                   
 
                 }
-                
-
-                
+                               
                    
             }
             t.Commit();
@@ -232,7 +451,6 @@ namespace Input_Insulation
             string familyName = "gIns_Column-ver4";
             string symbolName ="t"+ InsulationThickness;
             
-
             Family family = (from f in new FilteredElementCollector(m_doc).OfClass(typeof(Family)).
                                 Cast<Family>()
                                 where (f.Name == familyName)
@@ -382,9 +600,7 @@ namespace Input_Insulation
             }
 
 
-            
-
-
+           
 
             m_instanceProperties.Location = new XYZ(m_ColumnlocationPoint.X + offsetX, m_ColumnlocationPoint.Y + offsetY, m_ColumnlocationPoint.Z);
 
