@@ -15,7 +15,6 @@ namespace Input_Insulation
     {
         public Element PickElement(UIDocument uidoc, Document doc)
         {
-
             try
             {
                 // Create a reference to pick an object
@@ -40,19 +39,22 @@ namespace Input_Insulation
             catch
             {
             }
-
             return null;
         }
         public List<Element> PickElements(UIDocument uidoc, Document doc)
         {
-
+            IList<Reference> pickedObjectsRef = null;   
             // Create a reference to pick an object
             Selection choices = uidoc.Selection;
-
-            IList<Reference> pickedObjectsRef = choices.PickObjects(ObjectType.Element);
-
             List<Element> listElements = new List<Element>();
-
+            try
+            {
+                pickedObjectsRef = choices.PickObjects(ObjectType.Element);
+            }
+            catch
+            {
+                pickedObjectsRef = null;
+            }
             if (pickedObjectsRef != null)
             {
                 foreach (Reference reference in pickedObjectsRef)
@@ -62,7 +64,6 @@ namespace Input_Insulation
                     listElements.Add(pickedElement);
                 }
                 return listElements;
-
             }
             return null;
         }

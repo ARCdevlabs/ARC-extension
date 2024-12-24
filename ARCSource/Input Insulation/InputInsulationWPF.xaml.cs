@@ -30,8 +30,10 @@ namespace Input_Insulation
         private Utility _utility;
         private List<FamilyTypeInfo> familyTypeInfos;
         public static Element GlobalElement { get; set; }
-       public static bool shapeH { get; set; }
+        public static bool shapeH { get; set; }
         public ObservableCollection<string> TypeOfInsulations { get; set; }
+
+        TypeOfInsulation insulationType;
         public MainWindow(Document doc, List<Element> listElement)
         {
             InitializeComponent();
@@ -186,11 +188,26 @@ namespace Input_Insulation
 
                     }
 
-                    //else if (Radiobtn_ColumnInsulation.IsChecked == true)
-                    //{
+                    else if (Radiobtn_ColumnInsulation.IsChecked == true)
+                    {
 
-                    //    Utility.ColumnInsulation(_doc, _listElement, shapeH, textBoxValue.ToString());
-                    //}
+                        //Utility.ColumnInsulation(_doc, _listElement, shapeH, textBoxValue.ToString());
+                        if (shapeH == true)
+                        {
+                            insulationType = TypeOfInsulation.巻き付け;
+                        }
+                        else
+                        {
+                            insulationType = TypeOfInsulation.けいカル;
+                        }
+                        Element columnType = GlobalElement;
+
+                        FamilySymbol columnTypeSymbol = columnType as FamilySymbol;
+
+                        //TaskDialog.Show("Beam Information", columnTypeSymbol.Id.ToString());
+
+                        Utility.ColumnInsulation(_doc, _listElement, columnTypeSymbol, insulationType, covertToDouble.ToString());
+                    }
                 }
                 this.Close();
             }
