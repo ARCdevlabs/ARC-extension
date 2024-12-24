@@ -107,6 +107,7 @@ namespace Input_Insulation
                                 Transaction trans2 = new Transaction(doc, "Setting Shape Insulation");
                                 {
                                     trans2.Start();
+
                                     Parameter paramStartLevelOffset = newBeam.get_Parameter(BuiltInParameter.STRUCTURAL_BEAM_END0_ELEVATION);
                                     Parameter paramEndLevelOffset = newBeam.get_Parameter(BuiltInParameter.STRUCTURAL_BEAM_END1_ELEVATION);
 
@@ -118,8 +119,26 @@ namespace Input_Insulation
                                     newBeam.LookupParameter("tw").Set(tw_c);
                                     newBeam.LookupParameter("tf").Set(tf_c);
 
-                                    StructuralFramingUtils.DisallowJoinAtEnd(newBeam, 0);
-                                    StructuralFramingUtils.DisallowJoinAtEnd(newBeam, 1);
+                                    int usage = ele.get_Parameter(BuiltInParameter.INSTANCE_STRUCT_USAGE_PARAM).AsInteger();
+                                    if (usage == 3)
+                                    {
+                                        try
+                                        {
+                                            StructuralFramingUtils.AllowJoinAtEnd(newBeam, 0);
+                                            StructuralFramingUtils.AllowJoinAtEnd(newBeam, 1);
+                                        }
+                                        catch { }   
+                                    }
+                                    else
+                                    {
+                                        try
+                                        {
+                                            StructuralFramingUtils.DisallowJoinAtEnd(newBeam, 0);
+                                            StructuralFramingUtils.DisallowJoinAtEnd(newBeam, 1);
+                                        }
+                                        catch { }    
+                                    }
+
                                     try
                                     {
                                         Parameter paramStartJoinCutBack = newBeam.get_Parameter(BuiltInParameter.START_JOIN_CUTBACK);
@@ -323,8 +342,8 @@ namespace Input_Insulation
                                 newBeam.LookupParameter("tw").Set(tw_c);
                                 newBeam.LookupParameter("tf").Set(tf_c);
 
-                                StructuralFramingUtils.DisallowJoinAtEnd(newBeam, 0);
-                                StructuralFramingUtils.DisallowJoinAtEnd(newBeam, 1);
+                                //StructuralFramingUtils.DisallowJoinAtEnd(newBeam, 0);
+                                //StructuralFramingUtils.DisallowJoinAtEnd(newBeam, 1);
                                 try
                                 {
                                     Parameter paramStartJoinCutBack = newBeam.get_Parameter(BuiltInParameter.START_JOIN_CUTBACK);
@@ -421,6 +440,9 @@ namespace Input_Insulation
             {
                 //Element element = m_doc.GetElement(id);
                 //TaskDialog.Show("Beam Information", "Lỗi ở bước này");
+                ElementId levelId = element.get_Parameter(BuiltInParameter.SCHEDULE_BASE_LEVEL_PARAM).AsElementId();
+
+                Level level = m_doc.GetElement(levelId) as Level;
 
                 if (element.Category.Id != new ElementId(BuiltInCategory.OST_StructuralColumns))
                 {
@@ -436,7 +458,7 @@ namespace Input_Insulation
                 
                 try
                 {
-                    ColumnInsulation(m_doc, m_ColumnProperties, RWSymbol, typeOfInsulation, InsulationThickness);
+                    ColumnInsulation(m_doc, m_ColumnProperties, RWSymbol, level, typeOfInsulation, InsulationThickness);
                     
                 }
                 catch 
@@ -453,14 +475,17 @@ namespace Input_Insulation
         /// </summary>
         /// <param name="m_doc"></param>
         /// <param name="properties"> Thông tin từ columnn cần nhập cách nhiệt</param>
-        public static void ColumnInsulation(Document m_doc, ColumnInstanceProperties properties, FamilySymbol RWSymbol, TypeOfInsulation typeOfInsulation, string InsulationThickness)
+        public static void ColumnInsulation(Document m_doc, ColumnInstanceProperties properties, FamilySymbol RWSymbol, Level level, TypeOfInsulation typeOfInsulation, string InsulationThickness)
         {
             ARCLibrary lib = new ARCLibrary();  
             lib.ActivateSymbol(m_doc, RWSymbol);
+            Element host = level;
+            //ElementId levelId = new ElementId(-1);
+            //Level levelNone = m_doc.GetElement(levelId) as Level;
 
-            FamilyInstance insulation = m_doc.Create.NewFamilyInstance(properties.Location, RWSymbol, StructuralType.NonStructural);
+            FamilyInstance insulation = m_doc.Create.NewFamilyInstance(properties.Location, RWSymbol, host, level, StructuralType.NonStructural);
             //rotate
-
+            
             XYZ cc = new XYZ(properties.Location.X, properties.Location.Y, properties.Location.Z + 10);
             Line axis = Line.CreateBound(properties.Location, cc);
             ElementTransformUtils.RotateElement(m_doc, insulation.Id, axis, properties.Rotation);
@@ -623,7 +648,7 @@ namespace Input_Insulation
                 offsetY = m_instance.LookupParameter("ウェブ方向_柱偏芯").AsDouble();
             }
           
-            m_instanceProperties.Location = new XYZ(m_ColumnlocationPoint.X + offsetX, m_ColumnlocationPoint.Y + offsetY, m_ColumnlocationPoint.Z + genElevation + OffsetAtBase);
+            m_instanceProperties.Location = new XYZ(m_ColumnlocationPoint.X + offsetX, m_ColumnlocationPoint.Y + offsetY, m_ColumnlocationPoint.Z + OffsetAtBase + genElevation);
            
 
 
