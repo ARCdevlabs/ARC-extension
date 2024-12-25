@@ -5,13 +5,16 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data.Common;
 using System.Linq;
+using System.Runtime.Remoting.Lifetime;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using static Autodesk.Revit.DB.SpecTypeId;
 using static Input_Insulation.Utility;
 
 
@@ -23,27 +26,46 @@ namespace Input_Insulation
         public string TypeName { get; set; }
         public ElementId TypeId { get; set; } // Để lưu Id nếu cần sử dụng sau
     }
+
     public partial class MainWindow : Window
     {
         private Document _doc;
+
+        private UIDocument _uidoc;
+
         private List<Element> _listElement;
+
         private Utility _utility;
+
         private List<FamilyTypeInfo> familyTypeInfos;
         public static Element GlobalElement { get; set; }
         public static bool shapeH { get; set; }
         public ObservableCollection<string> TypeOfInsulations { get; set; }
 
         TypeOfInsulation insulationType;
-        public MainWindow(Document doc, List<Element> listElement)
+        public MainWindow(UIDocument uidoc, Document doc, List<Element> listElement)
         {
             InitializeComponent();
             _doc = doc;
+            _uidoc = uidoc;
             _listElement = listElement;
             _utility = new Utility();
             LoadFamilyTypes();
-            //Cbb_SelectTypeOfInsulation.ItemsSource = TypeOfInsulations;
-
         }
+
+        private void Radiobtn_ColumnInsulation_Checked(object sender, RoutedEventArgs e)
+        {
+            ButtonInsulationColumn.Content = "Pick the sample";
+        }
+        private void Radiobtn_BeamInsulation_Checked(object sender, RoutedEventArgs e)
+        {
+            ButtonInsulationColumn.Content = "Create Beam Insulation";
+        }
+        private void RadioBtn_HorizontalBeamInsulation_Checked(object sender, RoutedEventArgs e)
+        {
+            ButtonInsulationColumn.Content = "Create Horizontal Beam Insulation";
+        }
+
         private void LoadFamilyTypes()
         {
             // Filter for FamilySymbols (Types)
@@ -88,6 +110,7 @@ namespace Input_Insulation
             e.Handled = !regex.IsMatch(proposedText);
         }
 
+
         private void OnCreateInsulationButton_Click(object sender, RoutedEventArgs e)
         {
             string selectedValue = Cbb_SelectTypeOfInsulation.SelectedItem as string;
@@ -99,7 +122,7 @@ namespace Input_Insulation
                     {
                         string DisplayName = familyTypeInfo.FamilyName + ":" + familyTypeInfo.TypeName;
 
-                        if (DisplayName.ToString() == "gIns_Frame-ver4:Default")
+                        if (DisplayName.ToString() == "gIns_Frame-ver4.0:Default")
                         {
                             try
                             {
@@ -120,7 +143,7 @@ namespace Input_Insulation
                     {
                         string DisplayName = familyTypeInfo.FamilyName + ":" + familyTypeInfo.TypeName;
 
-                        if (DisplayName.ToString() == "gIns_Column-ver2:Default")
+                        if (DisplayName.ToString() == "gIns_Column-ver4.0:Default")
                         {
                             try
                             {
@@ -200,44 +223,29 @@ namespace Input_Insulation
                         {
                             insulationType = TypeOfInsulation.けいカル;
                         }
+                       
                         Element columnType = GlobalElement;
 
                         FamilySymbol columnTypeSymbol = columnType as FamilySymbol;
 
                         //TaskDialog.Show("Beam Information", columnTypeSymbol.Id.ToString());
-
-                        Utility.ColumnInsulation(_doc, _listElement, columnTypeSymbol, insulationType, covertToDouble.ToString());
+                        this.Hide();
+                        ARCLibrary lib = new ARCLibrary();
+                        try
+                        {
+                            Element sourceElement = lib.PickElement(_uidoc, _doc);
+                            ElementId sourceElementId = sourceElement.Id;                      
+                            Utility.ColumnInsulation(_doc, _listElement, sourceElementId, columnTypeSymbol, insulationType, covertToDouble.ToString());
+                        }
+                        catch (Exception ex)
+                        {
+                            TaskDialog.Show("Error", "Please input the sample Insulation for column at level, then pick them");
+                        }
                     }
                 }
                 this.Close();
             }
 
-            //private void InitializeControls()
-            //{
-
-            //    Cbb_SelectTypeOfInsulation.Items.Add(Utility.TypeOfInsulation.けいカル);
-            //    Cbb_SelectTypeOfInsulation.Items.Add(Utility.TypeOfInsulation.巻き付け);
-            //    Cbb_SelectTypeOfInsulation.SelectedIndex = 0;
-
-            //    if (_listElement.First().Category.Id == new ElementId(BuiltInCategory.OST_StructuralColumns))
-            //    {
-            //        Radiobtn_ColumnInsulation.IsChecked = true;
-            //    }
-            //    else if (_listElement.First().Category.Id == new ElementId(BuiltInCategory.OST_StructuralFraming))
-            //    {
-            //        double angle = _listElement.First().get_Parameter(BuiltInParameter.STRUCTURAL_BEND_DIR_ANGLE).AsDouble();
-            //        if (angle == 0)
-            //        {
-            //            RadioBtn_BeamInsolutation.IsChecked = true;
-
-            //        }
-            //        else
-            //        {
-            //            RadioBtn_HorizontalBeamInsulation.IsChecked = true;
-
-            //        }
-            //    }
-            //}
         }
     }
 }

@@ -8,6 +8,7 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI.Selection;
 using Autodesk.Revit.DB.Structure;
 using System.Windows.Controls;
+using System.Windows.Shapes;
 
 namespace Input_Insulation
 {
@@ -101,7 +102,7 @@ namespace Input_Insulation
             }
 
         }
-        public Line GetBeamLocation(Element beam)
+        public Autodesk.Revit.DB.Line GetBeamLocation(Element beam)
         {
             // Kiểm tra nếu Element không phải là dầm hoặc không có thông tin về vị trí
             if (beam == null || beam.Location == null || !(beam.Location is LocationCurve locationCurve))
@@ -116,7 +117,7 @@ namespace Input_Insulation
             XYZ startPoint = beamCurve.GetEndPoint(0);
             XYZ endPoint = beamCurve.GetEndPoint(1);
 
-            Line line = Line.CreateBound(startPoint, endPoint);
+            Autodesk.Revit.DB.Line line = Autodesk.Revit.DB.Line.CreateBound(startPoint, endPoint);
 
             return line;
         }
@@ -145,5 +146,23 @@ namespace Input_Insulation
                 // Xử lý lỗi khi không kích hoạt được FamilySymbol
             }
         }
+
+// Hàm sao chép đối tượng
+        public ElementId CopyElement(Document doc, ElementId elementId, XYZ translationVector)
+         {
+            Transaction t = new Transaction(doc, "Copy Element");
+            t.Start();
+            ICollection<ElementId> newElement;
+                ElementId returnElementId = null;
+
+                newElement = ElementTransformUtils.CopyElement(doc, elementId, translationVector);
+            t.Commit();                  
+                if (newElement != null && newElement.Count > 0)
+                    {
+                    returnElementId = newElement.First();
+                    }
+            return returnElementId;
+        }
+                
     }
 }
