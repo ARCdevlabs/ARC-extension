@@ -17,7 +17,7 @@ namespace Input_Insulation
     {
         #region Properties
 
-        Document m_doc=null;
+        Document m_doc = null;
 
         #endregion
 
@@ -43,22 +43,24 @@ namespace Input_Insulation
             {
                 listElement = selectedElement;
             }
-            try
+            if (listElement != null)
             {
+                try
+                {
 
-                MainWindow m_form = new MainWindow(idoc, listElement);
+                    MainWindow m_form = new MainWindow(iuidoc, idoc, listElement);
 
-               
-                m_form.ShowDialog();
+                    m_form.ShowDialog();
 
-                return Result.Succeeded;
+                    return Result.Succeeded;
 
+                }
+                catch (Exception ex)
+                {
+                    message = ex.Message;
+                }
             }
-            catch (Exception ex)
-            {
-                message = ex.Message;
-                return Result.Failed;
-            }
+            return Result.Failed;
         }
     }
 }
