@@ -437,7 +437,8 @@ namespace Input_Insulation
             return;
         }
 
-        public static void ColumnInsulation(Document m_doc, IList<Element> ids, ElementId sourceElementId, FamilySymbol RWSymbol, TypeOfInsulation typeOfInsulation,string InsulationThickness)
+        //public static void ColumnInsulation(Document m_doc, IList<Element> ids, ElementId sourceElementId, FamilySymbol RWSymbol, TypeOfInsulation typeOfInsulation,string InsulationThickness)
+            public static void ColumnInsulation(Document m_doc, IList<Element> ids, FamilySymbol RWSymbol, TypeOfInsulation typeOfInsulation, string InsulationThickness)
         {
             //Transaction t = new Transaction(m_doc, "Column Insulation");
 
@@ -469,21 +470,19 @@ namespace Input_Insulation
 
                     try
                     {
-                        //ColumnInsulation(m_doc, m_ColumnProperties, RWSymbol, level, typeOfInsulation, InsulationThickness);
+                        ColumnInsulation(m_doc, m_ColumnProperties, RWSymbol, level, typeOfInsulation, InsulationThickness);
 
-                        CopyColumnInsulation(m_doc, sourceElementId, m_ColumnProperties, RWSymbol, level, typeOfInsulation, InsulationThickness);
+                        //CopyColumnInsulation(m_doc, sourceElementId, m_ColumnProperties, RWSymbol, level, typeOfInsulation, InsulationThickness);
 
                     }
                     catch (Exception ex)
                     {
-                        //TaskDialog.Show("Error", "Please input the sample Insulation for column at level, then pick them");
+                        //TaskDialog.Show("Error", $"Không thể tạo cột: {ex.Message}");
                     }
-
                 }
                 //t.Commit();
                 trangroup.Assimilate();
             }
-
         }
 
         /// <summary>
@@ -493,13 +492,13 @@ namespace Input_Insulation
         /// <param name="properties"> Thông tin từ columnn cần nhập cách nhiệt</param>
         public static void ColumnInsulation(Document m_doc, ColumnInstanceProperties properties, FamilySymbol RWSymbol, Level level, TypeOfInsulation typeOfInsulation, string InsulationThickness)
         {
+            Transaction t = new Transaction(m_doc, "Column Insulation");
+            t.Start();
             ARCLibrary lib = new ARCLibrary();  
             lib.ActivateSymbol(m_doc, RWSymbol);
-            Element host = level;
-            //ElementId levelId = new ElementId(-1);
-            //Level levelNone = m_doc.GetElement(levelId) as Level;
 
-            FamilyInstance insulation = m_doc.Create.NewFamilyInstance(properties.Location, RWSymbol, host, level, StructuralType.NonStructural);
+
+            FamilyInstance insulation = m_doc.Create.NewFamilyInstance(properties.Location, RWSymbol, level, level, StructuralType.NonStructural);
             //rotate
             
             XYZ cc = new XYZ(properties.Location.X, properties.Location.Y, properties.Location.Z + 10);
@@ -508,7 +507,7 @@ namespace Input_Insulation
 
             insulation.LookupParameter("H").Set(properties.H);
             insulation.LookupParameter("B").Set(properties.B);
-
+            insulation.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).Set(properties.BaseOffset);
             try
             {
                 insulation.LookupParameter("tw").Set(properties.tw.Value);
@@ -524,8 +523,9 @@ namespace Input_Insulation
             insulation.LookupParameter("合成耐火左").Set(0);
 
 
-            if (typeOfInsulation == TypeOfInsulation.けいカル || !properties.IsColumnH)
-            {
+            //if (typeOfInsulation == TypeOfInsulation.けいカル || !properties.IsColumnH)
+            if (typeOfInsulation == TypeOfInsulation.けいカル)
+                {
                 insulation.LookupParameter("H_type").Set(0);
             }
             else
@@ -534,8 +534,12 @@ namespace Input_Insulation
             }
 
             insulation.LookupParameter("長さ__").Set(properties.Height);
-            
 
+            double thickness = Convert.ToDouble(InsulationThickness);
+
+            insulation.LookupParameter("耐火被覆t").Set(thickness);
+
+            t.Commit(); 
         }
 
         /// <summary>
@@ -755,8 +759,19 @@ namespace Input_Insulation
                 offsetX = m_instance.LookupParameter("フランジ方向_柱偏芯").AsDouble();
                 offsetY = m_instance.LookupParameter("ウェブ方向_柱偏芯").AsDouble();
             }
-          
-            m_instanceProperties.Location = new XYZ(m_ColumnlocationPoint.X + offsetX, m_ColumnlocationPoint.Y + offsetY, m_ColumnlocationPoint.Z + OffsetAtBase + genElevation);
+            //double soTrungGian = 12345;
+            //XYZ pointTrungGian = new XYZ(m_ColumnlocationPoint.X - soTrungGian, m_ColumnlocationPoint.Y - soTrungGian, m_ColumnlocationPoint.Z);
+
+            //m_instanceProperties.Location = new XYZ(m_ColumnlocationPoint.X + offsetX, m_ColumnlocationPoint.Y + offsetY, m_ColumnlocationPoint.Z);
+            if (m_instance.FacingOrientation.X < 0) 
+                {
+                    m_instanceProperties.Location = new XYZ(m_ColumnlocationPoint.X - offsetX, m_ColumnlocationPoint.Y - offsetY, m_ColumnlocationPoint.Z);
+                }
+            else
+                {
+                    m_instanceProperties.Location = new XYZ(m_ColumnlocationPoint.X + offsetX, m_ColumnlocationPoint.Y + offsetY, m_ColumnlocationPoint.Z);
+                }    
+           
 
             //m_instanceProperties.Location = new XYZ(m_ColumnlocationPoint.X + offsetX, m_ColumnlocationPoint.Y + offsetY, m_ColumnlocationPoint.Z + OffsetAtBase + genElevation);
 
