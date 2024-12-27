@@ -164,7 +164,6 @@ def orientation_mat_cat(A, B, vector):
         ket_qua= "Thẳng hàng"        
     return ket_qua
 
-
 def orientation_mat_bang(A, B, vector):
     C = move_point_along_vector(B, vector, 1)
     # Chuyển đổi tọa độ thành tuple
@@ -249,7 +248,6 @@ def create_plane_follow_line (line):
     normal_vector = vector1.CrossProduct(vector2).Normalize()
     plane = DB.Plane.CreateByNormalAndOrigin(normal_vector, mid_point)
     return plane
-
 
 def create_plane_from_point_and_normal(point, normal):
     plane = Autodesk.Revit.DB.Plane(normal, point)
@@ -373,3 +371,7 @@ def transform_line(transform, line):
     # Tạo Line mới từ các điểm đã dịch chuyển
     transformed_line = DB.Line.CreateBound(new_start_point, new_end_point)
     return transformed_line
+
+def distance_point_to_plane(point, plane):
+    distance = plane.Normal.DotProduct(point - plane.Origin)
+    return distance

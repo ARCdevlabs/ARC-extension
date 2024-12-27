@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import Autodesk.Revit.DB as DB
+
+#get_geometry_non_reference: Sẽ lấy geometry nhưng không có những Reference để có thể áp dụng vào việc tạo dimension.
 def get_geometry_non_reference(element):
     all_gemetry = []
     try:
@@ -14,6 +16,23 @@ def get_geometry_non_reference(element):
     except:
         return all_gemetry
 
+#get_geometry: Sẽ lấy geometry và có những Reference để có thể áp dụng vào việc tạo dimension.
+#Phương pháp này chỉ áp dụng được với các đối tượng với HasModifiedGeometry() == True
+def get_geometry(element):
+    option = DB.Options()
+    option.ComputeReferences = True
+    geo_ref = element.get_Geometry(option)
+    return geo_ref
+
+def get_geometry_with_view(element, view):
+    geo_opt = DB.Options()
+    geo_opt.ComputeReferences = True
+    geo_opt.IncludeNonVisibleObjects = True
+    geo_opt.View = view
+    geo_ref =  element.get_Geometry(geo_opt)
+    return geo_ref
+   
+# find_intersect_elements: Lọc các đối tượng giao nhau với 1 đối tượng đầu vào.
 def find_intersect_elements(idoc, element_A, list_element_B):
     result_element = []
     try:
@@ -29,3 +48,28 @@ def find_intersect_elements(idoc, element_A, list_element_B):
         return result_element #Trả về dạng list các element
     except:
         return result_element
+
+# get_face:Lấy tất cả các face của một geometry. 
+def get_face(geometry):
+    list_faces =[]
+    for geometry_object in geometry:
+        if hasattr(geometry_object, "Faces"):
+            for face in geometry_object.Faces:
+                list_faces.append(face)
+    return list_faces
+
+def get_center_plane_of_wall (wall):
+    wall_location = wall.Location
+    wall_location_curve = wall_location.Curve
+    start_point = wall_location_curve.GetEndPoint(0)
+    endpoint = wall_location_curve.GetEndPoint(1)
+    mid_point = wall_location_curve.Evaluate(0.5, True)
+    offset_mid_point = DB.XYZ(start_point.X, start_point.Y, mid_point.Z +10000)
+    point1 = start_point
+    point2 = endpoint
+    point3 =offset_mid_point
+    vector1 = point2 - point1
+    vector2 = point3 - point1
+    normal_vector = vector1.CrossProduct(vector2).Normalize()
+    plane = DB.Plane.CreateByNormalAndOrigin(normal_vector, mid_point)
+    return plane 
