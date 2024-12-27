@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-from codecs import Codec
-import string
-import importlib
-ARC = string.ascii_lowercase
-begin = ''.join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
-module = importlib.import_module(str(begin))
 import Autodesk
 from Autodesk.Revit.DB import *
 import Autodesk.Revit.DB as DB
@@ -12,6 +6,14 @@ from System.Collections.Generic import List
 from Autodesk.Revit.UI.Selection import ObjectType
 import traceback
 import math
+
+import nances as module
+from nances import vectortransform,geometry
+
+import clr
+clr.AddReference("AssemblyTimReferenceBeam241227.dll")
+import AssemblyTimReferenceBeam241227 #Load Assembly
+
 if module.AutodeskData():
     uidoc = __revit__.ActiveUIDocument
     #Get Document 
@@ -53,7 +55,7 @@ if module.AutodeskData():
         plane = Plane.CreateByNormalAndOrigin(normal_vector, mid_point)
         return plane
 
-    def get_rotate_90_location_wall (wall):
+    def get_rotate_90_location_wall_center (wall):
         from Autodesk.Revit.DB import Line
         wall_location = wall.Location
         wall_location_curve = wall_location.Curve
@@ -99,26 +101,14 @@ if module.AutodeskData():
                 center_plane_normal = center_plane.Normal
                 list_distance = []
                 list_outer_face = []
-                for face in faces:
-                    try:
-                        face_origin = face.Origin
-                        face_normal = face.FaceNormal
-                        face_to_plane = Plane.CreateByNormalAndOrigin(face_normal, face_origin)
-                        normal_face_to_plane = face_to_plane.Normal
-                        check_pararel = are_planes_parallel(center_plane_normal,face_normal)
-                        if check_pararel:
-                            distance =  distance_between_parallel_planes(face_to_plane, center_plane)
-                            list_distance.append(distance)
-                            list_outer_face.append(face.Reference)
-                        max_value = max(list_distance)
-                        max_index = list_distance.index(max_value)
-                        min_value = min(list_distance)
-                        min_index = list_distance.index(min_value)
-                        ref_face_max = list_outer_face[max_index]
-                        ref_face_min = list_outer_face[min_index]
-                    except:
-                        pass
-                detail_line = get_rotate_90_location_wall (wall)
+
+                call_class_tim_reference = AssemblyTimReferenceBeam241227.ClassTimReference(faces,center_plane, vectortransform)                
+                result = call_class_tim_reference.tim_reference_beam()
+                ref_face_min = result.ref_face_min
+                ref_face_max = result.ref_face_max
+                max_value = result.max_value
+
+                detail_line = get_rotate_90_location_wall_center (wall)
                 line = detail_line.Location.Curve
                 wall_reference = ReferenceArray()
                 wall_reference.Append(ref_face_min)
@@ -126,7 +116,5 @@ if module.AutodeskData():
                 dim = doc.Create.NewDimension(Currentview, line, wall_reference)
                 delete_detail_curve = doc.Delete(detail_line.Id)
             except:
-                import traceback
-                print(traceback.format_exc())
                 pass
         t.Commit()
