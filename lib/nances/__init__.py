@@ -846,40 +846,73 @@ PYREVIT_VERSION_APP_DIR = op.join(PYREVIT_APP_DIR)
 #Get UIDocument
 uidoc = __revit__.ActiveUIDocument
 doc = uidoc.Document
-# Def nay cho current element
-import clr
-clr.AddReference("BasicThings241228.dll")
-import BasicThings241228 #Load Assembly
+
 
 def get_selected_elements(tem_uidoc, tem_doc, noti = True):
-    if noti:
-        ket_qua = BasicThings241228.get_selected_elements(tem_uidoc, tem_doc, noti = True)
-    else:
-        ket_qua = BasicThings241228.get_selected_elements(tem_uidoc, tem_doc, noti = False)
-    return ket_qua
-    
+    selection = tem_uidoc.Selection
+    selection_ids = selection.GetElementIds()
+    elements = []
+    for element_id in selection_ids:
+        elements.append(tem_doc.GetElement(element_id))
 
+    if len(elements) == 0:
+        if noti:
+            from Autodesk.Revit.UI import TaskDialog
+            # module_path = Autodesk.__file__
+            # print module_path
+            dialog = TaskDialog("ARC")
+            from pyrevit.coreutils import applocales
+            current_applocale = applocales.get_current_applocale()
+            if str(current_applocale) == "日本語 / Japanese (ja)":
+                message = "このツールを使用する前に要素をご選択ください。"
+            else:
+                message = "Please select element before use this tool."
+            dialog.MainContent = message
+            dialog.TitleAutoPrefix = False
+            dialog.Show()
+        return False
+    else: 
+        return elements
+
+
+    
 def get_elements(iuidoc,idoc, string_warning_bar, noti = False):
-    if noti:
-        selected_element = BasicThings241228.get_elements(iuidoc,idoc, string_warning_bar, noti = True)
-    else:
-        selected_element = BasicThings241228.get_elements(iuidoc,idoc, string_warning_bar, noti = False)
+    selected_element = get_selected_elements(iuidoc,idoc, noti)
+    if selected_element == False:
+        list_ele = []
+        with forms.WarningBar(title=string_warning_bar):
+            try:
+                pick = iuidoc.Selection.PickObjects(Autodesk.Revit.UI.Selection.ObjectType.Element)
+                for tung_ref in pick:
+                    list_ele.append(idoc.GetElement(tung_ref.ElementId))
+            except:
+                sys.exit()
+            selected_element = list_ele
     return selected_element
+
 
 
 def get_element(iuidoc,idoc, string_warning_bar, noti = False):
-    if noti:
-        selected_element = BasicThings241228.get_element(iuidoc,idoc, string_warning_bar, noti = True)
-    else:
-        selected_element = BasicThings241228.get_element(iuidoc,idoc, string_warning_bar, noti = False)
+    selected_element = get_selected_elements(iuidoc,idoc, noti)
+    if selected_element == False:
+        list_ele = []
+        with forms.WarningBar(title=string_warning_bar):
+            try:
+                pick = iuidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element)
+                list_ele.append(idoc.GetElement(pick.ElementId))
+            except:
+                sys.exit()
+            selected_element = list_ele
     return selected_element
 
+
+
 def get_builtin_parameter_by_name(element, built_in_parameter):
-    parameter = BasicThings241228.get_builtin_parameter_by_name(element, built_in_parameter)
+    parameter = element.get_Parameter(built_in_parameter)
     return parameter 
 
 def Active_view(idoc):
-    active_view = BasicThings241228.Active_view(idoc)
+    active_view = idoc.ActiveView
     return active_view
 
 # Def join geometry
@@ -962,7 +995,6 @@ def checklicense_for_info():
         return "OK"
     else:
         "Not OK"
-
 
 def AutodeskData():
     import clr
