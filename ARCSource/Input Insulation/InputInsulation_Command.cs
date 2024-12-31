@@ -17,8 +17,6 @@ namespace Input_Insulation
     {
         #region Properties
 
-        Document m_doc = null;
-
         #endregion
 
         public Result Execute(ExternalCommandData revit, ref string message, ElementSet elements)
