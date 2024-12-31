@@ -240,7 +240,7 @@ namespace Input_Insulation
                         }
                         catch (Exception ex)
                         {
-                            //TaskDialog.Show("Error", "Please input the sample Insulation for column at level, then pick them");
+                            //TaskDialog.Show("Error", ex.ToString());
                         }
                     }
                 }

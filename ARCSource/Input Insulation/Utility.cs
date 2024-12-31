@@ -88,7 +88,7 @@ namespace Input_Insulation
 
                                 FamilySymbol beamTypeSymbol = familySymbol;
 
-                                lib.ActivateSymbol(doc, beamTypeSymbol);
+                                
 
                                 ElementId levelId = ele.get_Parameter(BuiltInParameter.INSTANCE_REFERENCE_LEVEL_PARAM).AsElementId();
 
@@ -98,7 +98,9 @@ namespace Input_Insulation
                                 {
                                     trans1.Start();
 
-                                    newBeam = lib.CreateBeam(doc, location, beamTypeSymbol, level);  //Cần điều chỉnh lại beamTypeSymbol dựa vào form WPF
+                                    lib.ActivateSymbol(doc, beamTypeSymbol);
+
+                                    newBeam = lib.CreateBeam(doc, location, beamTypeSymbol, level);  //Cần điều chỉnh lại beamTypeSymbol dựa vào form WPF      
 
                                     trans1.Commit();
 
@@ -311,8 +313,7 @@ namespace Input_Insulation
                             Line location = lib.GetBeamLocation(ele);
 
                             FamilySymbol beamTypeSymbol = familySymbol;
-
-                            lib.ActivateSymbol(doc, beamTypeSymbol);
+                           
 
                             ElementId levelId = ele.get_Parameter(BuiltInParameter.INSTANCE_REFERENCE_LEVEL_PARAM).AsElementId();
 
@@ -321,6 +322,8 @@ namespace Input_Insulation
                             Transaction trans1 = new Transaction(doc, "Input Beam Insulation");
                             {
                                 trans1.Start();
+
+                                lib.ActivateSymbol(doc, beamTypeSymbol);
 
                                 newBeam = lib.CreateBeam(doc, location, beamTypeSymbol, level);  //Cần điều chỉnh lại beamTypeSymbol dựa vào form WPF
 
@@ -463,21 +466,28 @@ namespace Input_Insulation
                     //Data ColumnInstance
                     FamilyInstance m_instance = element as FamilyInstance;
                     ColumnInstanceProperties m_ColumnProperties = new ColumnInstanceProperties();
-
-                    m_ColumnProperties = GetColumnProperties(m_doc, m_instance);
-
-                    //ElementId sourceElementId = new ElementId(13147656);
-
                     try
                     {
-                        ColumnInsulation(m_doc, m_ColumnProperties, RWSymbol, level, typeOfInsulation, InsulationThickness);
+                        m_ColumnProperties = GetColumnProperties(m_doc, m_instance);
 
-                        //CopyColumnInsulation(m_doc, sourceElementId, m_ColumnProperties, RWSymbol, level, typeOfInsulation, InsulationThickness);
+                        //ElementId sourceElementId = new ElementId(13147656);
 
+                        try
+                        {
+                            ColumnInsulation(m_doc, m_ColumnProperties, RWSymbol, level, typeOfInsulation, InsulationThickness);
+
+                            //CopyColumnInsulation(m_doc, sourceElementId, m_ColumnProperties, RWSymbol, level, typeOfInsulation, InsulationThickness);
+
+                        }
+                        //catch (Exception ex)
+                        catch
+                        {
+                            //TaskDialog.Show("Error", $"Không thể tạo cột: {ex.Message}");
+                        }
                     }
-                    catch (Exception ex)
+                    catch
                     {
-                        //TaskDialog.Show("Error", $"Không thể tạo cột: {ex.Message}");
+
                     }
                 }
                 //t.Commit();
@@ -494,52 +504,59 @@ namespace Input_Insulation
         {
             Transaction t = new Transaction(m_doc, "Column Insulation");
             t.Start();
-            ARCLibrary lib = new ARCLibrary();  
-            lib.ActivateSymbol(m_doc, RWSymbol);
 
-
-            FamilyInstance insulation = m_doc.Create.NewFamilyInstance(properties.Location, RWSymbol, level, level, StructuralType.NonStructural);
-            //rotate
-            
-            XYZ cc = new XYZ(properties.Location.X, properties.Location.Y, properties.Location.Z + 10);
-            Line axis = Line.CreateBound(properties.Location, cc);
-            ElementTransformUtils.RotateElement(m_doc, insulation.Id, axis, properties.Rotation);
-
-            insulation.LookupParameter("H").Set(properties.H);
-            insulation.LookupParameter("B").Set(properties.B);
-            insulation.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).Set(properties.BaseOffset);
             try
             {
-                insulation.LookupParameter("tw").Set(properties.tw.Value);
-                insulation.LookupParameter("tf").Set(properties.tf.Value);
-
-            }
-            catch
-            {
-            }
-            insulation.LookupParameter("合成耐火上").Set(0);
-            insulation.LookupParameter("合成耐火下").Set(0);
-            insulation.LookupParameter("合成耐火右").Set(0);
-            insulation.LookupParameter("合成耐火左").Set(0);
+                ARCLibrary lib = new ARCLibrary();
+                lib.ActivateSymbol(m_doc, RWSymbol);
 
 
-            //if (typeOfInsulation == TypeOfInsulation.けいカル || !properties.IsColumnH)
-            if (typeOfInsulation == TypeOfInsulation.けいカル)
+                FamilyInstance insulation = m_doc.Create.NewFamilyInstance(properties.Location, RWSymbol, level, level, StructuralType.NonStructural);
+                //rotate
+
+                XYZ cc = new XYZ(properties.Location.X, properties.Location.Y, properties.Location.Z + 10);
+                Line axis = Line.CreateBound(properties.Location, cc);
+                ElementTransformUtils.RotateElement(m_doc, insulation.Id, axis, properties.Rotation);
+
+                insulation.LookupParameter("H").Set(properties.H);
+                insulation.LookupParameter("B").Set(properties.B);
+                insulation.get_Parameter(BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM).Set(properties.BaseOffset);
+                try
                 {
-                insulation.LookupParameter("H_type").Set(0);
+                    insulation.LookupParameter("tw").Set(properties.tw.Value);
+                    insulation.LookupParameter("tf").Set(properties.tf.Value);
+
+                }
+                catch
+                {
+                }
+                insulation.LookupParameter("合成耐火上").Set(0);
+                insulation.LookupParameter("合成耐火下").Set(0);
+                insulation.LookupParameter("合成耐火右").Set(0);
+                insulation.LookupParameter("合成耐火左").Set(0);
+
+
+                //if (typeOfInsulation == TypeOfInsulation.けいカル || !properties.IsColumnH)
+                if (typeOfInsulation == TypeOfInsulation.けいカル)
+                {
+                    insulation.LookupParameter("H_type").Set(0);
+                }
+                else
+                {
+                    insulation.LookupParameter("H_type").Set(1);
+                }
+
+                insulation.LookupParameter("長さ__").Set(properties.Height);
+
+                double thickness = Convert.ToDouble(InsulationThickness);
+
+                insulation.LookupParameter("耐火被覆t").Set(thickness);
+
+                t.Commit();
             }
-            else
-            {
-                insulation.LookupParameter("H_type").Set(1);
+            catch 
+            { 
             }
-
-            insulation.LookupParameter("長さ__").Set(properties.Height);
-
-            double thickness = Convert.ToDouble(InsulationThickness);
-
-            insulation.LookupParameter("耐火被覆t").Set(thickness);
-
-            t.Commit(); 
         }
 
         /// <summary>
@@ -645,7 +662,7 @@ namespace Input_Insulation
                                      select fs).First();
 
             FamilyInstance insulation = m_doc.Create.NewFamilyInstance(properties.Location, RWSymbol, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
-            TaskDialog.Show("Beam Information", properties.Location.ToString());
+            //TaskDialog.Show("Beam Information", properties.Location.ToString());
             //Xoay cách nhiệt theo hướng của cột.
             XYZ cc = new XYZ(properties.Location.X, properties.Location.Y, properties.Location.Z + 10);
             Line axis = Line.CreateBound(properties.Location, cc);
