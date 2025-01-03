@@ -7,11 +7,7 @@ import nances as module
 from nances import geometry
 from nances import vectortransform
 from Autodesk.Revit.DB import *
-
-import clr
-clr.AddReference("AssemblyTimReferenceColumn241227.dll")
-import AssemblyTimReferenceColumn241227 #Load Assembly
-
+import tim_reference_column
 
 
 if module.AutodeskData():
@@ -101,7 +97,7 @@ if module.AutodeskData():
                         list_outer_face_Y = []
                         list_outer_face_X = []
                         unique_id = column.UniqueId
-                        call_class_tim_reference = AssemblyTimReferenceColumn241227.ClassTimReference(faces, X_vector, Y_vector, X_plane, Y_plane, vectortransform)
+                        call_class_tim_reference = tim_reference_column.ClassTimReference(faces, X_vector, Y_vector, X_plane, Y_plane, vectortransform)
                         result = call_class_tim_reference.tim_reference_column()
                         ref_face_min = result.ref_face_min
                         ref_face_max = result.ref_face_max
