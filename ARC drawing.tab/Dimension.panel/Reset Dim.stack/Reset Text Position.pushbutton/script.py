@@ -51,8 +51,6 @@ try:
     else:
         element = current_selection
 
-
-
     t = Transaction(doc,"Reset Text Position")
     t.Start() 
     for i in element:
