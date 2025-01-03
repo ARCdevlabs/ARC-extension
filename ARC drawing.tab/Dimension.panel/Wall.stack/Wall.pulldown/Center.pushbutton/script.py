@@ -8,10 +8,7 @@ import traceback
 
 import nances as module
 from nances import vectortransform,geometry
-
-import clr
-clr.AddReference("AssemblyTimReferenceBeam241227.dll")
-import AssemblyTimReferenceBeam241227 #Load Assembly
+import tim_reference_beam
 
 if module.AutodeskData():
     import math
@@ -161,7 +158,7 @@ if module.AutodeskData():
                 list_outer_face = []
                 unique_id = wall.UniqueId
 
-                call_class_tim_reference = AssemblyTimReferenceBeam241227.ClassTimReference(faces,center_plane, vectortransform)                
+                call_class_tim_reference = tim_reference_beam.ClassTimReference(faces,center_plane, vectortransform)                
                 result = call_class_tim_reference.tim_reference_beam()
                 ref_face_min = result.ref_face_min
                 ref_face_max = result.ref_face_max
