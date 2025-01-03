@@ -55,7 +55,7 @@ namespace Input_Insulation
 
         private void Radiobtn_ColumnInsulation_Checked(object sender, RoutedEventArgs e)
         {
-            ButtonInsulationColumn.Content = "Pick the sample";
+            ButtonInsulationColumn.Content = "Create Column Insulation";
         }
         private void Radiobtn_BeamInsulation_Checked(object sender, RoutedEventArgs e)
         {
@@ -229,17 +229,18 @@ namespace Input_Insulation
                         FamilySymbol columnTypeSymbol = columnType as FamilySymbol;
 
                         //TaskDialog.Show("Beam Information", columnTypeSymbol.Id.ToString());
-                        this.Hide();
+                        //this.Hide();
                         ARCLibrary lib = new ARCLibrary();
                         try
                         {
-                            Element sourceElement = lib.PickElement(_uidoc, _doc);
-                            ElementId sourceElementId = sourceElement.Id;                      
-                            Utility.ColumnInsulation(_doc, _listElement, sourceElementId, columnTypeSymbol, insulationType, covertToDouble.ToString());
+                            //Element sourceElement = lib.PickElement(_uidoc, _doc);
+                            //ElementId sourceElementId = sourceElement.Id;                      
+                            //Utility.ColumnInsulation(_doc, _listElement, sourceElementId, columnTypeSymbol, insulationType, covertToDouble.ToString());
+                            Utility.ColumnInsulation(_doc, _listElement, columnTypeSymbol, insulationType, covertToDouble.ToString());
                         }
                         catch (Exception ex)
                         {
-                            TaskDialog.Show("Error", "Please input the sample Insulation for column at level, then pick them");
+                            //TaskDialog.Show("Error", ex.ToString());
                         }
                     }
                 }

@@ -972,33 +972,57 @@ def get_document_data_file(file_id, file_ext, add_cmd_name=False):
 
 def checklicense_for_info():
     import clr
-    clr.AddReference("ReadPassCode241125Ver1.dll")
-    import ReadPassCode241125Ver1 
-    import_class = ReadPassCode241125Ver1.ClassReadPassCode() 
-    check = import_class.check_license()
+    appdata_path = os.path.join(os.getenv('APPDATA'), 'pyRevit', 'Extensions')
+    programdata_path = (r"C:\ProgramData\pyRevit\Extensions")
+    nances_bin_path = os.path.join(appdata_path, 'ARC extension.extension', 'bin')
+    path_string = op.join(nances_bin_path, 'LibARC_250103.dll')
+    path_string_programdata = op.join(programdata_path, 'LibARC_250103.dll')
+    try:
+        clr.AddReferenceToFileAndPath(path_string)
+    except:
+        clr.AddReferenceToFileAndPath(path_string_programdata)
+        
+    from NS.LibARC import LibARCSecurity #từ namespace NS.LibARC import class LibARCSecurity
+    check = LibARCSecurity.CheckLicense()
     if check:
         return "OK"
     else:
         "Not OK"
 
-
 def AutodeskData():
     import clr
-    clr.AddReference("ReadPassCode241125Ver1.dll")
-    import ReadPassCode241125Ver1 
-    import_class = ReadPassCode241125Ver1.ClassReadPassCode() 
-    check = import_class.check_license()
+    appdata_path = os.path.join(os.getenv('APPDATA'), 'pyRevit', 'Extensions')
+    programdata_path = (r"C:\ProgramData\pyRevit\Extensions")
+    nances_bin_path = os.path.join(appdata_path, 'ARC extension.extension', 'bin')
+    path_string = op.join(nances_bin_path, 'LibARC_250103.dll')
+    path_string_programdata = op.join(programdata_path, 'LibARC_250103.dll')
+    try:
+        clr.AddReferenceToFileAndPath(path_string)
+    except:
+        clr.AddReferenceToFileAndPath(path_string_programdata)
+
+    from NS.LibARC import LibARCSecurity #từ namespace NS.LibARC import class LibARCSecurity
+    check = LibARCSecurity.CheckLicense()
     if check:
         return check
     else:
         thong_bao_loi_license()
-
+   
 def AutodeskDataInCode():
     import clr
-    clr.AddReference("ReadPassCode241125Ver1.dll")
-    import ReadPassCode241125Ver1 
-    import_class = ReadPassCode241125Ver1.ClassReadPassCode() 
-    return import_class
+    appdata_path = os.path.join(os.getenv('APPDATA'), 'pyRevit', 'Extensions')
+    programdata_path = (r"C:\ProgramData\pyRevit\Extensions")
+    nances_bin_path = os.path.join(appdata_path, 'ARC extension.extension', 'bin')
+    path_string = op.join(nances_bin_path, 'LibARC_250103.dll')
+    path_string_programdata = op.join(programdata_path, 'LibARC_250103.dll')
+    try:
+        clr.AddReferenceToFileAndPath(path_string)
+    except:
+        clr.AddReferenceToFileAndPath(path_string_programdata)
+
+    from NS.LibARC import LibARCSecurity #từ namespace NS.LibARC import class LibARCSecurity
+    funtion = LibARCSecurity
+    return funtion
 
 def thong_bao_loi_license():
     tin_nhan = "Hãy mở khóa Add-in.\nSử dụng command [Get info] và gửi mã tới skype của Sơn\nhoặc email:nguyenthanhson1712@gmail.com\n\n\nこちらのツールを使用するには、\nアドインをロック解除する必要があります。\nコマンド [Get info] を使用してコードを取得し、その後\nSonのSkypeまたは以下のメールアドレスに送信してください：nguyenthanhson1712@gmail.com"

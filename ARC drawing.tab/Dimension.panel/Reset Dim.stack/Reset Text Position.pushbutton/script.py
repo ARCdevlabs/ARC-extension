@@ -16,10 +16,21 @@ if module.AutodeskData():
 	uidoc = __revit__.ActiveUIDocument
 	doc = uidoc.Document
 
-import clr
-clr.AddReference("DefResetTextPosition241208Ver3.dll")
-import DefResetTextPosition241208Ver3 #Load Assembly
-
+import nances
+module_check_license = nances.AutodeskDataInCode()
+check_license = module_check_license.check_license()
+def reset_text_position(element):
+    if check_license:
+        try:
+            number_of_segments =  element.NumberOfSegments
+            if number_of_segments != 0:
+                segments = element.Segments
+                for tung_seg in segments:
+                    tung_seg.ResetTextPosition()
+            else:
+                element.ResetTextPosition()
+        except:
+            pass
 from Autodesk.Revit.UI.Selection import ObjectType, Selection
 try:
     t0 = Transaction(doc,"Set Work Plane")
@@ -40,12 +51,10 @@ try:
     else:
         element = current_selection
 
-
-
     t = Transaction(doc,"Reset Text Position")
     t.Start() 
     for i in element:
-        DefResetTextPosition241208Ver3.reset_text_position(i) #Gọi def từ assembly luôn, không cần thông qua class nữa
+        reset_text_position(i) #Gọi def từ assembly luôn, không cần thông qua class nữa
     t.Commit()
 except:
     # print(traceback.format_exc())

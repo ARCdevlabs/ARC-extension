@@ -1,27 +1,15 @@
 # -*- coding: utf-8 -*-
-from Autodesk.Revit.UI.Selection.Selection import PickObject
-from Autodesk.Revit.UI.Selection  import ObjectType
-from Autodesk.Revit.DB import *
-from Autodesk.Revit.DB import FailuresAccessor
-from Autodesk.Revit.DB import Line
-from Autodesk.Revit.Creation import ItemFactoryBase
-from System.Collections.Generic import *
 from Autodesk.Revit.DB import Reference
 import Autodesk.Revit.DB as DB
 import math
-from rpw import ui
-from rpw.ui.forms import Alert
-import sys
-import string
-import importlib
-import traceback
 from nances import revit
-ARC = string.ascii_lowercase
-begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
-module = importlib.import_module(str(begin))
 import Autodesk
 from Autodesk.Revit.DB import *
+import nances as module
+from nances import vectortransform,geometry
 from System.Collections.Generic import *
+import tim_reference_beam 
+
 if module.AutodeskData():
     uidoc = __revit__.ActiveUIDocument
     doc = uidoc.Document
@@ -188,7 +176,6 @@ if module.AutodeskData():
         Snap_dim =(5*(5/3)) * (1/304.8)* Scale #1mm bang 0.003084
         Vector_for_scale = Snap_dim *direction_of_wall 
         move_detail_curve = locate_detail_curve_of_location_curve.Move(Vector_for_scale)
-
         return detail_curve_of_location_curve
 
     def get_wall_reference_by_magic(uid,index):
@@ -265,33 +252,11 @@ if module.AutodeskData():
                 list_distance = []
                 list_outer_face = []
                 unique_id = wall.UniqueId
-                for face in faces:
-                    try:
-                        face_origin = face.Origin
-                        face_normal = face.FaceNormal
-                        face_to_plane = DB.Plane.CreateByNormalAndOrigin(face_normal, face_origin)
-                        normal_face_to_plane = face_to_plane.Normal
-                        check_pararel = are_planes_parallel(center_plane_normal,face_normal)
-                        if check_pararel:
-                            distance =  distance_between_parallel_planes(face_to_plane, center_plane )
-                            list_distance.append(distance)
-                            list_outer_face.append(face.Reference)
-                    except:
-                        # import traceback
-                        # print(traceback.format_exc())                
-                        pass
-                try:
-                    max_value = max(list_distance)
-                    max_index = list_distance.index(max_value)
-                    min_value = min(list_distance)
-                    min_index = list_distance.index(min_value)
-                    ref_face_max = list_outer_face[max_index]
-                    ref_face_min = list_outer_face[min_index]
-                    # print ref_face_max, ref_face_min
-                except:
-                    # import traceback
-                    # print(traceback.format_exc())          
-                    pass
+                call_class_tim_reference = tim_reference_beam.ClassTimReference(faces,center_plane, vectortransform)                
+                result = call_class_tim_reference.tim_reference_beam()
+                ref_face_min = result.ref_face_min
+                ref_face_max = result.ref_face_max
+                max_value = result.max_value
                 detail_line = get_rotate_90_location_wall (wall)
                 line = detail_line.Location.Curve
                 clone_curve = line.Clone()

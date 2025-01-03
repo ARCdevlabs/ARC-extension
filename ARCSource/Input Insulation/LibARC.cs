@@ -125,9 +125,16 @@ namespace Input_Insulation
         public FamilyInstance CreateBeam(Document doc, Curve curve, FamilySymbol beamType, Level level)
         {
             // Tạo dầm mới
-            FamilyInstance beam = doc.Create.NewFamilyInstance(curve, beamType, level, StructuralType.Beam);
-
-            return beam;
+            if (beamType.IsActive == true)
+            {             
+                FamilyInstance beam = doc.Create.NewFamilyInstance(curve, beamType, level, StructuralType.Beam);
+                return beam;
+            }
+            else
+            {
+                //TaskDialog.Show("Beam Insulation", "Please Active the Family symbol");
+                return null;
+            }
         }
 
         public void ActivateSymbol(Document doc, FamilySymbol element)

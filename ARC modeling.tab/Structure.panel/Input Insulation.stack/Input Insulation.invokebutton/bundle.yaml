@@ -1,0 +1,13 @@
+title:   
+  en_us: Create Insulation
+  ja: 断熱材入力
+tooltip:
+  en_us:
+    Create insulate beams and columns according to Obayashi family standards.
+  ja:
+    大林組の標準に従って断熱梁と柱を作成します。
+assembly: Input Insulation 
+command_class: InputInsulation_Command
+
+
+

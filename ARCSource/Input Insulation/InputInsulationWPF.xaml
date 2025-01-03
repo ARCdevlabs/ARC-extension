@@ -26,7 +26,19 @@
                         Header="Guide"
                         Background="WhiteSmoke"
                         Height="336" BorderBrush="Black"
-                        />
+                        >
+                <StackPanel x:Name="GroupBoxContent" 
+                        Orientation="Vertical">
+                     <Label Content="Default Family of Insulation: Please load family before use this addin" />
+                    <TextBlock Text="    - Beam: gIns_Frame-ver4.0" />
+                    <TextBlock Text="    - Column: gIns_Column-ver4.0" />
+                    <Label Content="H Shape                       ロ Shape" Width="182" FontWeight="Bold" />
+                    <Image Source="/Input Insulation;component/Resource/ImageShape.png" 
+                   Width="361" 
+                   Height="200" 
+                   Stretch="Uniform" />
+                </StackPanel>
+            </GroupBox>
         </StackPanel>
 
         <StackPanel Margin="0,20,10,10"
