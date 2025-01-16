@@ -837,28 +837,25 @@ import platform
 from Autodesk.Revit.DB import (FilteredElementCollector,Element, View, ElementId, FamilyInstance, FillPatternElement, Color, OverrideGraphicSettings,FilteredElementCollector, BuiltInCategory)
 from nances import forms
 
+import importdll
+import_class = importdll.ImportDLL()
+
 PYREVIT_ADDON_NAME = 'pyRevit'
 PYREVIT_FILE_PREFIX = '{}_'.format(PYREVIT_ADDON_NAME)
 USER_ROAMING_DIR = os.getenv('appdata')
 PYREVIT_APP_DIR = op.join(USER_ROAMING_DIR, PYREVIT_ADDON_NAME)
 PYREVIT_VERSION_APP_DIR = op.join(PYREVIT_APP_DIR)
 
-#Get UIDocument
-uidoc = __revit__.ActiveUIDocument
-doc = uidoc.Document
 # Def nay cho current element
 def get_selected_elements(tem_uidoc, tem_doc, noti = True):
-    selection = tem_uidoc.Selection
-    selection_ids = selection.GetElementIds()
-    elements = []
-    for element_id in selection_ids:
-        elements.append(tem_doc.GetElement(element_id))
-
-    if len(elements) == 0:
+    return_elements = []
+    elements = import_class.LibARC_Selection.CurrentSelection(tem_uidoc,tem_doc)
+    if elements != None:
+        for i in elements:
+            return_elements.append(i)
+    if elements == None:
         if noti:
             from Autodesk.Revit.UI import TaskDialog
-            # module_path = Autodesk.__file__
-            # print module_path
             dialog = TaskDialog("ARC")
             from pyrevit.coreutils import applocales
             current_applocale = applocales.get_current_applocale()
@@ -871,7 +868,7 @@ def get_selected_elements(tem_uidoc, tem_doc, noti = True):
             dialog.Show()
         return False
     else: 
-        return elements
+        return return_elements
     
 def get_elements(iuidoc,idoc, string_warning_bar, noti = False):
     selected_element = get_selected_elements(iuidoc,idoc, noti)
@@ -932,120 +929,88 @@ def joingeometry(idoc,List1, List2):
     Alert(Mes,title="Mes",header= "Report number Join and Switch joined")
     return 
 
-def _get_app_file(file_id, file_ext,
-                filename_only=False, stamped=False, universal=False):
-    appdata_folder = PYREVIT_VERSION_APP_DIR
-    file_prefix = PYREVIT_FILE_PREFIX
-    if stamped:
-        file_prefix = pyrevit.PYREVIT_FILE_PREFIX_STAMPED
-    elif universal:
-        appdata_folder = PYREVIT_APP_DIR
-        file_prefix = pyrevit.PYREVIT_FILE_PREFIX_UNIVERSAL
+# def _get_app_file(file_id, file_ext,
+#                 filename_only=False, stamped=False, universal=False):
+#     appdata_folder = PYREVIT_VERSION_APP_DIR
+#     file_prefix = PYREVIT_FILE_PREFIX
+#     if stamped:
+#         file_prefix = pyrevit.PYREVIT_FILE_PREFIX_STAMPED
+#     elif universal:
+#         appdata_folder = PYREVIT_APP_DIR
+#         file_prefix = pyrevit.PYREVIT_FILE_PREFIX_UNIVERSAL
 
-    full_filename = '{}{}.{}'.format(file_prefix, file_id, file_ext)
-    if filename_only:
-        return full_filename
-    else:
-        return op.join(
-            appdata_folder,
-            coreutils.cleanup_filename(full_filename)
-            )
+#     full_filename = '{}{}.{}'.format(file_prefix, file_id, file_ext)
+#     if filename_only:
+#         return full_filename
+#     else:
+#         return op.join(
+#             appdata_folder,
+#             coreutils.cleanup_filename(full_filename)
+#             )
 
-def get_data_file(file_id, file_ext, name_only=False):
-    return _get_app_file(file_id, file_ext, filename_only=name_only)
+# def get_data_file(file_id, file_ext, name_only=False):
+#     return _get_app_file(file_id, file_ext, filename_only=name_only)
 
-def get_document_data_file(file_id, file_ext, add_cmd_name=False):
-    proj_info = revit.query.get_project_info()
-    # print (proj_info)
-    if add_cmd_name:
-        script_file_id = '{}_{}'.format(EXEC_PARAMS.command_name,
-                                        file_id)
-                                        #    proj_info.filename
-                                        #    or proj_info.name)
-    else:
-        script_file_id = '{}'.format(file_id)
-                                        # proj_info.filename
-                                        # or proj_info.name)
-    # print (get_data_file(script_file_id, file_ext))
-    return get_data_file(script_file_id, file_ext)
+# def get_document_data_file(file_id, file_ext, add_cmd_name=False):
+#     proj_info = revit.query.get_project_info()
+#     # print (proj_info)
+#     if add_cmd_name:
+#         script_file_id = '{}_{}'.format(EXEC_PARAMS.command_name,
+#                                         file_id)
+#                                         #    proj_info.filename
+#                                         #    or proj_info.name)
+#     else:
+#         script_file_id = '{}'.format(file_id)
+#                                         # proj_info.filename
+#                                         # or proj_info.name)
+#     # print (get_data_file(script_file_id, file_ext))
+#     return get_data_file(script_file_id, file_ext)
 
 
 def checklicense_for_info():
-    import clr
-    appdata_path = os.path.join(os.getenv('APPDATA'), 'pyRevit', 'Extensions')
-    programdata_path = (r"C:\ProgramData\pyRevit\Extensions")
-    nances_bin_path = os.path.join(appdata_path, 'ARC extension.extension', 'bin')
-    path_string = op.join(nances_bin_path, 'LibARC_250103.dll')
-    path_string_programdata = op.join(programdata_path, 'LibARC_250103.dll')
-    try:
-        clr.AddReferenceToFileAndPath(path_string)
-    except:
-        clr.AddReferenceToFileAndPath(path_string_programdata)
-        
-    from NS.LibARC import LibARCSecurity #từ namespace NS.LibARC import class LibARCSecurity
-    check = LibARCSecurity.CheckLicense()
+    import_def = import_class.get_dll()
+    check = import_def.LibARC_Security.CheckLicense()
     if check:
         return "OK"
     else:
         "Not OK"
 
 def AutodeskData():
-    import clr
-    appdata_path = os.path.join(os.getenv('APPDATA'), 'pyRevit', 'Extensions')
-    programdata_path = (r"C:\ProgramData\pyRevit\Extensions")
-    nances_bin_path = os.path.join(appdata_path, 'ARC extension.extension', 'bin')
-    path_string = op.join(nances_bin_path, 'LibARC_250103.dll')
-    path_string_programdata = op.join(programdata_path, 'LibARC_250103.dll')
-    try:
-        clr.AddReferenceToFileAndPath(path_string)
-    except:
-        clr.AddReferenceToFileAndPath(path_string_programdata)
-
-    from NS.LibARC import LibARCSecurity #từ namespace NS.LibARC import class LibARCSecurity
-    check = LibARCSecurity.CheckLicense()
+    import_def = import_class.get_dll()
+    check = import_def.LibARC_Security.CheckLicense()
     if check:
         return check
     else:
         thong_bao_loi_license()
    
 def AutodeskDataInCode():
-    import clr
-    appdata_path = os.path.join(os.getenv('APPDATA'), 'pyRevit', 'Extensions')
-    programdata_path = (r"C:\ProgramData\pyRevit\Extensions")
-    nances_bin_path = os.path.join(appdata_path, 'ARC extension.extension', 'bin')
-    path_string = op.join(nances_bin_path, 'LibARC_250103.dll')
-    path_string_programdata = op.join(programdata_path, 'LibARC_250103.dll')
-    try:
-        clr.AddReferenceToFileAndPath(path_string)
-    except:
-        clr.AddReferenceToFileAndPath(path_string_programdata)
-
-    from NS.LibARC import LibARCSecurity #từ namespace NS.LibARC import class LibARCSecurity
-    funtion = LibARCSecurity
+    import_def = import_class.get_dll()
+    funtion = import_def.LibARC_Security
     return funtion
+
 
 def thong_bao_loi_license():
     tin_nhan = "Hãy mở khóa Add-in.\nSử dụng command [Get info] và gửi mã tới skype của Sơn\nhoặc email:nguyenthanhson1712@gmail.com\n\n\nこちらのツールを使用するには、\nアドインをロック解除する必要があります。\nコマンド [Get info] を使用してコードを取得し、その後\nSonのSkypeまたは以下のメールアドレスに送信してください：nguyenthanhson1712@gmail.com"
     MessageBox.Show(tin_nhan, "ARC", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
 
-def all_elements_of_category(idoc, category):
-	return FilteredElementCollector(idoc).OfCategory(category).WhereElementIsNotElementType().ToElements()
+# def all_elements_of_category(idoc, category):
+# 	return FilteredElementCollector(idoc).OfCategory(category).WhereElementIsNotElementType().ToElements()
 
-def override_graphics_in_view(idoc, view, list_element_id, color, color_cut):
-    name_pattern = "<Solid fill> , <塗り潰し>"
-    patterns = FilteredElementCollector(idoc).OfClass(FillPatternElement)
-    for pattern in patterns:
-        if pattern.Name in name_pattern:
-            solidPatternId = pattern.Id
-    override = OverrideGraphicSettings()
-    for i in list_element_id:
-        override.SetSurfaceForegroundPatternColor(color)
-        override.SetSurfaceForegroundPatternId(solidPatternId)
-        override.SetCutForegroundPatternColor(color_cut)
-        override.SetCutForegroundPatternId(solidPatternId)
-        view.SetElementOverrides(i, override)
-    return
+# def override_graphics_in_view(idoc, view, list_element_id, color, color_cut):
+#     name_pattern = "<Solid fill> , <塗り潰し>"
+#     patterns = FilteredElementCollector(idoc).OfClass(FillPatternElement)
+#     for pattern in patterns:
+#         if pattern.Name in name_pattern:
+#             solidPatternId = pattern.Id
+#     override = OverrideGraphicSettings()
+#     for i in list_element_id:
+#         override.SetSurfaceForegroundPatternColor(color)
+#         override.SetSurfaceForegroundPatternId(solidPatternId)
+#         override.SetCutForegroundPatternColor(color_cut)
+#         override.SetCutForegroundPatternId(solidPatternId)
+#         view.SetElementOverrides(i, override)
+#     return
     
 
 def Active_view(idoc):
@@ -1198,28 +1163,28 @@ def distance_between_parallel_planes(plane1, plane2):
     distance = (distance1 - distance2)
     return distance
 
-def get_rotate_90_location_wall (wall):
-    from Autodesk.Revit.DB import Line, BuiltInParameter
-    wall_location = wall.Location
-    wall_location_curve = wall_location.Curve
-    start = wall_location_curve.GetEndPoint(0)
-    end = wall_location_curve.GetEndPoint(1)
-    flat_start = XYZ(start.X,start.Y, start.Z)
-    flat_end =  XYZ(end.X,end.Y, start.Z)
-    flat_line =  Line.CreateBound(flat_start,flat_end)
-    mid_point = flat_line.Evaluate(0.5, True)
-    Z_point = XYZ(mid_point.X, mid_point.Y, mid_point.Z + 10)
-    Z_axis = Line.CreateBound(mid_point, Z_point)
-    curve_of_location_curve = Line.CreateBound(flat_start,flat_end)
-    detail_curve_of_location_curve = doc.Create.NewDetailCurve(Currentview,curve_of_location_curve)
-    locate_detail_curve_of_location_curve = detail_curve_of_location_curve.Location
-    rotate_locate_detail_curve_of_location_curve = locate_detail_curve_of_location_curve.Rotate(Z_axis, 2 * math.pi / 4)
-    direction_of_wall = flat_line.Direction
-    Scale = Currentview.Scale
-    Snap_dim = 4.5 * 0.0032808 #1mm bang 0.0032808feet
-    Vector_for_scale = Snap_dim * Scale *direction_of_wall
-    move_detail_curve = locate_detail_curve_of_location_curve.Move(Vector_for_scale)
-    return detail_curve_of_location_curve
+# def get_rotate_90_location_wall (wall):
+#     from Autodesk.Revit.DB import Line, BuiltInParameter
+#     wall_location = wall.Location
+#     wall_location_curve = wall_location.Curve
+#     start = wall_location_curve.GetEndPoint(0)
+#     end = wall_location_curve.GetEndPoint(1)
+#     flat_start = XYZ(start.X,start.Y, start.Z)
+#     flat_end =  XYZ(end.X,end.Y, start.Z)
+#     flat_line =  Line.CreateBound(flat_start,flat_end)
+#     mid_point = flat_line.Evaluate(0.5, True)
+#     Z_point = XYZ(mid_point.X, mid_point.Y, mid_point.Z + 10)
+#     Z_axis = Line.CreateBound(mid_point, Z_point)
+#     curve_of_location_curve = Line.CreateBound(flat_start,flat_end)
+#     detail_curve_of_location_curve = doc.Create.NewDetailCurve(Currentview,curve_of_location_curve)
+#     locate_detail_curve_of_location_curve = detail_curve_of_location_curve.Location
+#     rotate_locate_detail_curve_of_location_curve = locate_detail_curve_of_location_curve.Rotate(Z_axis, 2 * math.pi / 4)
+#     direction_of_wall = flat_line.Direction
+#     Scale = Currentview.Scale
+#     Snap_dim = 4.5 * 0.0032808 #1mm bang 0.0032808feet
+#     Vector_for_scale = Snap_dim * Scale *direction_of_wall
+#     move_detail_curve = locate_detail_curve_of_location_curve.Move(Vector_for_scale)
+#     return detail_curve_of_location_curve
 
 def get_wall_reference_by_magic(uid,index):
     format = "{0}:{1}:{2}"
@@ -1420,7 +1385,6 @@ import Autodesk.Revit.DB as DB
 from System.Collections.Generic import *
 
 def get_nearest_point(points, reference_point):
-
     min_distance = float('inf')
     nearest_point = None
     

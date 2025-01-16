@@ -2,9 +2,15 @@
 import Autodesk
 import Autodesk.Revit.DB as DB
 import math
+import importdll
+import_class = importdll.ImportDLL()
+import_def = import_class.get_dll()
 
+# def move_point_along_vector(point, vector, distance):
+#     new_point = point + vector.Normalize() * distance
+#     return new_point
 def move_point_along_vector(point, vector, distance):
-    new_point = point + vector.Normalize() * distance
+    new_point = import_def.LibARC_VectorMath.MovePointAlongVector(point, vector, distance)
     return new_point
 
 def normalize(vector):
@@ -224,9 +230,8 @@ def degrees_to_radians(degrees):
 
 
 def distance_from_point_to_plane(point, plane):
-    distance = plane.Normal.DotProduct(point - plane.Origin)
+    distance = import_def.LibARC_VectorMath.DistanceFromPointToPlane(point, plane)
     return distance
-
 
 def distance_between_parallel_planes(plane1, plane2):
     point_on_plane = DB.XYZ(0, 0, 0)
@@ -253,10 +258,9 @@ def create_plane_from_point_and_normal(point, normal):
     plane = Autodesk.Revit.DB.Plane(normal, point)
     return plane
 
+
 def are_planes_parallel(normal1, normal2):
-    tolerance=0.0000001
-    cross_product = normal1.CrossProduct(normal2)
-    return cross_product.GetLength() < tolerance
+    return import_def.LibARC_VectorMath.ArePlanesParallel(normal1, normal2)
 
 def distance_between_planes(normal1, point_on_plane1, normal2):
     vector_between_planes = point_on_plane1 - (point_on_plane1.DotProduct(normal2) - normal2.DotProduct(normal1)) / normal1.DotProduct(normal2) * normal1

@@ -88,7 +88,7 @@ if module.AutodeskData():
                         point_location = column.Location.Point
                         geo = geometry.get_geometry(column)
                         faces = geometry.get_face(geo)
-                        X_vector =get_X_vector(column)
+                        X_vector = get_X_vector(column)
                         Y_vector = get_Y_vector(column)
                         Y_plane = Plane.CreateByNormalAndOrigin(X_vector, point_location)
                         X_plane = Plane.CreateByNormalAndOrigin(Y_vector, point_location)

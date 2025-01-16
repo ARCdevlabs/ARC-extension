@@ -28,6 +28,8 @@ if nances.AutodeskData():
                         list_distance.append(distance)
                         list_outer_face.append(face.Reference)
                 except:
+                    # import traceback
+                    # print(traceback.format_exc())
                     pass
             if list_distance:    
                 max_value = max(list_distance)
