@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 import Autodesk.Revit.DB as DB
+import importdll
+import_class = importdll.ImportDLL()
+import_def = import_class.get_dll()
 
 #get_geometry_non_reference: Sẽ lấy geometry nhưng không có những Reference để có thể áp dụng vào việc tạo dimension.
 def get_geometry_non_reference(element):
@@ -18,20 +21,17 @@ def get_geometry_non_reference(element):
 
 #get_geometry: Sẽ lấy geometry và có những Reference để có thể áp dụng vào việc tạo dimension.
 #Phương pháp này chỉ áp dụng được với các đối tượng với HasModifiedGeometry() == True
+# def get_geometry(element):
+#     option = DB.Options()
+#     option.ComputeReferences = True
+#     geo_ref = element.get_Geometry(option)
+#     return geo_ref
+
+
 def get_geometry(element):
-    option = DB.Options()
-    option.ComputeReferences = True
-    geo_ref = element.get_Geometry(option)
+    geo_ref = import_def.LibARC_Geometry.GetGeometry(element)
     return geo_ref
 
-def get_geometry_with_view(element, view):
-    geo_opt = DB.Options()
-    geo_opt.ComputeReferences = True
-    geo_opt.IncludeNonVisibleObjects = True
-    geo_opt.View = view
-    geo_ref =  element.get_Geometry(geo_opt)
-    return geo_ref
-   
 # find_intersect_elements: Lọc các đối tượng giao nhau với 1 đối tượng đầu vào.
 def find_intersect_elements(idoc, element_A, list_element_B):
     result_element = []
@@ -50,12 +50,18 @@ def find_intersect_elements(idoc, element_A, list_element_B):
         return result_element
 
 # get_face:Lấy tất cả các face của một geometry. 
+# def get_face(geometry):
+#     list_faces =[]
+#     for geometry_object in geometry:
+#         if hasattr(geometry_object, "Faces"):
+#             for face in geometry_object.Faces:
+#                 list_faces.append(face)
+#     return list_faces
 def get_face(geometry):
     list_faces =[]
-    for geometry_object in geometry:
-        if hasattr(geometry_object, "Faces"):
-            for face in geometry_object.Faces:
-                list_faces.append(face)
+    faces = import_def.LibARC_Geometry.GetFaces(geometry)
+    for face in faces:
+        list_faces.append(face)
     return list_faces
 
 def get_center_plane_of_wall (wall):

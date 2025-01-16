@@ -13,8 +13,8 @@ import Autodesk.Revit.DB as DB
 from System.Collections.Generic import *
 import traceback
 if module.AutodeskData():
-	uidoc = __revit__.ActiveUIDocument
-	doc = uidoc.Document
+    uidoc = __revit__.ActiveUIDocument
+    doc = uidoc.Document
 
 import nances
 module_check_license = nances.AutodeskDataInCode()
