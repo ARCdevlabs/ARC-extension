@@ -10,14 +10,12 @@ module = importlib.import_module(str(begin))
 import Autodesk
 from Autodesk.Revit.DB import *
 from System.Collections.Generic import *
-uidoc = __revit__.ActiveUIDocument
-doc = uidoc.Document
-Ele = module.get_selected_elements(uidoc,doc)
-# t = Transaction (doc, "Chọn type từ element")
-# t.Start()
-list_ele = []
-for i in Ele:
-    element_type = module.get_type(doc, i)
-    list_ele.append(element_type)
-module.get_current_selection(uidoc,list_ele)
-# t.Commit()        
+if module.AutodeskData():
+    uidoc = __revit__.ActiveUIDocument
+    doc = uidoc.Document
+    Ele = module.get_selected_elements(uidoc,doc)
+    list_ele = []
+    for i in Ele:
+        element_type = module.get_type(doc, i)
+        list_ele.append(element_type)
+    module.get_current_selection(uidoc,list_ele)     

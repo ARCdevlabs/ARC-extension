@@ -24,11 +24,14 @@ def override_graphics_in_view(view, list_element_id, color, color_cut):
             solidPatternId = pattern.Id
     override = OverrideGraphicSettings()
     for i in list_element_id:
-        override.SetSurfaceForegroundPatternColor(color)
-        override.SetSurfaceForegroundPatternId(solidPatternId)
-        override.SetCutForegroundPatternColor(color_cut)
-        override.SetCutForegroundPatternId(solidPatternId)
-        view.SetElementOverrides(i, override)
+        try:
+            override.SetSurfaceForegroundPatternColor(color)
+            override.SetSurfaceForegroundPatternId(solidPatternId)
+            override.SetCutForegroundPatternColor(color_cut)
+            override.SetCutForegroundPatternId(solidPatternId)
+            view.SetElementOverrides(i, override)
+        except:
+            pass
     return
 
 #Get UIDocument
