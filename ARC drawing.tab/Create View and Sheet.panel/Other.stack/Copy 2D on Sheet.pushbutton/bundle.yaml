@@ -1,6 +1,9 @@
 title:
-  ja: シートの2Dコピー
+  ja: 2D要素のコピーペ
   en_us: Copy 2D on Sheet
 tooltip:
   ja: 選択した2Dオブジェクトをこのシートから別のシートへコピーぺします。
   en_us: Tool sẽ giúp copy các đối tượng 2D đã chọn ở 1 sheet sang các sheet khác.
+authors:
+  - Lý Ngọc Quế
+  - Tô Thanh Tùng
