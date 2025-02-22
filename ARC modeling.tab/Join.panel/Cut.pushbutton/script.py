@@ -51,7 +51,7 @@ try:
                                     pass
             len_cut = str(len (Cut))
             Mes = "Cut: " + len_cut
-            Alert(Mes,title="Mes",header= "Report number Join and Switch joined")
+            Alert(Mes,title="Mes",header= "Report number Cut Geometry")
             return Cut
 
 
@@ -115,11 +115,11 @@ try:
         # Dao nguoc input
         from rpw.ui.forms import SelectFromList
         value = SelectFromList('Priority', ['@Please choose which list to prioritize','List 1','List 2'])
-        if value =="List 1":
+        if value =="List 2":
             List1 = Input1
             List2 = Input2
         else:
-            if value == "List 2":
+            if value == "List 1":
                 List1 = Input2
                 List2 = Input1
             else:
