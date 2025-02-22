@@ -28,58 +28,58 @@ from System.Collections.Generic import *
 if module.AutodeskData():
     Currentview = doc.ActiveView
 
-def move_element (idoc, element, vector):
-    move = Autodesk.Revit.DB.ElementTransformUtils.MoveElement(idoc,element.Id,vector)
-    return move
+    def move_element (idoc, element, vector):
+        move = Autodesk.Revit.DB.ElementTransformUtils.MoveElement(idoc,element.Id,vector)
+        return move
 
-def tinh_toan_vector_move(line1, line2):
-    # Lấy điểm đầu và điểm cuối của line1
-    start_point1 = line1.Origin
-    # Lấy điểm đầu và điểm cuối của line2
-    end_point2 = line2.Origin
-    # Tính toán vector di chuyển
-    move_vector = XYZ(end_point2.X - start_point1.X, end_point2.Y - start_point1.Y, end_point2.Z - start_point1.Z)
-    return move_vector
+    def tinh_toan_vector_move(line1, line2):
+        # Lấy điểm đầu và điểm cuối của line1
+        start_point1 = line1.Origin
+        # Lấy điểm đầu và điểm cuối của line2
+        end_point2 = line2.Origin
+        # Tính toán vector di chuyển
+        move_vector = XYZ(end_point2.X - start_point1.X, end_point2.Y - start_point1.Y, end_point2.Z - start_point1.Z)
+        return move_vector
 
-class DimensionSelectionFilter(Autodesk.Revit.UI.Selection.ISelectionFilter):
-    def AllowElement(self, element):
-        # Chỉ cho phép chọn đối tượng Dimension
-        return isinstance(element, Dimension)
+    class DimensionSelectionFilter(Autodesk.Revit.UI.Selection.ISelectionFilter):
+        def AllowElement(self, element):
+            # Chỉ cho phép chọn đối tượng Dimension
+            return isinstance(element, Dimension)
 
-    def AllowReference(self, reference, point):
-        # Không sử dụng AllowReference trong trường hợp này
-        return False
+        def AllowReference(self, reference, point):
+            # Không sử dụng AllowReference trong trường hợp này
+            return False
 
-# Hàm chọn một Dimension từ danh sách sử dụng ISelectionFilter
-def pick_dimension_element():
-    try:
-        selected_dimension = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element, DimensionSelectionFilter(), "Chọn một Dimension")
-        return doc.GetElement(selected_dimension.ElementId) if selected_dimension else None
-    except:
-        return None
-
-def main():
-    first_ele =  pick_dimension_element()
-    if first_ele:
-        dim_1 = first_ele
-        line_dim_1 = dim_1.Curve
-    else:
-        sys.exit()
-    while True:
+    # Hàm chọn một Dimension từ danh sách sử dụng ISelectionFilter
+    def pick_dimension_element():
         try:
-            second_ele = pick_dimension_element()
-            dim_2 = second_ele
-            line_dim_2 = dim_2.Curve
-            vector_move_2 = tinh_toan_vector_move (line_dim_2,line_dim_1)
-            t = Transaction(doc, "Align dim")
-            t.Start()
-            move_element(doc,dim_2, vector_move_2)                    
-            t.Commit()
-        except Exception as ex:
-            if "Operation canceled by user." in str(ex):
-                break
-            else:
-                break
-main()
+            selected_dimension = uidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element, DimensionSelectionFilter(), "Chọn một Dimension")
+            return doc.GetElement(selected_dimension.ElementId) if selected_dimension else None
+        except:
+            return None
+
+    def main():
+        first_ele =  pick_dimension_element()
+        if first_ele:
+            dim_1 = first_ele
+            line_dim_1 = dim_1.Curve
+        else:
+            sys.exit()
+        while True:
+            try:
+                second_ele = pick_dimension_element()
+                dim_2 = second_ele
+                line_dim_2 = dim_2.Curve
+                vector_move_2 = tinh_toan_vector_move (line_dim_2,line_dim_1)
+                t = Transaction(doc, "Align dim")
+                t.Start()
+                move_element(doc,dim_2, vector_move_2)                    
+                t.Commit()
+            except Exception as ex:
+                if "Operation canceled by user." in str(ex):
+                    break
+                else:
+                    break
+    main()
 
 

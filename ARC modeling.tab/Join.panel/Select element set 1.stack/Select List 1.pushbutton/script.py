@@ -17,11 +17,11 @@ from pyrevit.coreutils import appdata
 uidoc = __revit__.ActiveUIDocument
 doc = uidoc.Document
 import Autodesk
-import nances
 from Autodesk.Revit.DB import *
 import Autodesk.Revit.DB as DB
 from System.Collections.Generic import List
 from Autodesk.Revit.UI.Selection import ObjectType
+import nances
 if nances.AutodeskData():
     def get_document_data_file(file_id, file_ext, add_cmd_name=False):
 

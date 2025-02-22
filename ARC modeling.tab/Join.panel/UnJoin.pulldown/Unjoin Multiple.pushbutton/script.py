@@ -14,28 +14,30 @@ import traceback
 from rpw import ui
 from rpw.ui.forms import Alert
 #Get UIDocument
-uidoc = __revit__.ActiveUIDocument
-#Get Document 
-doc = uidoc.Document
-Currentview = doc.ActiveView
+import nances
+if nances.AutodeskData():
+    uidoc = __revit__.ActiveUIDocument
+    #Get Document 
+    doc = uidoc.Document
+    Currentview = doc.ActiveView
 
-Ele = module.get_elements(uidoc,doc, "Select Elements to UnJoin Geometry", noti = False)
-listele = []
-t = Transaction (doc, "Unjoin multiple")
-t.Start()
-try:
-    pick = Ele
-    dependent = []
-    for i in pick:
-        pickid = i.Id
-        listele.append(doc.GetElement(pickid)) 
-    for e in listele:
-        dependent.append (JoinGeometryUtils.GetJoinedElements(doc,e))
-        for a in dependent:
-            for b in a:
-                eleb = doc.GetElement(b)
-                if JoinGeometryUtils.AreElementsJoined(doc, e, eleb):
-                    JoinGeometryUtils.UnjoinGeometry(doc, e, eleb)
-except:
-    pass
-t.Commit()
+    Ele = module.get_elements(uidoc,doc, "Select Elements to UnJoin Geometry", noti = False)
+    listele = []
+    t = Transaction (doc, "Unjoin multiple")
+    t.Start()
+    try:
+        pick = Ele
+        dependent = []
+        for i in pick:
+            pickid = i.Id
+            listele.append(doc.GetElement(pickid)) 
+        for e in listele:
+            dependent.append (JoinGeometryUtils.GetJoinedElements(doc,e))
+            for a in dependent:
+                for b in a:
+                    eleb = doc.GetElement(b)
+                    if JoinGeometryUtils.AreElementsJoined(doc, e, eleb):
+                        JoinGeometryUtils.UnjoinGeometry(doc, e, eleb)
+    except:
+        pass
+    t.Commit()
