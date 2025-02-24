@@ -1,0 +1,9 @@
+title:   
+  en_us: Ẩn Revit link
+  ja: Revitリンク表示/非表示
+tooltip:
+  en_us:
+    Tool sẽ tạm ẩn tất cả Revit link trong view đang mở.
+  ja:
+    このツールを使用して、開いているビュー内のすべてのRevitリンクを一時的に非表示にします。
+author: Nguyễn Thanh Sơn

@@ -1,0 +1,12 @@
+title:   
+  en_us: Super Filter
+  ja: フィルター作成
+tooltip:
+  en_us:
+    Tạo filter với nhiều category
+  ja:
+    複数のカテゴリを含むフィルターを作成します。
+author: 
+  - "Phan Mẫu Cường"
+assembly: ViewFiltersCreation
+command_class: Command

@@ -1,0 +1,10 @@
+title:
+  en_us: Overkill
+  ja: Overkill
+tooltip:
+  en_us: Deletes the lines overlapped by other lines (similar to AutoCAD Overkill)
+  ja: 他の線と重複している線を削除します（AutoCADのOVERKILL[重複オブジェクト削除]と同様）。
+author: >-
+  tylerk
+
+  {{author}}

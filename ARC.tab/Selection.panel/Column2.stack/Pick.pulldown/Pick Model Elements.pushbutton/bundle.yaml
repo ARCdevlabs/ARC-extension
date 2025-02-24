@@ -1,0 +1,10 @@
+title:
+  en_us: Pick Model Elements
+  ja: 3D要素を選択
+tooltip:
+  en_us: >-
+    Click:
+    Click vào tool sẽ quét chọn chỉ các đối tượng thuộc 3D
+  ja: >-
+    クリック：
+    ツールをクリックすると、3Dに属する要素のみが選択されます。

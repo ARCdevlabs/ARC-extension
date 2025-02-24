@@ -1,0 +1,9 @@
+title:   
+  en_us: Type Wall
+  ja: 壁タイプ
+tooltip: 
+  en_us: Tạo Filter cho type của tường có trong model
+  ja: モデル内の壁タイプのフィルターを作成します。
+# highlight: new      # highlight as new or update
+authors:
+  - Nguyễn Thanh Sơn

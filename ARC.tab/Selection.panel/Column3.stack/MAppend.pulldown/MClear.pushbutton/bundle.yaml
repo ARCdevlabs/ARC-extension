@@ -1,0 +1,8 @@
+title:
+  en_us: MClear
+  ja: MClear
+tooltip:
+  en_us: >-
+    Loại bỏ hết các đối tượng khỏi bộ nhớ (điều này không ảnh hưởng tới model)
+  ja: >-
+    メモリからすべての要素を削除します。（これはモデルには影響しません）

@@ -1,0 +1,8 @@
+title:   
+  en_us: Đổi hướng dầm
+  ja: 梁方向変更
+tooltip:
+  en_us: Chọn dầm đang bị sai hướng => Click vào tool sẽ đổi ngược lại hướng của dầm.
+  ja: 方向が間違っている梁を選択してからツールを使用すると、梁の方向が逆に変更されます。
+authors:
+  - Nguyễn Thanh Sơn

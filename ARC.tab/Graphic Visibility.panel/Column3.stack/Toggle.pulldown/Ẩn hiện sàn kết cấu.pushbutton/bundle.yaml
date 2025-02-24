@@ -1,0 +1,12 @@
+title:   
+  en_us: Ẩn hiện sàn kết cấu
+  ja: 構造床表示/非表示
+tooltip:
+  en_us:
+    Tool sẽ ẩn sàn kết cấu
+
+    Bấm lần nữa sẽ hiện sàn kết cấu trở lại.
+  ja:
+    このツールを使用して構造床を非表示にします。
+    再度クリックすると、構造床が再び表示されます。
+author: Nguyễn Thanh Sơn

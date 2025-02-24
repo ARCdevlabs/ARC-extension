@@ -1,0 +1,8 @@
+title:
+  en_us: Sample Text Styles
+  ja: 文字スタイル
+tooltip:
+  en_us: List tất cả text style có trong project
+  ja: プロジェクト内のすべての文字スタイルを一覧に表示します。
+  Author: Daria Ivanciucova
+context: active-plan-view

@@ -1,0 +1,17 @@
+title:
+  en_us: Pick
+  ja: 選び出す
+tooltip:
+  en_us: >-
+    Click:
+    Click vào tool sẽ quét chọn các đối tượng thuộc category chỉ định
+
+    Shift-Click:
+    Chọn các category ưa thích
+
+  ja: >-
+    クリック：
+    ツールをクリックすると、指定されたカテゴリの要素が選択されます。
+
+    シフトクリック：
+    お気に入りのカテゴリを選択します。

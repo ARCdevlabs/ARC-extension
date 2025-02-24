@@ -1,0 +1,10 @@
+title:
+  en_us:
+    Mở View Tổng
+  ja:
+    親ビューを開く
+tooltip:
+  en_us:
+    Mở View tổng chứa view con đang mở
+  ja:
+    開いているビューの親ビューを開きます。

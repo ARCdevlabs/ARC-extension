@@ -1,0 +1,8 @@
+title:
+  en_us: MDeduct
+  ja: MDeduct
+tooltip:
+  en_us: >-
+    Bỏ bớt đối tượng trong bộ nhớ mà đã lưu với lệnh MWrite
+  ja: >-
+    MWriteで保存されたメモリからいらない要素を削除します。

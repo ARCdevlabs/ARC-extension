@@ -1,0 +1,12 @@
+title:
+  ja: コンポーネントモデルを削除
+  en_us: Wipe Model Components
+tooltip:
+  ja: このツールは、モデルをお客様に提出する前に不要な情報を削除するのに役立ちます。
+   ツールを実行し、モデルから削除したいカテゴリを選択します。
+   その後、「Wipe Model」をクリックすると、ツールが各カテゴリを順に処理し、削除します。
+
+   Revitからいくつかのエラーや警告が表示されることがあります（これは破壊的なプロセスであるため）ので、
+   使用する際は注意し、何を行うのかを十分に理解してください。
+
+  en_us: Hãy cẩn thận những gì bạn sắp làm. Công cụ này giúp bạn loại bỏ những thông tin thừa không cần thiết trong mô hình khi gửi cho nhà thầu hoặc nhà tư vấn. Chạy các công cụ và chọn các danh mục mà bạn muốn xóa khỏi mô hình. Sau đó nhấn "Xóa mô hình" và quy trình sẽ đi qua từng danh mục và xóa chúng. Bạn có thể thấy một số lỗi hoặc cảnh báo từ quy trình Revit (vì đây là một quy trình có tính phá hoại cao) nhưng nhìn chung chúng sẽ không làm hỏng tập lệnh.

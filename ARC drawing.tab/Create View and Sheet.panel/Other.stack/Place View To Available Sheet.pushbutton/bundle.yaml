@@ -1,0 +1,6 @@
+title:
+  ja: 既存のシートにビューを配置
+  en_us: Thêm View vào Sheet có sẵn
+tooltip:
+  ja: ブラウザーのビューを選択し、その後ツールをクリックしてシートを選択し、選択したビューをシートに配置します。
+  en_us: Chọn các view bên thanh browser, sau đó click vào tool và chọn sheet để bố trí các view đã chọn vào sheet.

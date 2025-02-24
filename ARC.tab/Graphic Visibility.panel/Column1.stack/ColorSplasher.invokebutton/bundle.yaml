@@ -1,0 +1,12 @@
+title:   
+  en_us: ColorSplasher
+  ja: Color Splasher
+tooltip:
+  en_us:
+    Công cụ để override tất cả đối tượng trong Revit
+    Rất thuận tiện trong việc select
+  ja:
+    このツールを使用してRevit内のすべての要素を上書きします。
+    選択する際に非常に便利です。
+assembly: ColorSplasher
+command_class: Command

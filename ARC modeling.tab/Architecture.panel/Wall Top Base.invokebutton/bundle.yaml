@@ -1,0 +1,15 @@
+title:   
+  en_us: Top/Base
+  ja: 壁上部/下部
+tooltip:
+  en_us:
+    Điều chỉnh Top và Base offset của Tường
+  ja:
+    壁の上部/下部オフセットを調整します。
+author: 
+  - "Phan Mẫu Cường"
+assembly: ModifyTopBaseWall
+command_class: Command
+
+
+

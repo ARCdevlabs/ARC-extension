@@ -1,0 +1,12 @@
+title:
+  en_us: Ẩn hiện tường kiến trúc
+  ja: 意匠壁表示/非表示
+  
+tooltip:
+  en_us: Tool sẽ ẩn tường kiến trúc
+
+    Bấm lần nữa sẽ hiện tường kiến trúc trở lại.
+  ja: このツールを使用して意匠壁を非表示にします。
+      再度クリックすると、意匠壁が再び表示されます。
+
+author: Nguyễn Thanh Sơn

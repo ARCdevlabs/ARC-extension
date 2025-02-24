@@ -1,0 +1,8 @@
+title:   
+  en_us: Beam Center Line
+  ja: 梁芯
+tooltip:
+  en_us: Chọn dầm ở view mặt bằng => Click vào tool sẽ vẽ ra detail line ngay tâm của dầm.
+  ja: 平面ビューで梁を選択し、ツールをクリックすると、梁芯に詳細線分が入力されます。
+authors:
+  - Nguyễn Thanh Sơn

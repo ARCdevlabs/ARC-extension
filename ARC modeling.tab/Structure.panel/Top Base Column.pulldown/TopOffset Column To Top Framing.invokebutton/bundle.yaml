@@ -1,0 +1,15 @@
+title:   
+  en_us: Chỉnh Top Offset tới mặt trên dầm 
+  ja: 上部オフセットを梁の天端まで調整
+tooltip:
+  en_us:
+    パラメータ「上部オフセット」に従います。
+  ja:
+    更新中...
+author: 
+  - "Phan Mẫu Cường"
+assembly: ModifyTopBaseColumn
+command_class: ModifyTopOffsetColumnToTopFraming
+
+
+

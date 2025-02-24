@@ -1,0 +1,9 @@
+title:   
+  en_us: Type Ceiling
+  ja: 天井タイプ
+tooltip: 
+  en_us: Tạo Filter cho type của Ceiling có trong model
+  ja: モデル内の天井タイプのフィルターを作成します。
+# highlight: new      # highlight as new or update
+authors:
+  - Nguyễn Thanh Sơn

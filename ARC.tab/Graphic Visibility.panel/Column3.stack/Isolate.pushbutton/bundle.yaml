@@ -1,0 +1,8 @@
+title:
+  en_us: Isolate
+  ja: 選択表示
+tooltip:
+  en_us:
+    Hỗ trợ quét chọn duy nhất category được chỉ định
+  ja:
+    指定されたカテゴリのみを選択します。

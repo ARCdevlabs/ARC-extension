@@ -1,0 +1,8 @@
+title:
+  en_us: MAppend
+  ja: MAppend
+tooltip:
+  en_us: >-
+    Thêm đối tượng vào bộ nhớ đã lưu với lệnh MWrite
+  ja: >-
+    MWriteで保存されたメモリに要素を追加します。

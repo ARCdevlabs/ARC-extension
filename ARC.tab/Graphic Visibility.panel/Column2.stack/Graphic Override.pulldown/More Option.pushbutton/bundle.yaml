@@ -1,0 +1,7 @@
+title:
+  en_us: Nhiều Option
+  ja: オプション
+tooltip:
+  en_us: Cung cấp nhiều option để override đối tượng đang được chọn
+  ja: 選択した要素を上書きするための複数のオプションを提供します。
+context: selection

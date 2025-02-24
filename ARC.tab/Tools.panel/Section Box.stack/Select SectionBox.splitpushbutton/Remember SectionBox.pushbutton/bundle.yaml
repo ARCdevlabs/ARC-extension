@@ -1,0 +1,13 @@
+title:   
+  en_us: Ghi nhớ SectionBox
+  ja: 切断ボックスを記憶
+tooltip:
+  en_us:
+    Chọn SectionBox => Bấm vào lệnh Ghi nhớ SectionBox.
+
+    Lần sau có thể dùng phím tắt để Select lại SectionBox
+  ja:
+    切断ボックスを選択して『切断ボックスを記憶』のツールをクリックします。
+
+    次回からショートカットキーを使って切断ボックスを再選択できます。
+author: Nguyễn Thanh Sơn

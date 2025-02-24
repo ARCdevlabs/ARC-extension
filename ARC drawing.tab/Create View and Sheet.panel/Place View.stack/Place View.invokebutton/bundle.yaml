@@ -1,0 +1,7 @@
+title:   
+  en_us: Thêm View vào Sheet
+  ja: ビューをシートに配置
+author: 
+  - "Phan Mẫu Cường"
+assembly: PlaceViewsToSheet
+command_class: Command

@@ -1,0 +1,7 @@
+title:
+  en_us: Chọn tất cả đối tượng cùng family trong View
+  ja: ビューで同じファミリの全部の要素を選択します
+tooltip:
+  en_us: Chọn trước một đối tượng -> Click vào tool -> Tất cả đối tượng cùng family với đối tượng ban đầu sẽ được chọn
+  ja: 最初に1つの要素を選択 → ツールをクリック → 最初の要素と同じファミリのすべての要素が選択されます。
+context: selection

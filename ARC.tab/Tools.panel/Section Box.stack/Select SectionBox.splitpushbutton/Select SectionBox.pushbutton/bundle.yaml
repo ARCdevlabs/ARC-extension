@@ -1,0 +1,9 @@
+title:   
+  en_us: Select SectionBox
+  ja: 切断ボックスを選択
+tooltip:
+  en_us:
+    Ghi nhớ SectionBox trước để có thể dùng lệnh này.
+  ja:
+    このツールを使用する前に、『切断ボックスを記憶』を実行する必要があります。
+author: Nguyễn Thanh Sơn

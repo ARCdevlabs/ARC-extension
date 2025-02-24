@@ -1,0 +1,11 @@
+title:   
+  en_us: Chọn dầm theo phương ngang
+  ja: 横方向の梁を選択
+tooltip:
+  en_us:
+    "Click vào tool, toàn bộ dầm theo phương ngang sẽ được chọn"
+  ja:
+    "ツールをクリックすると、横方向のすべての梁が選択されます。"
+author: 
+  - "Nguyễn Thanh Sơn"
+# highlight: new

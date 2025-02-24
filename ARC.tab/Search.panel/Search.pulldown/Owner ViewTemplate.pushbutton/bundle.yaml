@@ -1,0 +1,10 @@
+title:   
+  en_us: ViewTemplate đang áp dụng cho View nào
+  ja: ビューテンプレートのビューを探す
+tooltip:
+  en_us:
+    ""
+  ja:
+    "そのビューテンプレートがどのビューに適用されているかわからない場合は、このツールを使用して検索します。"
+author: 
+  - "Nguyễn Thanh Sơn"

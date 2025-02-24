@@ -1,0 +1,21 @@
+title:
+  ja: 削除
+  ru: Очистить
+  fr_fr: Nettoyage
+  en_us: Wipe
+layout:
+  - Wipe Model Components
+  - Wipe Attached Constraints
+  - Find Constraints
+  - Wipe Selected Families
+  # - Wipe Site Designer Line Styles
+  # - Wipe Unpurgable Viewport Types
+  # - Wipe Data Schema
+  # - Wipe Collab Cache
+  - Wipe SubCategories
+  - Wipe Unused Filters
+  - Wipe Unused View Templates
+  - Wipe Empty Elevation Tags
+  - Wipe Empty Tags
+  # - Wipe Arrowheads Types
+  # - Wipe All Project Parameters

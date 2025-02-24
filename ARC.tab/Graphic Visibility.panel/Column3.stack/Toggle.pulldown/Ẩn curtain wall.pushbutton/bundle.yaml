@@ -1,0 +1,13 @@
+title:   
+  en_us: Ẩn hiện Curtain wall
+  ja: カーテンウォール表示/非表示
+tooltip:
+  en_us:
+    Tool sẽ ẩn tất cả đối tượng là Curtain wall.
+
+    Bấm lần nữa sẽ hiện Curtain wall trở lại
+  ja:
+    ツールを使用してカーテンウォールのすべての要素を非表示にします。
+    再度クリックすると、カーテンウォールが再び表示されます。
+author: Nguyễn Thanh Sơn
+

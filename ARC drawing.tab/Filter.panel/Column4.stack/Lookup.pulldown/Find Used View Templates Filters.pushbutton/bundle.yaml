@@ -1,0 +1,6 @@
+title:
+  ja: 使用中のビュー テンプレート フィルターを検索
+  en_us: Find Used View Template Filters
+tooltip:
+  ja: すべてのビュー テンプレートと、ビュー テンプレートに適用されているフィルターをエクスポートします。このプロセスには時間がかかる場合があります。
+  en_us: Xuất ra tất cả View Template và filter đang được áp dụng vào View Template, quá trình này có thể mất thời gian 

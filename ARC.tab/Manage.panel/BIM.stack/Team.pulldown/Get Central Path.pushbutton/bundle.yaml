@@ -1,0 +1,16 @@
+title:
+  en_us: Get Central Path
+  ja: セントラルデータのパス
+tooltip:
+  en_us: >-
+    Print the full path to the central model (if model is workshared)
+    
+    Shift+Click: 
+
+    Open central model path in file browser
+  ja: >-
+    このツールはセントラルデータのパスを取得するのに役立ちます（モデルがワークシェアされている場合）。
+
+    シフトクリック：
+    
+    ファイルブラウザでセントラルデータのパスを開きます。

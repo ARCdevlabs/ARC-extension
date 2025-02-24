@@ -1,0 +1,9 @@
+title:   
+  en_us: Đặt móng tại vị trí cột
+  ja: 柱の位置に基礎を配置
+tooltip:
+  en_us: Chỉ cần đặt trước 1 móng => Chọn tất cả các cột cần đặt móng bên dưới => Chạy tool theo video hướng dẫn => Móng sẽ copy ra tất cả các cột.
+  ja: まず1つの基礎を配置し、基礎を配置する必要のあるすべての柱を選択します。その後、ビデオの指示に従ってツールを実行すると、すべての柱に基礎が配置されます。
+# highlight: new      # highlight as new or update
+authors:
+  - Nguyễn Thanh Sơn

@@ -1,0 +1,9 @@
+title:   
+  en_us: Hiển thị hướng dầm
+  ja: 梁の方向を表示
+tooltip:
+  en_us: Chọn tất cả dầm cần check hướng => chạy tool sẽ hiển thị hướng của dầm bằng detail line. Tool chỉ hoạt động ở view mặt bằng.
+  ja: 方向をチェックしたいすべての梁を選択してからツールを実行すると、詳細線分で梁の方向が表示されます。ツールは平面ビューでのみ動作します。
+# highlight: new      # highlight as new or update
+authors:
+  - Nguyễn Thanh Sơn

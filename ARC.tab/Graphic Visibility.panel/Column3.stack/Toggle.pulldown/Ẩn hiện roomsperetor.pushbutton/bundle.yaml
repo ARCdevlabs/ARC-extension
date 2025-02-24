@@ -1,0 +1,12 @@
+title:   
+  en_us: Ẩn hiện roomsperator
+  ja: 部屋分割表示/非表示
+tooltip:
+  en_us:
+    Tool sẽ ẩn roomsperator trong bảng VG
+
+    Bấm lần nữa sẽ hiện roomsperator trở lại
+  ja:
+    このツールを使用して表示/グラフィックスで部屋分割を非表示にします。
+    再度クリックすると、部屋分割が再び表示されます。
+author: Nguyễn Thanh Sơn

@@ -1,0 +1,483 @@
+{
+  "Uuid": "aafcf106-31c4-4ba1-99ce-431de13002ad",
+  "IsCustomNode": false,
+  "Description": "",
+  "Name": "Projection detail line to face_script",
+  "ElementResolver": {
+    "ResolutionMap": {}
+  },
+  "Inputs": [],
+  "Outputs": [],
+  "Nodes": [
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "Autodesk.DesignScript.Geometry.Surface.ProjectInputOnto@Autodesk.DesignScript.Geometry.Geometry,Autodesk.DesignScript.Geometry.Vector",
+      "Id": "7a2068af5d2b47a5ab5e0fe36ba5a810",
+      "Inputs": [
+        {
+          "Id": "73754ac165ca48c4a9477aaac18b54a0",
+          "Name": "surface",
+          "Description": "Autodesk.DesignScript.Geometry.Surface",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "7c7a32e4c0ca40c5b721c095dfe10cbf",
+          "Name": "geometryToProject",
+          "Description": "Geometry",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "7332873f6822469fb3044598e9ebb954",
+          "Name": "projectionDirection",
+          "Description": "Vector",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "a4747e9286f948ee9e94f678a97ba49c",
+          "Name": "Geometry[]",
+          "Description": "Geometry[]",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Projects the input Geometry onto this Surface in the input Vector direction. !!This projection method currently supports only points or curves!!\n\nSurface.ProjectInputOnto (geometryToProject: Geometry, projectionDirection: Vector): Geometry[]"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "Revit.Elements.Element.GetLocation",
+      "Id": "1df1ac4b190e44abbf9b6280fee8a5d2",
+      "Inputs": [
+        {
+          "Id": "17026c1024624f3ea768e8098e335de4",
+          "Name": "element",
+          "Description": "Revit.Elements.Element",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "4c2226e935854d299e7c7898021ae474",
+          "Name": "Geometry",
+          "Description": "Location Geometry",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Get an existing element's location\n\nElement.GetLocation ( ): Geometry"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "Autodesk.DesignScript.Geometry.Vector.ZAxis",
+      "Id": "e3f70d83c2cc4d49824665069f9c77ca",
+      "Inputs": [],
+      "Outputs": [
+        {
+          "Id": "4d7b64bbe3844f9c9b015bc76fe3f24d",
+          "Name": "Vector",
+          "Description": "Vector",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Get the canonical Z axis Vector (0,0,1)\n\nVector.ZAxis ( ): Vector"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "Autodesk.DesignScript.Geometry.PolySurface.ByJoinedSurfaces@Autodesk.DesignScript.Geometry.Surface[]",
+      "Id": "ebe85668bb174eb1bb9754a3c221bfdf",
+      "Inputs": [
+        {
+          "Id": "81b52e50df2d4f808b2de317e4ec3292",
+          "Name": "surfaces",
+          "Description": "Surfaces to join into polysurface\n\nSurface[]",
+          "UsingDefaultValue": false,
+          "Level": 1,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "6e3ca1fb7e6547a3aa52059ae594b5bb",
+          "Name": "PolySurface",
+          "Description": "PolySurface",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Make Polysurface by joining surfaces.\n\nPolySurface.ByJoinedSurfaces (surfaces: Surface[]): PolySurface"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "DSCore.List.Flatten@var[]..[],int",
+      "Id": "def60ca4abe04eb8a123cbaa99635d9f",
+      "Inputs": [
+        {
+          "Id": "e0cc6ec5b1044934ac5ff3fd5e3be98b",
+          "Name": "list",
+          "Description": "List to flatten.\n\nvar[]..[]",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        },
+        {
+          "Id": "45c4288670ee4f4f9a788bd663b1e793",
+          "Name": "amount",
+          "Description": "Layers of list nesting to remove (-1 will remove all list nestings)\n\nint\nDefault value : -1",
+          "UsingDefaultValue": true,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "c81e6924b83e4606851e0e3bee870587",
+          "Name": "list",
+          "Description": "Flattened list by amount",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Flattens a nested list of lists by a certain amount.\n\nList.Flatten (list: var[]..[], amount: int = -1): var[]..[]"
+    },
+    {
+      "ConcreteType": "Dynamo.Graph.Nodes.ZeroTouch.DSFunction, DynamoCore",
+      "NodeType": "FunctionNode",
+      "FunctionSignature": "Revit.Elements.ModelCurve.ByCurve@Autodesk.DesignScript.Geometry.Curve",
+      "Id": "1d894529c8594a11b0619e405d4dbbeb",
+      "Inputs": [
+        {
+          "Id": "3ca2e3a34fae4e8a875d76364dae7bc9",
+          "Name": "curve",
+          "Description": "Curve",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "c6f3d26096484385b045f1d7dc2f37cf",
+          "Name": "ModelCurve",
+          "Description": "ModelCurve",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Auto",
+      "Description": "Construct a Revit ModelCurve element from a Curve\n\nModelCurve.ByCurve (curve: Curve): ModelCurve"
+    },
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "NodeType": "PythonScriptNode",
+      "Code": "import clr\r\n\r\nclr.AddReference(\"RevitAPIUI\")\r\nfrom  Autodesk.Revit.UI import *\r\n\r\nclr.AddReference(\"RevitServices\")\r\nimport RevitServices\r\nfrom RevitServices.Persistence import DocumentManager\r\ndoc = DocumentManager.Instance.CurrentDBDocument\r\nuidoc=DocumentManager.Instance.CurrentUIApplication.ActiveUIDocument\r\n\r\nclr.AddReference(\"RevitNodes\")\r\nimport Revit\r\nclr.ImportExtensions(Revit.Elements)\r\nclr.ImportExtensions(Revit.GeometryConversion)\r\n\r\nclr.AddReference('RevitAPI')\r\nfrom Autodesk.Revit.DB import *\r\n\r\nsurfaces, gpoints = [], []\r\nsel1 = uidoc.Selection\r\not1 = Selection.ObjectType.Face\r\nref_list = sel1.PickObjects(ot1, \"Select the faces and press Finish.\")\r\nfor ref in ref_list:\r\n\tel1 = doc.GetElement(ref.ElementId)\r\n\tsf0 = el1.GetGeometryObjectFromReference(ref)\r\n\tif isinstance(el1, FamilyInstance):\r\n\t\ttf1 = el1.GetTransform().ToCoordinateSystem()\r\n\t\tsf1 = sf0.Convert(ref, tf1)\r\n\telse:\r\n\t\tsf1 = sf0.ToProtoType(True)\r\n\tfor i in sf1: i.Tags.AddTag(\"RevitFaceReference\", ref)\r\n\tsurfaces.append(sf1)\r\n\r\nOUT = surfaces",
+      "Engine": "IronPython2",
+      "VariableInputPorts": true,
+      "Id": "a3bab962fac74d1aaf0c510c1fb27913",
+      "Inputs": [
+        {
+          "Id": "29a1300b6c0d4e268f580e64f44f2c93",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "d2850d84013e4c2cbec74da8ba39484d",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded Python script."
+    },
+    {
+      "ConcreteType": "PythonNodeModels.PythonNode, PythonNodeModels",
+      "NodeType": "PythonScriptNode",
+      "Code": "\r\nimport clr\r\nclr.AddReference(\"RevitAPIUI\")\r\nfrom  Autodesk.Revit.UI import *\r\n\r\nclr.AddReference(\"RevitServices\")\r\nimport RevitServices\r\nfrom RevitServices.Persistence import DocumentManager\r\ndoc = DocumentManager.Instance.CurrentDBDocument\r\nuidoc=DocumentManager.Instance.CurrentUIApplication.ActiveUIDocument\r\n\r\nclr.AddReference(\"RevitNodes\")\r\nimport Revit\r\nclr.ImportExtensions(Revit.Elements)\r\n\r\ndef output1(l1):\r\n\tif len(l1) == 1: return l1[0]\r\n\telse: return l1\r\n\r\nsel1 = uidoc.Selection\r\nobt1 = Selection.ObjectType.Element\r\nmsg1 = \"Select the detail line\"\r\nout1 = []\r\nTaskDialog.Show(\"ARC\", msg1)\r\ntry:\r\n\tel1 = doc.GetElement(sel1.PickObject(obt1, msg1).ElementId)\r\n\tout1.append(el1.ToDSType(True))\r\n\tTaskDialog.Show(\"ARC\", \"Next, please select faces\")\r\nexcept:\r\n\tpass\t\r\nOUT = output1(out1)",
+      "Engine": "IronPython2",
+      "VariableInputPorts": true,
+      "Id": "dc410362d1ed459e96ec3c09f2717c0c",
+      "Inputs": [
+        {
+          "Id": "e5c3d491ca594cf195155aa69ac36e12",
+          "Name": "IN[0]",
+          "Description": "Input #0",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Outputs": [
+        {
+          "Id": "7a79b9f49695429a9515b0bf8bdea704",
+          "Name": "OUT",
+          "Description": "Result of the python script",
+          "UsingDefaultValue": false,
+          "Level": 2,
+          "UseLevels": false,
+          "KeepListStructure": false
+        }
+      ],
+      "Replication": "Disabled",
+      "Description": "Runs an embedded Python script."
+    }
+  ],
+  "Connectors": [
+    {
+      "Start": "a4747e9286f948ee9e94f678a97ba49c",
+      "End": "3ca2e3a34fae4e8a875d76364dae7bc9",
+      "Id": "65eed0c4921c4e47a1b7fbb54bada689"
+    },
+    {
+      "Start": "4c2226e935854d299e7c7898021ae474",
+      "End": "7c7a32e4c0ca40c5b721c095dfe10cbf",
+      "Id": "810e44d68f064ddba723f5bac7cff131"
+    },
+    {
+      "Start": "4d7b64bbe3844f9c9b015bc76fe3f24d",
+      "End": "7332873f6822469fb3044598e9ebb954",
+      "Id": "dbc4c7149f0246fdb35f8a3498ec0b88"
+    },
+    {
+      "Start": "6e3ca1fb7e6547a3aa52059ae594b5bb",
+      "End": "73754ac165ca48c4a9477aaac18b54a0",
+      "Id": "c9837e1884344126bb7ddda89c1edbf5"
+    },
+    {
+      "Start": "c81e6924b83e4606851e0e3bee870587",
+      "End": "81b52e50df2d4f808b2de317e4ec3292",
+      "Id": "71508bec790e43a993dc7e63fe8ad6ec"
+    },
+    {
+      "Start": "d2850d84013e4c2cbec74da8ba39484d",
+      "End": "e0cc6ec5b1044934ac5ff3fd5e3be98b",
+      "Id": "adf4c83cc7654e27b0be85d857d2e774"
+    },
+    {
+      "Start": "7a79b9f49695429a9515b0bf8bdea704",
+      "End": "29a1300b6c0d4e268f580e64f44f2c93",
+      "Id": "36b3ac49bd1d4e4e977cf1f6275b1d11"
+    },
+    {
+      "Start": "7a79b9f49695429a9515b0bf8bdea704",
+      "End": "17026c1024624f3ea768e8098e335de4",
+      "Id": "9597c0e4796141a398feeba01b0ae521"
+    }
+  ],
+  "Dependencies": [],
+  "NodeLibraryDependencies": [],
+  "Thumbnail": "",
+  "GraphDocumentationURL": null,
+  "ExtensionWorkspaceData": [
+    {
+      "ExtensionGuid": "28992e1d-abb9-417f-8b1b-05e053bee670",
+      "Name": "Properties",
+      "Version": "2.12",
+      "Data": {}
+    },
+    {
+      "ExtensionGuid": "DFBD9CC0-DB40-457A-939E-8C8555555A9D",
+      "Name": "Generative Design",
+      "Version": "8.1",
+      "Data": {}
+    }
+  ],
+  "Author": "",
+  "Linting": {
+    "activeLinter": "None",
+    "activeLinterId": "7b75fb44-43fd-4631-a878-29f4d5d8399a",
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "Bindings": [],
+  "View": {
+    "Dynamo": {
+      "ScaleFactor": 1.0,
+      "HasRunWithoutCrash": true,
+      "IsVisibleInDynamoLibrary": true,
+      "Version": "2.12.1.8246",
+      "RunType": "Manual",
+      "RunPeriod": "1000"
+    },
+    "Camera": {
+      "Name": "Background Preview",
+      "EyeX": 6515.283203125,
+      "EyeY": 10263.0791015625,
+      "EyeZ": 15877.525390625,
+      "LookX": -6515.283203125,
+      "LookY": -10263.0791015625,
+      "LookZ": -15877.525390625,
+      "UpX": -0.12045743316411972,
+      "UpY": 0.948323667049408,
+      "UpZ": -0.29355111718177795
+    },
+    "NodeViews": [
+      {
+        "ShowGeometry": true,
+        "Name": "Surface.ProjectInputOnto",
+        "Id": "7a2068af5d2b47a5ab5e0fe36ba5a810",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 960.20817926015638,
+        "Y": 451.18848000505466
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Element.GetLocation",
+        "Id": "1df1ac4b190e44abbf9b6280fee8a5d2",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 272.43613832152334,
+        "Y": 228.11381541477652
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Vector.ZAxis",
+        "Id": "e3f70d83c2cc4d49824665069f9c77ca",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 756.38348378978822,
+        "Y": 537.758533945451
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "PolySurface.ByJoinedSurfaces",
+        "Id": "ebe85668bb174eb1bb9754a3c221bfdf",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 611.19845157361851,
+        "Y": 443.18280681176014
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "List.Flatten",
+        "Id": "def60ca4abe04eb8a123cbaa99635d9f",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 348.2622430575592,
+        "Y": 585.36578660791179
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "ModelCurve.ByCurve",
+        "Id": "1d894529c8594a11b0619e405d4dbbeb",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 1324.9518174947359,
+        "Y": 453.43631838105114
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Python Script",
+        "Id": "a3bab962fac74d1aaf0c510c1fb27913",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": 35.239518160901525,
+        "Y": 588.06019386197636
+      },
+      {
+        "ShowGeometry": true,
+        "Name": "Python Script",
+        "Id": "dc410362d1ed459e96ec3c09f2717c0c",
+        "IsSetAsInput": false,
+        "IsSetAsOutput": false,
+        "Excluded": false,
+        "X": -206.77415769546707,
+        "Y": 231.22976018258339
+      }
+    ],
+    "Annotations": [
+      {
+        "Id": "416c952072cf486f9d46c946d37bb52a",
+        "Title": "Pick Detail Line\r\n",
+        "Nodes": [
+          "dc410362d1ed459e96ec3c09f2717c0c"
+        ],
+        "Left": -216.77415769546707,
+        "Top": 48.229760182583391,
+        "Width": 144.0,
+        "Height": 287.0,
+        "FontSize": 36.0,
+        "InitialTop": 231.22976018258339,
+        "InitialHeight": 145.0,
+        "TextblockHeight": 173.0,
+        "Background": "#FFC1D676"
+      },
+      {
+        "Id": "214e503a49444b18a52c60a7e80babb4",
+        "Title": "Pick Face",
+        "Nodes": [
+          "a3bab962fac74d1aaf0c510c1fb27913"
+        ],
+        "Left": 25.239518160901525,
+        "Top": 535.06019386197636,
+        "Width": 144.0,
+        "Height": 157.0,
+        "FontSize": 36.0,
+        "InitialTop": 588.06019386197636,
+        "InitialHeight": 145.0,
+        "TextblockHeight": 43.0,
+        "Background": "#FFC1D676"
+      }
+    ],
+    "X": 302.87900764620781,
+    "Y": -23.668176699996309,
+    "Zoom": 0.722078659900079
+  }
+}

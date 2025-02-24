@@ -1,0 +1,10 @@
+title:
+  en_us: MAppend
+  ja: MAppend
+layout:
+  - MAppend
+  - MClear
+  - MDeduct
+  - Next
+  - Prev
+  - Purge Memory Files

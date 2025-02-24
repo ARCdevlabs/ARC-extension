@@ -1,0 +1,15 @@
+title:   
+  en_us: Chỉnh Base Offset cột tới line kết cấu dầm 
+  ja: 柱の下部オフセットを梁の構造ラインまで調整
+tooltip:
+  en_us:
+    Theo tiêu chuẩn obayashi hoặc các tiêu chuẩn khác
+  ja:
+    大林組の基準または他の基準に従います。
+author: 
+  - "Phan Mẫu Cường"
+assembly: ModifyTopBaseColumn
+command_class: ModifyBaseOffsetColumnAtStartLevel
+
+
+

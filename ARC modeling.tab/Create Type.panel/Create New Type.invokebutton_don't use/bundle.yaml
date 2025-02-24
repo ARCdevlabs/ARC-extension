@@ -1,0 +1,15 @@
+title:   
+  en_us: Tạo Type
+  ja: 更新中...
+tooltip:
+  en_us:
+    Tạo type từ file Excel
+  ja:
+    更新中...
+author: 
+  - "Phan Mẫu Cường"
+assembly: CreateNewType
+command_class: CreateNewType_Command
+
+
+

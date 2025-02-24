@@ -1,0 +1,6 @@
+title:
+  en_us: Make Pattern from PAT
+  ja: PATからパターンを作成
+tooltip:
+  en_us: Batch import AutoCAD PAT files into Revit model
+  ja: AutoCADのPAT形式のファイルを一括でRevitモデルにインポートします。

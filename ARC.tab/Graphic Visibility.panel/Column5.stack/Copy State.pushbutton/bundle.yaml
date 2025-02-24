@@ -1,0 +1,13 @@
+title:
+  en_us: Copy VG
+  ja: 表示/グラフィックスをコピー
+tooltip:
+  en_us: >-
+    Copy trạng thái của view đang mở, ví dụ như "Visibility Graphics" settings hoặc "Zoom state".
+    
+    Chạy thử để xem cách nó hoạt động.
+  ja: >-
+    開いているビューの状態をコピーします。例えば、『表示/グラフィックス』の設定や『ズーム状態』などです。
+    
+    試してみて、どのように動作するかを確認してください。
+

@@ -1,0 +1,10 @@
+title:
+  en_us: Pick Detail Elements
+  ja: 注釈要素を選択
+tooltip:
+  en_us: >-
+    Click:
+    Click vào tool sẽ quét chọn chỉ các đối tượng thuộc 2D
+  ja: >-
+    クリック：
+    ツールをクリックすると、2Dに属する要素のみが選択されます。

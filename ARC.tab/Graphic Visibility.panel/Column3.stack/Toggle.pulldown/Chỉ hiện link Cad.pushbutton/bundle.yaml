@@ -1,0 +1,9 @@
+title:   
+  en_us: Chỉ hiện link Cad
+  ja: CADリンクのみ表示
+tooltip:
+  en_us:
+    Tool sẽ isolate link Cad.
+  ja:
+    このツールを使用してCADリンクを選択表示します。
+author: Nguyễn Thanh Sơn

@@ -1,0 +1,8 @@
+title:   
+  en_us: Create Grid Section
+  ja: 軸組の作成
+assembly: CreateSectionView
+command_class: CommandController
+
+
+

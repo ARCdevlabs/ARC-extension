@@ -1,0 +1,14 @@
+title:   
+  en_us: Export Layer
+  ja: レイヤーの書き出し
+tooltip:
+  en_us:
+    Chọn type tường hoặc sàn hoặc trần ở thanh Browser và Click vào tool
+
+    Lựa chọn folder chứa file Exel sẽ export.
+    
+  ja:
+    ブラウザのバーで壁、床、または天井のタイプを選択し、ツールをクリックします。
+
+    書き出しのExcelファイルを保存するフォルダを選択します。
+author: Lý Ngọc Quế

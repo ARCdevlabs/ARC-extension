@@ -1,0 +1,13 @@
+title:   
+  en_us: Copy ScopeBox
+  ja: タイプサンプル作成
+tooltip:
+  en_us:
+    Chọn type ở thanh Browser và Click vào tool
+
+    Pick vào một Instance có sẵn, Tool sẽ copy ra nhiều
+    
+    Instance với type khác nhau
+  ja:
+    ブラウザーでタイプを選択し、ツールをクリックします。
+    既存の要素を選択します。このツールは、異なるタイプの多数の要素を複製します。

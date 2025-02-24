@@ -1,0 +1,8 @@
+title:   
+  en_us: Vẽ hàng loạt sàn theo tâm dầm
+  ja: 梁芯でスラブを入力
+tooltip:
+  en_us: Quét chọn tất cả dầm ở view mặt bằng và click vào tool. Lưu ý chỉ áp dụng tool khi ở giai đoạn đầu dự án, chưa có room, chưa có tường.
+  ja: 平面ビューで全ての梁を選択し、ツールをクリックします。ツールはプロジェクトの初期段階で、部屋や壁がまだない場合にのみ適用してください。
+authors:
+  - Nguyễn Thanh Sơn

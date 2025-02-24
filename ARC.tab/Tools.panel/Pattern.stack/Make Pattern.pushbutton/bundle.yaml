@@ -1,0 +1,31 @@
+help_url: '{{docpath}}H7b8hjHbauE&t=8s&list=PLc_1PNcpnV57FWI6G8Cd09umHpSOzvamf'
+title:
+  en_us: Make Pattern
+  ja: パターン作成 
+tooltip:
+  en_us: >-
+    Draw your pattern tile in a detail view using detail lines, curves, circles
+    or ellipses, or even filled regions
+
+    Select the pattern lines and curves and run this tool. Give the pattern a
+    name and hit "Create Pattern". The tool asks you to pick the boundary
+    corners of the pattern. The tool will process the input lines, approximates
+    the curves and splines with smaller lines and finds the best angles for
+    these lines and will generate a pattern. It also reads the patterns from
+    selected filled regions and will combine with selected detail lines
+
+
+    TIP: You can export existing patterns if no lines are selected
+
+
+    TRICK: You can convert existing pattern types by selecting a filled region
+    only and create the opposite pattern type (selected drafting filled region
+    and create model pattern)
+  ja: >-
+    詳細ビューで詳細線、曲線、円、楕円、または塗りつぶし領域を使用してパターンタイルを描きます。
+
+    パターン線と曲線を選択して、このツールを実行します。パターンに名前を付け、『パターン作成』をクリックします。ツールはパターンの境界角を選択するように求めます。ツールは入力された線を処理し、曲線やスプラインを小さな線で近似し、これらの線の最適な角度を見つけてパターンを生成します。また、選択された塗りつぶし領域のパターンを読み取り、選択された詳細線と組み合わせます。
+
+    ヒント：線が選択されていない場合、既存のパターンをエクスポートできます。
+    
+    裏技：塗りつぶし領域のみを選択して、既存のパターンタイプを変換し、反対のパターンタイプ（選択したドラフティングの塗りつぶし領域とモデルパターンを作成）を作成することができます。

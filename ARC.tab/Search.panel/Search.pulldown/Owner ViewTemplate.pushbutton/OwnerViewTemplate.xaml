@@ -1,0 +1,19 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:av="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="av" 
+        Width="427" SizeToContent="Height" Height="212" FontSize="14" WindowStartupLocation="CenterScreen" Title="ARCtools" ShowInTaskbar="False">
+    <StackPanel Margin="10,10,10,28">
+
+        <Label Content="Nhập tên của ViewTemplate vào ô bên dưới" Margin="0,0,0,10" Width="392" />
+        <TextBox x:Name="textbox" Height="46" FontSize="18" VerticalContentAlignment="Center" Padding="10,0,10,0" Background="#FFF7F6F6" Width="389"/>
+        <Button Content="Click để hiện các view đang sử dụng ViewTemplate bên trên" Height="37" Margin="0,10,0,0" Click="find_view" Background="#FFE6D4D4" BorderBrush="#FF190000" Foreground="Black" Width="388" />
+        <Grid Height="25" Width="414">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="75*"/>
+                <ColumnDefinition Width="250*"/>
+                <ColumnDefinition Width="89*"/>
+            </Grid.ColumnDefinitions>
+        </Grid>
+
+    </StackPanel>
+</Window>

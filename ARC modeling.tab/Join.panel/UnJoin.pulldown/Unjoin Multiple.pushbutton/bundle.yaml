@@ -1,0 +1,8 @@
+title:   
+  en_us: Unjoin nhiều đối tượng
+  ja: 複数のジオメトリの結合を解除
+tooltip:
+  en_us: Quét chọn nhiều đối tượng => Click vào tool => Toàn bộ đối tượng đã chọn sẽ được unjoin.
+  ja: 複数のジオメトリを選択してツールをクリックすると、選択されたすべてのジオメトリの結合が解除されます。
+authors:
+  - Nguyễn Thanh Sơn

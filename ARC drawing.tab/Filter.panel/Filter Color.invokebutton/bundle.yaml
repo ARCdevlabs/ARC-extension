@@ -1,0 +1,15 @@
+title:   
+  en_us: Filters Color 
+  ja: フィルターの色
+tooltip:
+  en_us:
+    Thiết lập màu sắc đậm nhạt cho các filter
+  ja:
+    フィルターの色の濃淡を設定します。
+author: 
+  - "Phan Mẫu Cường"
+assembly: SetFilterOverrides
+command_class: Command
+
+
+
