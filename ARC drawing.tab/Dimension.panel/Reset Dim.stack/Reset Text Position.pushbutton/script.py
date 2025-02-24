@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-__doc__ = 'nguyenthanhson1712@gmail.com'
-__author__ = 'NguyenThanhSon' "Email: nguyenthanhson1712@gmail.com"
 from codecs import Codec
 import string
 import importlib
