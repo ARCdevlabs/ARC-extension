@@ -9,7 +9,7 @@ import nances
 if nances.AutodeskData():
     uidoc = __revit__.ActiveUIDocument
     doc = uidoc.Document
-    Ele  = nances.get_elements(uidoc,doc, 'Select Piles', noti = False)
+    
 
     from pyrevit import script
     logger = script.get_logger()
@@ -22,28 +22,6 @@ if nances.AutodeskData():
     def save_configs(content):
         my_config.parameter_input = content
         script.save_config()
-
-    def sort_piles_by(piles, direction, reverse = False):
-        try:
-            # Lấy tọa độ X của từng cọc, nếu có LocationPoint
-            if direction == "X" and reverse == False:
-                sorted_piles = sorted(piles, key=lambda pile: pile.Location.Point.X)
-            if direction == "X" and reverse == True:
-                sorted_piles = sorted(piles, key=lambda pile: pile.Location.Point.X, reverse = True)
-            if direction == "Y" and reverse == False:
-                sorted_piles = sorted(piles, key=lambda pile: pile.Location.Point.Y)
-            if direction == "Y" and reverse == True:
-                sorted_piles = sorted(piles, key=lambda pile: pile.Location.Point.Y, reverse = True)
-            return sorted_piles
-        except:
-            pass
-
-    # Lấy danh sách các cọc từ bộ lọc của Revit
-    doc = __revit__.ActiveUIDocument.Document
-
-    # Chỉ lấy các cọc có LocationPoint
-    piles = [pile for pile in Ele if pile.Location and isinstance(pile.Location, LocationPoint)]
-
 
     from rpw.ui.forms import (FlexForm, Label, ComboBox, TextBox,
                                 Separator, Button, CheckBox)
@@ -84,46 +62,77 @@ if nances.AutodeskData():
     except:
         sys.exit()
 
-    # Gọi hàm sắp xếp
-    if method == '1. Phương X: Từ nhỏ đến lớn':
-        sorted_piles = sort_piles_by(piles,"X", False)
-    if method == '2. Phương X: Từ lớn đến nhỏ':
-        sorted_piles = sort_piles_by(piles,"X", True)
-    if method == '3. Phương Y: Từ nhỏ đến lớn':
-        sorted_piles = sort_piles_by(piles,"Y", False)
-    if method == '4. Phương Y: Từ lớn đến nhỏ':
-        sorted_piles = sort_piles_by(piles,"Y", True)
-
-    so_luong_coc = len(sorted_piles)
     try:
         convert_to_number = int(start_number)
     except:
         nances.message_box("Số bắt đầu không hợp lệ")
-    # for number in range(convert_to_number, convert_to_number + so_luong_coc):
-    #     print(number)
-    t = Transaction (doc, "Pile Numbering")
-    try:
-        t.Start()
-        for pile in sorted_piles:
-            try:
-                get_para = nances.get_parameter_by_name(pile, str(parameter))
-                storage_type = get_para.StorageType
-                if str(storage_type) == "String":
-                    get_para.Set(str(convert_to_number))
-                    convert_to_number += 1
-                if str(storage_type) == "Double" or str(storage_type) == "Integer":
-                    get_para.Set(convert_to_number)
-                    convert_to_number += 1
-                # if method == '1. Phương X: Từ nhỏ đến lớn':
-                #     convert_to_number += 1
-                # if method == '2. Phương X: Từ lớn đến nhỏ':
-                #     convert_to_number += 1
-                # if method == '3. Phương Y: Từ nhỏ đến lớn':
-                #     convert_to_number += 1
-                # if method == '4. Phương Y: Từ lớn đến nhỏ':
-                #     convert_to_number += 1                
-            except:
-                pass
-        t.Commit()
-    except:
-        pass
+    def main(convert_to_number):
+        # Bat dau vong lap lua chon
+        run = True
+        while run == True:
+            try:    # Chỉ lấy các cọc có LocationPoint
+                def sort_piles_by(piles, direction, reverse = False):
+                    try:
+                        # Lấy tọa độ X của từng cọc, nếu có LocationPoint
+                        if direction == "X" and reverse == False:
+                            sorted_piles = sorted(piles, key=lambda pile: pile.Location.Point.X)
+                        if direction == "X" and reverse == True:
+                            sorted_piles = sorted(piles, key=lambda pile: pile.Location.Point.X, reverse = True)
+                        if direction == "Y" and reverse == False:
+                            sorted_piles = sorted(piles, key=lambda pile: pile.Location.Point.Y)
+                        if direction == "Y" and reverse == True:
+                            sorted_piles = sorted(piles, key=lambda pile: pile.Location.Point.Y, reverse = True)
+                        return sorted_piles
+                    except:
+                        pass
+                # Ele  = nances.get_elements(uidoc,doc, 'Select Piles', noti = False)
+                try:
+                    pick_elements = nances.pick = uidoc.Selection.PickObjects(Autodesk.Revit.UI.Selection.ObjectType.Element)
+                    Ele = []
+                    if pick_elements:
+                        for tung_ele in pick_elements:
+                            Ele.append(doc.GetElement(tung_ele.ElementId))
+                    else:
+                        run = False
+                except:
+                    run = False
+                    Ele = []
+                    pass
+                piles = [pile for pile in Ele if pile.Location and isinstance(pile.Location, LocationPoint)]
+                # Gọi hàm sắp xếp
+                if method == '1. Phương X: Từ nhỏ đến lớn':
+                    sorted_piles = sort_piles_by(piles,"X", False)
+                if method == '2. Phương X: Từ lớn đến nhỏ':
+                    sorted_piles = sort_piles_by(piles,"X", True)
+                if method == '3. Phương Y: Từ nhỏ đến lớn':
+                    sorted_piles = sort_piles_by(piles,"Y", False)
+                if method == '4. Phương Y: Từ lớn đến nhỏ':
+                    sorted_piles = sort_piles_by(piles,"Y", True)
+                t = Transaction (doc, "Pile Numbering")
+                t.Start()
+                try:                   
+                    for pile in sorted_piles:
+                        try:
+                            get_para = nances.get_parameter_by_name(pile, str(parameter))
+                            storage_type = get_para.StorageType
+                            if str(storage_type) == "String":
+                                get_para.Set(str(convert_to_number))
+                                convert_to_number += 1
+                            if str(storage_type) == "Double" or str(storage_type) == "Integer":
+                                get_para.Set(convert_to_number)
+                                convert_to_number += 1  
+                        except:
+                            pass
+                    t.Commit()
+                except:
+                    t.RollBack()
+                    pass
+            except Exception as ex:
+                run = False
+                if "Operation canceled by user." in str(ex):
+                    run = False
+                    break
+                else:
+                    run = False
+                    break
+    main(convert_to_number)

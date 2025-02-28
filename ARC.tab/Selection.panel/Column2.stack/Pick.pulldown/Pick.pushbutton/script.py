@@ -16,9 +16,9 @@ module = importlib.import_module(str(begin))
 
 from collections import namedtuple
 
-from nances import revit, UI
+from pyrevit import revit, UI
 from nances import forms
-from nances import script
+from pyrevit import script
 
 from pyrevit.coreutils import applocales
 current_applocale = applocales.get_current_applocale()
