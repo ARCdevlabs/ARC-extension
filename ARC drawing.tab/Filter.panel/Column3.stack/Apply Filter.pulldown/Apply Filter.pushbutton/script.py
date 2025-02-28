@@ -185,7 +185,7 @@ if module.AutodeskData():
     checked_items = select_filter
     if checked_items and len(checked_items) > 0:
         from rpw.ui.forms import SelectFromList
-        value = SelectFromList('Override Fore ground or Back ground?', ['Fore ground','Back ground'])
+        value = SelectFromList('Override Fore ground or Back ground?', ['1.Fore ground','2.Back ground'])
         t = Transaction (doc, "Apply filter to view")
         t.Start()
         list_tem = []  
