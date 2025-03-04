@@ -49,8 +49,10 @@ def pick_grid_by_rectangle():
 				selected_elements = selection.PickElementsByRectangle(GridSelectionFilter(), tin_nhan_2)
 			if selected_elements:
 				return selected_elements
-		except:
-			pass
+
+		except Autodesk.Revit.Exceptions.OperationCanceledException:
+			sys.exit()  # Thoát lệnh nếu nhấn ESC
+
 
 selected_ids = uidoc.Selection.GetElementIds()
 
@@ -75,7 +77,6 @@ while not grids and not levels:
 
 def set_work_plane_for_view(view):
 	try:
-		# Create a Plane using the view's direction and origin
 		plane = Autodesk.Revit.DB.Plane.CreateByNormalAndOrigin(view.ViewDirection, view.Origin)
 		sketch_plane = Autodesk.Revit.DB.SketchPlane.Create(doc, plane)
 		view.SketchPlane = sketch_plane
@@ -86,12 +87,13 @@ def set_work_plane_for_view(view):
 def pick_point_with_nearest_snap(iuidoc):
 	snap_settings = Autodesk.Revit.UI.Selection.ObjectSnapTypes.None
 	prompt = huong_dan_3
-	click_point = None
 	try:
 		click_point = iuidoc.Selection.PickPoint(snap_settings, prompt)
+		return click_point
+	except Autodesk.Revit.Exceptions.OperationCanceledException:
+		sys.exit()  # Thoát lệnh nếu nhấn ESC
 	except Exception:
-		pass
-	return click_point
+		return None
 
 def nearest_point_on_line(start, end, point):
 	line_direction = (end - start).Normalize()
@@ -100,7 +102,7 @@ def nearest_point_on_line(start, end, point):
 	closest_point = start + line_direction * distance
 	return closest_point
 
-def RUTNGAN_TRUC_MAT_BANG(grid, view, click_point):
+def RUTNGAN_TRUC(grid, view, click_point):
 	datum_extent_type = Autodesk.Revit.DB.DatumExtentType.ViewSpecific
 	list_curve = grid.GetCurvesInView(datum_extent_type, view)
 	if list_curve:
@@ -113,38 +115,9 @@ def RUTNGAN_TRUC_MAT_BANG(grid, view, click_point):
 			distance_to_start = closest_point.DistanceTo(start_point)
 			distance_to_end = closest_point.DistanceTo(end_point)
 
-			# Tính điểm new start and end points
-			if distance_to_start < distance_to_end:
-				new_start_point = closest_point
-				new_end_point = end_point
-			else:
-				new_start_point = start_point
-				new_end_point = closest_point
+			new_start_point = closest_point if distance_to_start < distance_to_end else start_point
+			new_end_point = end_point if distance_to_start < distance_to_end else closest_point
 
-			new_curve = Line.CreateBound(new_start_point, new_end_point)
-			if new_curve.IsBound:
-				grid.SetCurveInView(datum_extent_type, view, new_curve)
-
-def RUTNGAN_TRUC_MAT_DUNG(grid, view, click_point):
-	datum_extent_type = Autodesk.Revit.DB.DatumExtentType.ViewSpecific
-	list_curve = grid.GetCurvesInView(datum_extent_type, view)
-	if list_curve:
-		curve = list_curve[0]
-		if isinstance(curve, Line):
-			start_point = curve.GetEndPoint(0)
-			end_point = curve.GetEndPoint(1)
-
-			closest_point = nearest_point_on_line(start_point, end_point, click_point)
-			distance_to_start = closest_point.DistanceTo(start_point)
-			distance_to_end = closest_point.DistanceTo(end_point)
-
-			if distance_to_start < distance_to_end:
-				new_start_point = closest_point
-				new_end_point = end_point
-			else:
-				new_start_point = start_point
-				new_end_point = closest_point
-				
 			new_curve = Line.CreateBound(new_start_point, new_end_point)
 			if new_curve.IsBound:
 				grid.SetCurveInView(datum_extent_type, view, new_curve)
@@ -162,12 +135,8 @@ def RUTNGAN_LEVEL(level, click_point):
 			distance_to_start = closest_point.DistanceTo(start_point)
 			distance_to_end = closest_point.DistanceTo(end_point)
 
-			if distance_to_start < distance_to_end:
-				new_start_point = closest_point
-				new_end_point = end_point
-			else:
-				new_start_point = start_point
-				new_end_point = closest_point
+			new_start_point = closest_point if distance_to_start < distance_to_end else start_point
+			new_end_point = end_point if distance_to_start < distance_to_end else closest_point
 
 			new_curve = Line.CreateBound(new_start_point, new_end_point)
 			if new_curve.IsBound:
@@ -190,21 +159,19 @@ try:
 		click_point = pick_point_with_nearest_snap(uidoc)
 
 	if not click_point:
-		module.message_box(huong_dan_4)
+		module.message_box("Không có điểm nào được chọn.")
 		trans_group.RollBack()
 		sys.exit()
 
 	t2 = Transaction(doc, tin_nhan_0)
 	t2.Start()
 	for grid in grids:
-		if doc.ActiveView.ViewType == ViewType.FloorPlan or doc.ActiveView.ViewType == ViewType.CeilingPlan:
-			RUTNGAN_TRUC_MAT_BANG(grid, doc.ActiveView, click_point)
-		else:
-			RUTNGAN_TRUC_MAT_DUNG(grid, doc.ActiveView, click_point)
+		RUTNGAN_TRUC(grid, doc.ActiveView, click_point)
 	for level in levels:
 		RUTNGAN_LEVEL(level, click_point)
 	t2.Commit()
 
 	trans_group.Assimilate()
 except:
+	trans_group.RollBack()
 	sys.exit()
