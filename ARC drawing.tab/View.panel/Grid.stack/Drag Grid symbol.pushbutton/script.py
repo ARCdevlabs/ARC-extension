@@ -49,8 +49,8 @@ def pick_grid_by_rectangle():
 				selected_elements = selection.PickElementsByRectangle(GridSelectionFilter(), tin_nhan_2)
 			if selected_elements:
 				return selected_elements
-		except Autodesk.Revit.Exceptions.OperationCanceledException:
-			sys.exit()  # Thoát lệnh nếu nhấn ESC
+		except:
+			pass
 
 selected_ids = uidoc.Selection.GetElementIds()
 
@@ -91,7 +91,8 @@ def pick_point_with_nearest_snap(iuidoc):
 	except Autodesk.Revit.Exceptions.OperationCanceledException:
 		sys.exit()  # Thoát lệnh nếu nhấn ESC
 	except Exception:
-		return None
+		pass
+	return click_point
 
 def nearest_point_on_line(start, end, point):
 	line_direction = (end - start).Normalize()
@@ -100,7 +101,7 @@ def nearest_point_on_line(start, end, point):
 	closest_point = start + line_direction * distance
 	return closest_point
 
-def RUTNGAN_TRUC(grid, view, click_point):
+def RUTNGAN_TRUC_MAT_BANG(grid, view, click_point):
 	datum_extent_type = Autodesk.Revit.DB.DatumExtentType.ViewSpecific
 	list_curve = grid.GetCurvesInView(datum_extent_type, view)
 	if list_curve:
@@ -116,6 +117,30 @@ def RUTNGAN_TRUC(grid, view, click_point):
 			new_start_point = closest_point if distance_to_start < distance_to_end else start_point
 			new_end_point = end_point if distance_to_start < distance_to_end else closest_point
 
+			new_curve = Line.CreateBound(new_start_point, new_end_point)
+			if new_curve.IsBound:
+				grid.SetCurveInView(datum_extent_type, view, new_curve)
+
+def RUTNGAN_TRUC_MAT_DUNG(grid, view, click_point):
+	datum_extent_type = Autodesk.Revit.DB.DatumExtentType.ViewSpecific
+	list_curve = grid.GetCurvesInView(datum_extent_type, view)
+	if list_curve:
+		curve = list_curve[0]
+		if isinstance(curve, Line):
+			start_point = curve.GetEndPoint(0)
+			end_point = curve.GetEndPoint(1)
+
+			closest_point = nearest_point_on_line(start_point, end_point, click_point)
+			distance_to_start = closest_point.DistanceTo(start_point)
+			distance_to_end = closest_point.DistanceTo(end_point)
+
+			if distance_to_start < distance_to_end:
+				new_start_point = closest_point
+				new_end_point = end_point
+			else:
+				new_start_point = start_point
+				new_end_point = closest_point
+				
 			new_curve = Line.CreateBound(new_start_point, new_end_point)
 			if new_curve.IsBound:
 				grid.SetCurveInView(datum_extent_type, view, new_curve)
@@ -171,5 +196,4 @@ try:
 
 	trans_group.Assimilate()
 except:
-	trans_group.RollBack()
 	sys.exit()
