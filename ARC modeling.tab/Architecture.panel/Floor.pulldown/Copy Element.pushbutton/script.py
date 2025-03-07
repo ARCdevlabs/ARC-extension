@@ -24,9 +24,9 @@ try:
         from pyrevit.coreutils import applocales
         current_applocale = applocales.get_current_applocale()
         if str(current_applocale) == "日本語 / Japanese (ja)":
-            message = "3 つのサブ要素点を選択して平面を形成し、[完了]を押します。"
+            message = "1つのサブ要素点を選択して"
         else:
-            message = "Pick 1 điểm sub element để tạo thành 1 mặt phẳng, sau đó ấn Finish"
+            message = "Pick 1 điểm sub element"
 
         with forms.WarningBar(title = message):
             
