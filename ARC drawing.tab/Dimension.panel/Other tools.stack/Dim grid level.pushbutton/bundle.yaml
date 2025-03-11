@@ -1,0 +1,12 @@
+title:   
+  en_us: Auto dim Grids/Levels
+  ja: グリッド・レベルの寸法を自動配置
+tooltip:
+  en_us:
+    Click chọn trục hoặc level => Click chọn điểm đặt dimensions.
+
+  ja: 
+    通り、またはレベルをクリックして選択→寸法押さえ位置にクリック。
+    
+highlight: new
+author: Tô Thanh Tùng 
