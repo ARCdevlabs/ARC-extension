@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from Autodesk.Revit.UI.Selection import ObjectType, ObjectSnapTypes
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import (Grid, Level, XYZ, Plane, SketchPlane, Line, Reference, ReferenceArray, FilteredElementCollector, BuiltInCategory, Transaction, TransactionGroup)
 from Autodesk.Revit.UI import Selection
 from pyrevit import forms, revit
 import sys
@@ -62,7 +62,6 @@ def get_all_grids_or_levels_in_view(view, element1, element2):
 	# Xác định hướng của grid (bao gồm trục xiên)
 	if isinstance(element1, Grid):
 		direction = element1.Curve.Direction
-		# Chuẩn hóa vector hướng
 		direction = direction.Normalize()
 	else:
 		is_horizontal = abs(pos2.X - pos1.X) > abs(pos2.Y - pos1.Y)
@@ -72,7 +71,6 @@ def get_all_grids_or_levels_in_view(view, element1, element2):
 	for el in elements:
 		pos = get_element_position(el)
 		if pos and isinstance(el, Grid):
-			# Kiểm tra các grid song song với grid đầu tiên
 			el_dir = el.Curve.Direction.Normalize()
 			if el_dir.IsAlmostEqualTo(direction) or el_dir.IsAlmostEqualTo(-direction):
 				perp_dir = XYZ(-direction.Y, direction.X, 0)
@@ -124,45 +122,94 @@ def create_dimensions(view, elements, click_point):
 	except Exception as e:
 		print("Lỗi khi tạo dimension: ", e)
 
-with TransactionGroup(doc, "Auto dim Grids and Levels") as trans_group:
-	trans_group.Start()
-	try:
-		t1 = Transaction(doc, "Set Work Plane")
-		t1.Start()
-		if not set_work_plane_for_view(uidoc.ActiveView):
-			t1.RollBack()
-			trans_group.RollBack()
-			sys.exit(0)
-		t1.Commit()
+selected_ids = uidoc.Selection.GetElementIds()
 
-		while True:
-			element1 = pick_grid_or_level("Chọn Grid hoặc Level thứ nhất")
-			if not element1:
-				break
-				
-			element2 = pick_grid_or_level("Chọn Grid hoặc Level thứ hai")
-			if not element2:
-				break
-				
-			elements = get_all_grids_or_levels_in_view(uidoc.ActiveView, element1, element2)
-			if not elements:
+if len(selected_ids) == 2:  # Trường hợp mới: Chọn trước 2 Grid/Level
+	elements = [doc.GetElement(id) for id in selected_ids]
+	element1, element2 = elements
+	
+	# Kiểm tra xem cả hai phần tử có phải cùng loại không
+	if not ((isinstance(element1, Grid) and isinstance(element2, Grid)) or 
+			(isinstance(element1, Level) and isinstance(element2, Level))):
+		forms.alert("Hai phần tử được chọn phải cùng loại (cùng là Grid hoặc cùng là Level)!")
+		sys.exit(0)
+
+	with TransactionGroup(doc, "Dim from Preselected Grids or Levels") as trans_group:
+		trans_group.Start()
+		try:
+			t1 = Transaction(doc, "Set Work Plane")
+			t1.Start()
+			if not set_work_plane_for_view(uidoc.ActiveView):
+				t1.RollBack()
+				trans_group.RollBack()
+				sys.exit(0)
+			t1.Commit()
+
+			relevant_elements = get_all_grids_or_levels_in_view(uidoc.ActiveView, element1, element2)
+			if not relevant_elements:
 				forms.alert("Không tìm thấy elements phù hợp")
-				continue
-				
+				trans_group.RollBack()
+				sys.exit(0)
+
 			with forms.WarningBar(title="Chọn điểm để đặt dim"):
 				click_point = pick_point_with_nearest_snap(uidoc)
-				
+			
 			if not click_point:
-				break
+				trans_group.RollBack()
+				sys.exit(0)
 
 			t2 = Transaction(doc, "Create Dimensions")
 			t2.Start()
-			create_dimensions(uidoc.ActiveView, elements, click_point)
+			create_dimensions(uidoc.ActiveView, relevant_elements, click_point)
 			t2.Commit()
 
-		trans_group.Assimilate()
-	except Exception as e:
-		print("Lỗi: ", e)
-		print(traceback.format_exc())
-		trans_group.RollBack()
-		sys.exit(0)
+			trans_group.Assimilate()
+		except Exception as e:
+			print("Lỗi: ", e)
+			print(traceback.format_exc())
+			trans_group.RollBack()
+			sys.exit(0)
+
+else:  # Trường hợp cũ: Chọn thủ công với vòng lặp
+	with TransactionGroup(doc, "Auto dim Grids and Levels") as trans_group:
+		trans_group.Start()
+		try:
+			t1 = Transaction(doc, "Set Work Plane")
+			t1.Start()
+			if not set_work_plane_for_view(uidoc.ActiveView):
+				t1.RollBack()
+				trans_group.RollBack()
+				sys.exit(0)
+			t1.Commit()
+
+			while True:
+				element1 = pick_grid_or_level("Chọn Grid hoặc Level thứ nhất")
+				if not element1:
+					break
+					
+				element2 = pick_grid_or_level("Chọn Grid hoặc Level thứ hai")
+				if not element2:
+					break
+					
+				elements = get_all_grids_or_levels_in_view(uidoc.ActiveView, element1, element2)
+				if not elements:
+					forms.alert("Không tìm thấy elements phù hợp")
+					continue
+					
+				with forms.WarningBar(title="Chọn điểm để đặt dim"):
+					click_point = pick_point_with_nearest_snap(uidoc)
+					
+				if not click_point:
+					break
+
+				t2 = Transaction(doc, "Create Dimensions")
+				t2.Start()
+				create_dimensions(uidoc.ActiveView, elements, click_point)
+				t2.Commit()
+
+			trans_group.Assimilate()
+		except Exception as e:
+			print("Lỗi: ", e)
+			print(traceback.format_exc())
+			trans_group.RollBack()
+			sys.exit(0)
