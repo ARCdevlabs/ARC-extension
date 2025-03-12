@@ -26,13 +26,16 @@ if module.AutodeskData():
     for beam in Ele:
         get_para_start_level_offset = module.get_builtin_parameter_by_name(beam, DB.BuiltInParameter.STRUCTURAL_BEAM_END0_ELEVATION)
         get_para_end_level_offset = module.get_builtin_parameter_by_name(beam, DB.BuiltInParameter.STRUCTURAL_BEAM_END1_ELEVATION)
-        if get_para_start_level_offset.AsDouble() != 0 or get_para_end_level_offset.AsDouble() != 0:
+        value_start_level_offset = get_para_start_level_offset.AsDouble()
+        value_end_level_offset = get_para_end_level_offset.AsDouble()
+        if round(value_start_level_offset,3) != 0 or round(value_end_level_offset,3) != 0:
             list_khong_duoc_chuyen.append((beam.Id).IntegerValue)
         else:
+            
             list_duoc_chuyen.append(beam)
     
     with revit.Transaction('DisAllow Join', swallow_errors=True):
-        for tung_beam in list_duoc_chuyen:
+        for tung_beam in Ele:
             disallow_join_at_end(tung_beam, 0)
             disallow_join_at_end(tung_beam, 1)
 
@@ -101,7 +104,7 @@ if module.AutodeskData():
             t4.Commit()
 
     with revit.Transaction('Allow Join', swallow_errors=True):
-        for tung_beam in list_duoc_chuyen:
+        for tung_beam in Ele:
             allow_join_at_end(tung_beam, 0)
             allow_join_at_end(tung_beam, 1)
 
