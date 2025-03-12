@@ -1,7 +1,7 @@
 title:   
-  en_us: Switch To Z Offset
+  en_us: Switch To Start End Level Offset
 tooltip:
-  en_us: Thay đổi từ Start End Offset thành Z offset
+  en_us: Thay đổi từ Z offset thành Start End Level Offset.
 highlight: New
 authors:
   - Nguyễn Thanh Sơn

@@ -1,0 +1,9 @@
+title:   
+  en_us: Ortho Hide
+tooltip:
+  en_us: Ẩn các đối tượng theo phương vuông góc với view. Áp dụng cho các mặt cắt trục
+assembly: HideOrthogonalElements
+command_class: CommandController
+
+
+
