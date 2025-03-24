@@ -123,7 +123,6 @@ if module.AutodeskData():
                 group.append(tung_beam)
                 found_group = True
                 break
-
         # Nếu không tìm thấy nhóm nào, tạo nhóm mới
         if not found_group:
             parallel_groups.append([direction, tung_beam])

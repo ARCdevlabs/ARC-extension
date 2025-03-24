@@ -36,18 +36,18 @@ if module.AutodeskData():
     data = []
     for tung_element in selected_element:  
         try:
+            id_element = tung_element.Id
             get_element_name_param= module.get_builtin_parameter_by_name(tung_element, BuiltInParameter.ELEM_FAMILY_AND_TYPE_PARAM)
             get_element_name = get_element_name_param.AsValueString()
-            get_host_param = module.get_builtin_parameter_by_name(tung_element, DB.BuiltInParameter.INSTANCE_FREE_HOST_PARAM)
-            id_element = tung_element.Id
-            
+
+            get_host_param = module.get_builtin_parameter_by_name(tung_element, DB.BuiltInParameter.INSTANCE_FREE_HOST_PARAM)                    
             string_host = get_host_param.AsString()
 
             element_link = output.linkify(id_element)
-            # data.append((element_link,("Name of Element: {}".format(get_element_name)), ("Name of Host: {}".format(string_host))))
-            print (element_link + "                   " + "Name of Element: " + str(get_element_name) + "                           " + "Name of Host: " + str(string_host))
-        except:
+            data.append((element_link,("Name of Element: {}".format(get_element_name)), ("Name of Host: {}".format(string_host))))
 
+            print (element_link + "\t" * 3 + "Name of Element: " + str(get_element_name) + "\t" * 3 + "Name of Host: " + str(string_host))
+        except:
             pass
     # output.print_table(table_data=data,
     #                 title="List Host",
