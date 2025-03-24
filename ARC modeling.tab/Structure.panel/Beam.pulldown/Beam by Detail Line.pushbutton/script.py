@@ -5,7 +5,7 @@ from Autodesk.Revit.DB import *
 import Autodesk.Revit.DB as DB
 from System.Collections.Generic import List
 from Autodesk.Revit.UI.Selection import ObjectType
-from nances import revit
+from nances import revit,vectortransform
 
 if nances.AutodeskData():
     uidoc = __revit__.ActiveUIDocument
@@ -220,7 +220,7 @@ if nances.AutodeskData():
         nearest_point = get_nearest_point(list_intersect_point,p1, extend_length)
         if nearest_point:
 
-            tim_diem_gan_intersect_point = nances.vectortransform.nearest_point(nearest_point, p1, p2)
+            tim_diem_gan_intersect_point = vectortransform.nearest_point(nearest_point, p1, p2)
 
             if tim_diem_gan_intersect_point == "StartPoint":
                 new_line = DB.Line.CreateBound(nearest_point,p2)
