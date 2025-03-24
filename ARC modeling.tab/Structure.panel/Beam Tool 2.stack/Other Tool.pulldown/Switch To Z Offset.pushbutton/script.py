@@ -41,7 +41,7 @@ if module.AutodeskData():
         except:
             pass
 
-        if value_para_start_Z != 0 or value_para_end_Z != 0 or value_para_Z != 0:
+        if round(value_para_start_Z,4) != 0 or round(value_para_end_Z,4) != 0 or round(value_para_Z,0) != 0:
             list_khong_duoc_chuyen.append((beam.Id).IntegerValue)
         else:
             list_duoc_chuyen.append(beam)

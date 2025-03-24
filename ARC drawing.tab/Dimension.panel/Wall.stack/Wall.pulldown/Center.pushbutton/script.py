@@ -146,10 +146,14 @@ if module.AutodeskData():
 
     Ele = module.get_elements(uidoc,doc, "Select Wall", noti = False)
     if Ele:
-        t = Transaction(doc,"Dimension wall (centered)")
-        t.Start()
+        # t = Transaction(doc,"Dimension wall (centered)")
+        # t.Start()
+        trans_group = TransactionGroup(doc, 'Dim Center of Wall')
+        trans_group.Start()
         for wall in Ele:
             try:
+                t = Transaction(doc, 'Dim Center of Wall')
+                t.Start()   
                 geo = (get_geometry(wall))
                 faces = get_face(geo)
                 center_plane = get_center_plane(wall)
@@ -171,7 +175,10 @@ if module.AutodeskData():
                 # Cai nay de dim 
                 wall_reference = ReferenceArray()
                 string_face_3 = get_wall_reference_by_magic(unique_id,4) #Co ve -9999 va id 4 luon luon la tam tuong
+                # string_face_3 = get_wall_reference_by_type(unique_id,4) #Co ve -9999 va id 4 luon luon la tam tuong
                 ref_3 = Reference.ParseFromStableRepresentation(doc,string_face_3)
+                # print ref_3
+                
                 all_grid = get_all_grid()
                 try:
                     for grid in all_grid:
@@ -236,10 +243,10 @@ if module.AutodeskData():
                 except:
                     # delete_detail_curve = doc.Delete(detail_line.Id)
                     continue
+                t.Commit()
             except:
-                pass
-        t.Commit()
-
+                pass            
+        trans_group.Assimilate()
 
 
 
