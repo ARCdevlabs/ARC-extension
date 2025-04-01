@@ -846,88 +846,6 @@ USER_ROAMING_DIR = os.getenv('appdata')
 PYREVIT_APP_DIR = op.join(USER_ROAMING_DIR, PYREVIT_ADDON_NAME)
 PYREVIT_VERSION_APP_DIR = op.join(PYREVIT_APP_DIR)
 
-# Def nay cho current element
-def get_selected_elements(tem_uidoc, tem_doc, noti = True):
-    return_elements = []
-    elements = import_class.LibARC_Selection.CurrentSelection(tem_uidoc,tem_doc)
-    if elements != None:
-        for i in elements:
-            return_elements.append(i)
-    if elements == None:
-        if noti:
-            from Autodesk.Revit.UI import TaskDialog
-            dialog = TaskDialog("ARC")
-            from pyrevit.coreutils import applocales
-            current_applocale = applocales.get_current_applocale()
-            if str(current_applocale) == "日本語 / Japanese (ja)":
-                message = "このツールを使用する前に要素をご選択ください。"
-            else:
-                message = "Please select element before use this tool."
-            dialog.MainContent = message
-            dialog.TitleAutoPrefix = False
-            dialog.Show()
-        return False
-    else: 
-        return return_elements
-    
-def get_elements(iuidoc,idoc, string_warning_bar, noti = False):
-    selected_element = get_selected_elements(iuidoc,idoc, noti)
-    if selected_element == False:
-        list_ele = []
-        with forms.WarningBar(title=string_warning_bar):
-            try:
-                pick = iuidoc.Selection.PickObjects(Autodesk.Revit.UI.Selection.ObjectType.Element)
-                for tung_ref in pick:
-                    list_ele.append(idoc.GetElement(tung_ref.ElementId))
-            except:
-                sys.exit()
-            selected_element = list_ele
-    return selected_element
-
-def get_element(iuidoc,idoc, string_warning_bar, noti = False):
-    selected_element = get_selected_elements(iuidoc,idoc, noti)
-    if selected_element == False:
-        list_ele = []
-        with forms.WarningBar(title=string_warning_bar):
-            try:
-                pick = iuidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element)
-                list_ele.append(idoc.GetElement(pick.ElementId))
-            except:
-                sys.exit()
-            selected_element = list_ele
-    return selected_element
-
-# Def join geometry
-def joingeometry(idoc,List1, List2):
-    CountSwitchJoin = []
-    Join = []
-    for i in List1:
-        Bdb = i.get_BoundingBox(None)
-        Outlineofbb = (Outline(Bdb.Min, Bdb.Max))
-        for intersected in Autodesk.Revit.DB.FilteredElementCollector(idoc).WherePasses(Autodesk.Revit.DB.BoundingBoxIntersectsFilter(Outlineofbb)):
-        # Check xem list filter
-            for a in List2:
-                if a.Id == intersected.Id:
-            # Code join geometry
-                    try:
-                        result = Autodesk.Revit.DB.JoinGeometryUtils.JoinGeometry(idoc,i,intersected)
-                        checkcutting = Autodesk.Revit.DB.JoinGeometryUtils.IsCuttingElementInJoin(idoc,i,intersected)
-                        Join.Add("OK")
-                        if str(checkcutting) == "False":
-                            switchjoin = Autodesk.Revit.DB.JoinGeometryUtils.SwitchJoinOrder(idoc,i,intersected)
-                    except:
-                        try:
-                            checkcutting = Autodesk.Revit.DB.JoinGeometryUtils.IsCuttingElementInJoin(idoc,i,intersected)
-                            if str(checkcutting) == "False":
-                                switchjoin = Autodesk.Revit.DB.JoinGeometryUtils.SwitchJoinOrder(idoc,i,intersected)
-                                CountSwitchJoin.append("OK")
-                        except:
-                            pass
-    LenJoin = str(len (Join))
-    LenSwitchjoin = str(len (CountSwitchJoin))
-    Mes = "Joined: " + LenJoin + " and Switch join: " + LenSwitchjoin
-    Alert(Mes,title="Mes",header= "Report number Join and Switch joined")
-    return 
 
 # def _get_app_file(file_id, file_ext,
 #                 filename_only=False, stamped=False, universal=False):
@@ -992,7 +910,89 @@ def AutodeskDataInCode():
 def thong_bao_loi_license():
     tin_nhan = "Hãy mở khóa Add-in.\nSử dụng command [Get info] và gửi mã tới skype của Sơn\nhoặc email:nguyenthanhson1712@gmail.com\n\n\nこちらのツールを使用するには、\nアドインをロック解除する必要があります。\nコマンド [Get info] を使用してコードを取得し、その後\nSonのSkypeまたは以下のメールアドレスに送信してください：nguyenthanhson1712@gmail.com"
     MessageBox.Show(tin_nhan, "ARC", MessageBoxButtons.OK, MessageBoxIcon.Information)
+# Def nay cho current element
+if AutodeskData():
+    def get_selected_elements(tem_uidoc, tem_doc, noti = True):
+        return_elements = []
+        elements = import_class.LibARC_Selection.CurrentSelection(tem_uidoc,tem_doc)
+        if elements != None:
+            for i in elements:
+                return_elements.append(i)
+        if elements == None:
+            if noti:
+                from Autodesk.Revit.UI import TaskDialog
+                dialog = TaskDialog("ARC")
+                from pyrevit.coreutils import applocales
+                current_applocale = applocales.get_current_applocale()
+                if str(current_applocale) == "日本語 / Japanese (ja)":
+                    message = "このツールを使用する前に要素をご選択ください。"
+                else:
+                    message = "Please select element before use this tool."
+                dialog.MainContent = message
+                dialog.TitleAutoPrefix = False
+                dialog.Show()
+            return False
+        else: 
+            return return_elements
+        
+    def get_elements(iuidoc,idoc, string_warning_bar, noti = False):
+        selected_element = get_selected_elements(iuidoc,idoc, noti)
+        if selected_element == False:
+            list_ele = []
+            with forms.WarningBar(title=string_warning_bar):
+                try:
+                    pick = iuidoc.Selection.PickObjects(Autodesk.Revit.UI.Selection.ObjectType.Element)
+                    for tung_ref in pick:
+                        list_ele.append(idoc.GetElement(tung_ref.ElementId))
+                except:
+                    sys.exit()
+                selected_element = list_ele
+        return selected_element
 
+    def get_element(iuidoc,idoc, string_warning_bar, noti = False):
+        selected_element = get_selected_elements(iuidoc,idoc, noti)
+        if selected_element == False:
+            list_ele = []
+            with forms.WarningBar(title=string_warning_bar):
+                try:
+                    pick = iuidoc.Selection.PickObject(Autodesk.Revit.UI.Selection.ObjectType.Element)
+                    list_ele.append(idoc.GetElement(pick.ElementId))
+                except:
+                    sys.exit()
+                selected_element = list_ele
+        return selected_element
+
+    # Def join geometry
+    def joingeometry(idoc,List1, List2):
+        CountSwitchJoin = []
+        Join = []
+        for i in List1:
+            Bdb = i.get_BoundingBox(None)
+            Outlineofbb = (Outline(Bdb.Min, Bdb.Max))
+            for intersected in Autodesk.Revit.DB.FilteredElementCollector(idoc).WherePasses(Autodesk.Revit.DB.BoundingBoxIntersectsFilter(Outlineofbb)):
+            # Check xem list filter
+                for a in List2:
+                    if a.Id == intersected.Id:
+                # Code join geometry
+                        try:
+                            result = Autodesk.Revit.DB.JoinGeometryUtils.JoinGeometry(idoc,i,intersected)
+                            checkcutting = Autodesk.Revit.DB.JoinGeometryUtils.IsCuttingElementInJoin(idoc,i,intersected)
+                            Join.Add("OK")
+                            if str(checkcutting) == "False":
+                                switchjoin = Autodesk.Revit.DB.JoinGeometryUtils.SwitchJoinOrder(idoc,i,intersected)
+                        except:
+                            try:
+                                checkcutting = Autodesk.Revit.DB.JoinGeometryUtils.IsCuttingElementInJoin(idoc,i,intersected)
+                                if str(checkcutting) == "False":
+                                    switchjoin = Autodesk.Revit.DB.JoinGeometryUtils.SwitchJoinOrder(idoc,i,intersected)
+                                    CountSwitchJoin.append("OK")
+                            except:
+                                pass
+        LenJoin = str(len (Join))
+        LenSwitchjoin = str(len (CountSwitchJoin))
+        Mes = "Joined: " + LenJoin + " and Switch join: " + LenSwitchjoin
+        Alert(Mes,title="Mes",header= "Report number Join and Switch joined")
+        return 
 
 # def all_elements_of_category(idoc, category):
 # 	return FilteredElementCollector(idoc).OfCategory(category).WhereElementIsNotElementType().ToElements()
