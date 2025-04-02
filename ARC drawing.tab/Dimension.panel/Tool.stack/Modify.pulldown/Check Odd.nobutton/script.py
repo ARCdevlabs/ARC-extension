@@ -64,7 +64,7 @@ if nances.AutodeskData():
                     so_cuoi_cung = get_last_letter(quy_doi_mm)
                     # print so_cuoi_cung
                     # if dem_so_thap_phan > 1 and so_cuoi_cung != 0 and so_cuoi_cung != 5:
-                    if dem_so_thap_phan > 1:                
+                    if dem_so_thap_phan > 0:                
                         list_dim_le.append(dimension.Id)
                         # print lam_tron
             else:
@@ -73,7 +73,7 @@ if nances.AutodeskData():
                 lam_tron = round(quy_doi_mm,3)
                 dem_so_thap_phan = count_decimal_places(lam_tron)
                 so_cuoi_cung = get_last_letter(quy_doi_mm)
-                if dem_so_thap_phan > 1 and so_cuoi_cung != 0 and so_cuoi_cung != 5:
+                if dem_so_thap_phan > 0 and so_cuoi_cung != 0 and so_cuoi_cung != 5:
                     list_dim_le.append(dimension.Id)
                     # print lam_tron
         except:
