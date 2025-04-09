@@ -158,7 +158,7 @@ if nances.AutodeskData():
         return XYZ(x_inter, y_inter, 0)  # Z luôn bằng 0 vì đường nằm trên mặt phẳng XY
     
     
-    def get_nearby_beams(beams, reference_line, radius=3000/304.8):
+    def get_nearby_beams(beams, reference_line, radius=5000/304.8):
         """Lọc các dầm trong bán kính 'radius' từ điểm đầu và cuối của reference_line."""
         start_point = reference_line.GetEndPoint(0)  # Điểm đầu của line
         end_point = reference_line.GetEndPoint(1)    # Điểm cuối của line
@@ -166,22 +166,25 @@ if nances.AutodeskData():
         nearby_beams = []
 
         for beam in beams:
+            try:
             # Lấy tọa độ trung tâm của dầm
-            location = beam.Location.Curve
-            if not location:
-                continue
+                location = beam.Location.Curve
+                if not location:
+                    continue
 
-            if isinstance(location, Line):
-                beam_midpoint = (location.GetEndPoint(0) + location.GetEndPoint(1)) / 2
-            else:
-                beam_midpoint = location.Point  # Nếu là LocationPoint thì lấy trực tiếp
+                if isinstance(location, Line):
+                    beam_midpoint = (location.GetEndPoint(0) + location.GetEndPoint(1)) / 2
+                else:
+                    beam_midpoint = location.Point  # Nếu là LocationPoint thì lấy trực tiếp
 
-            # Kiểm tra khoảng cách từ điểm đầu & cuối đến beam
-            dist_to_start = beam_midpoint.DistanceTo(start_point)
-            dist_to_end = beam_midpoint.DistanceTo(end_point)
+                # Kiểm tra khoảng cách từ điểm đầu & cuối đến beam
+                dist_to_start = beam_midpoint.DistanceTo(start_point)
+                dist_to_end = beam_midpoint.DistanceTo(end_point)
 
-            if dist_to_start <= radius or dist_to_end <= radius:
-                nearby_beams.append(beam)
+                if dist_to_start <= radius or dist_to_end <= radius:
+                    nearby_beams.append(beam)
+            except:
+                pass
         return nearby_beams
     
     def get_nearest_point(points, reference_point, extend_value):
@@ -302,21 +305,29 @@ if nances.AutodeskData():
                 group_song_song = tim_group_so_luong_song_song_nhieu_nhat (line_da_chuan_hoa)               
 
                 # level = doc.GetElement(ElementId(339))
-                level = doc.GetElement(active_view.LevelId)
+                # level = doc.GetElement(active_view.GenLevel)
+                level = active_view.GenLevel
                 beam_type = selected_type_beam
                 
                 beams = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StructuralFraming).WhereElementIsNotElementType().ToElements()
 
                 center_line = get_center_line(group_song_song[0],group_song_song[1])
+                start_point = center_line.GetEndPoint(0)
+                end_point = center_line.GetEndPoint(1)
+                new_start_point = XYZ(start_point.X,start_point.Y,level.Elevation)
+                new_end_point = XYZ(end_point.X,end_point.Y,level.Elevation)
+                new_center_line_in_level = Autodesk.Revit.DB.Line.CreateBound(new_start_point, new_end_point)
                 grids = get_all_grid_in_current_view(doc,active_view)
                 extend = 800/304.8
-                new_line = extend_line_lan_1(center_line, beams, extend,grids,active_view)
+                new_line = extend_line_lan_1(new_center_line_in_level, beams, extend,grids,active_view)
                 new_line = extend_line_lan_2(new_line, beams, extend,grids,active_view)
+                
 
                 with revit.Transaction('Create Center Line', swallow_errors=True):
                     active_symbol(beam_type)
                     # det_line = doc.Create.NewDetailCurve(active_view, center_line)
                     create_beam(new_line,beam_type,level)
+                    # create_beam(center_line,beam_type,level)
             except Exception as ex:
                 # import traceback
                 # print(traceback.format_exc())
