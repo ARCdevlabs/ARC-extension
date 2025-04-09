@@ -198,7 +198,7 @@ if module.AutodeskData():
             override_settings = OverrideGraphicSettings()
             index_i = checked_items.index(i_name)
             random_color = list_color[index_i]
-            if value == "Fore ground":
+            if value == "1.Fore ground":
                 override_settings.SetSurfaceForegroundPatternColor(random_color)
                 override_settings.SetSurfaceForegroundPatternId(GetFillPattern.Id)
                 override_settings.SetCutForegroundPatternColor(random_color)
