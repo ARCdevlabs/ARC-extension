@@ -131,7 +131,7 @@ if nances.AutodeskData():
                 pass
         return all_geometry
     
-    def find_intersection(line1, line2):
+    def find_intersection(line1, line2, level_elevation):
         """Tìm giao điểm của 2 đường thẳng trên mặt phẳng XY."""
         p1, p2 = line1.GetEndPoint(0), line1.GetEndPoint(1)
         p3, p4 = line2.GetEndPoint(0), line2.GetEndPoint(1)
@@ -155,7 +155,7 @@ if nances.AutodeskData():
         x_inter = x1 + t * (x2 - x1)
         y_inter = y1 + t * (y2 - y1)
 
-        return XYZ(x_inter, y_inter, 0)  # Z luôn bằng 0 vì đường nằm trên mặt phẳng XY
+        return XYZ(x_inter, y_inter, level_elevation)  # Z luôn bằng 0 vì đường nằm trên mặt phẳng XY
     
     
     def get_nearby_beams(beams, reference_line, radius=5000/304.8):
@@ -199,7 +199,7 @@ if nances.AutodeskData():
                     nearest_point = point
         return nearest_point
     
-    def extend_line_lan_1(line, beams, extend_length, grids, view):
+    def extend_line_lan_1(line, beams, extend_length, grids, view, level_elevation):
 
         """Mở rộng line về hai phía 300mm, nếu gặp Beam thì dừng lại ở điểm giao nhau"""
         # Lấy điểm đầu và cuối của Line
@@ -215,7 +215,7 @@ if nances.AutodeskData():
         grid_lines_and_beams_line = list_beam_line + list_grid_lines
         # Tìm điểm giao giữa line mở rộng và mặt của beam
         for tung_line in grid_lines_and_beams_line: 
-            intersection = find_intersection(line,tung_line)
+            intersection = find_intersection(line,tung_line,level_elevation)
             if intersection:
                 list_intersect_point.append(intersection)
         
@@ -233,7 +233,7 @@ if nances.AutodeskData():
             new_line = line
         return new_line
     
-    def extend_line_lan_2(line, beams, extend_length,grids, view):
+    def extend_line_lan_2(line, beams, extend_length,grids, view,level_elevation):
 
         # Lấy điểm đầu và cuối của Line
         p1, p2 = line.GetEndPoint(0), line.GetEndPoint(1)
@@ -250,7 +250,7 @@ if nances.AutodeskData():
         grid_lines_and_beams_line = list_beam_line + list_grid_lines
         # Tìm điểm giao giữa line mở rộng và mặt của beam
         for tung_line in grid_lines_and_beams_line: 
-            intersection = find_intersection(line,tung_line)
+            intersection = find_intersection(line,tung_line,level_elevation)
             if intersection:
                 list_intersect_point.append(intersection)
         # for beam in list_nearby_beams:
@@ -309,18 +309,24 @@ if nances.AutodeskData():
                 level = active_view.GenLevel
                 beam_type = selected_type_beam
                 
-                beams = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StructuralFraming).WhereElementIsNotElementType().ToElements()
+                # beams = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StructuralFraming).WhereElementIsNotElementType().ToElements()
+                # current_view = doc.ActiveView
+                beams = FilteredElementCollector(doc, active_view.Id) \
+                    .OfCategory(BuiltInCategory.OST_StructuralFraming) \
+                    .WhereElementIsNotElementType() \
+                    .ToElements()
 
                 center_line = get_center_line(group_song_song[0],group_song_song[1])
                 start_point = center_line.GetEndPoint(0)
                 end_point = center_line.GetEndPoint(1)
+                level_elevation = level.Elevation
                 new_start_point = XYZ(start_point.X,start_point.Y,level.Elevation)
                 new_end_point = XYZ(end_point.X,end_point.Y,level.Elevation)
                 new_center_line_in_level = Autodesk.Revit.DB.Line.CreateBound(new_start_point, new_end_point)
                 grids = get_all_grid_in_current_view(doc,active_view)
                 extend = 800/304.8
-                new_line = extend_line_lan_1(new_center_line_in_level, beams, extend,grids,active_view)
-                new_line = extend_line_lan_2(new_line, beams, extend,grids,active_view)
+                new_line = extend_line_lan_1(new_center_line_in_level, beams, extend,grids,active_view,level_elevation)
+                new_line = extend_line_lan_2(new_line, beams, extend,grids,active_view,level_elevation)
                 
 
                 with revit.Transaction('Create Center Line', swallow_errors=True):
