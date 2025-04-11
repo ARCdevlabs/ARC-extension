@@ -5,7 +5,7 @@ from nances import forms
 from pyrevit import script
 if nances.AutodeskData():
     logger = script.get_logger()
-    selected_views = forms.select_sheets(use_selection=True)
+    selected_views = forms.select_views(use_selection=True)
     # module.message_box("Tiếp theo, chỉ được 1 sheet mà muốn add view vào thôi")
     if selected_views:
         logger.debug('View đã chọn {}'.format(len(selected_views)))
