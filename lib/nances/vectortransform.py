@@ -234,7 +234,7 @@ def distance_from_point_to_plane(point, plane):
     return distance
 
 def distance_between_parallel_planes(plane1, plane2):
-    point_on_plane = DB.XYZ(0, 0, 0)
+    point_on_plane = DB.XYZ(-54321, -54321, 0)
     distance1 = abs(distance_from_point_to_plane(point_on_plane, plane1))
     distance2 = abs(distance_from_point_to_plane(point_on_plane, plane2))
     distance = (distance1 - distance2)
