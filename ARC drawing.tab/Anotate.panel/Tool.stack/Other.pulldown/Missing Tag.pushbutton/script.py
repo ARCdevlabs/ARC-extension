@@ -51,13 +51,14 @@ if nances.AutodeskData():
                 ListAnotationInCurrentView.append(a)
             elif str(WhatView) == str(ParentView):
                 ListAnotationInCurrentView.append(a)
-        for i in AllEleOfCategory:
-            EleId = i.Id
-            ListClone.append(i)
-            for b in ListAnotationInCurrentView:
-                host = b.TaggedLocalElementId
-                if host == EleId:
-                    ListClone.Remove(i)
+        for tung_element in AllEleOfCategory:
+            EleId = tung_element.Id
+            ListClone.append(tung_element)
+            for tung_tag in ListAnotationInCurrentView:
+                # host = tung_tag.TaggedLocalElementId
+                tung_tag_host = tung_tag.GetTaggedLocalElementIds()
+                if EleId in tung_tag_host:
+                    ListClone.Remove(tung_element)
         def TempIsolate(view, items):
             ielements = List[ElementId]([x.Id for x in items])
             view.IsolateElementsTemporary(ielements)

@@ -33,12 +33,14 @@ NewList = []
 t = Transaction (doc, "Check double tag")
 t.Start()
 try:
-    for i in Ele:
-        if i.Category.Name != "Room Tags":
-            host = i.TaggedLocalElementId
-            NewList.append (host)
+    for tung_tag in Ele:
+        if tung_tag.Category.Name != "Room Tags":
+            # host_tung_tag = tung_tag.TaggedLocalElementId
+            tung_tag_host = tung_tag.GetTaggedLocalElementIds()
+            for tung_doi_tuong in tung_tag_host:
+                NewList.append (tung_doi_tuong)
         else:
-            host = i.TaggedLocalRoomId
+            host = tung_tag.TaggedLocalRoomId
             NewList.append (host)
     ListDuplicate.append([item for item, count in collections.Counter(NewList).items() if count > 1])
     ListDuplicate = [item for items in ListDuplicate for item in items]

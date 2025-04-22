@@ -95,6 +95,7 @@ if module.AutodeskData():
                             try:
                                 dimension.Prefix = "W="
                             except:
+                                # print(traceback.format_exc())
                                 pass    
                         t0 = Transaction(doc,"Set workplane")
                         t0.Start()        
@@ -102,14 +103,15 @@ if module.AutodeskData():
                         try:
                             set_work_plane_for_view (current_view)
                         except:
+                            print(traceback.format_exc())
                             pass
                         t0.Commit()   
                         return_point = pick_point_with_nearest_snap()
+                        
                         collector = FilteredElementCollector(uidoc.Document, current_view.Id).OfCategory(BuiltInCategory.OST_Dimensions).WhereElementIsNotElementType()
 
                         list_dimension_and_seg= []
                         list_dim_seg_point = []
-                        list_each_dimension = []
                         t = Transaction(doc,"Add W=")
                         t.Start()  
                         for dimension in collector:
@@ -124,8 +126,13 @@ if module.AutodeskData():
                             seg_posi = each_dim.TextPosition
                             list_dim_seg_point.append(seg_posi)
                         zipped_seg = zip(list_dimension_and_seg, list_dim_seg_point)
+                        one_point_seg_z = list_dim_seg_point[0].Z
+                        return_point = DB.XYZ(return_point.X, return_point.Y, one_point_seg_z)
                         nearest_point_to_seg = get_nearest_point(list_dim_seg_point, return_point)
+                        # print (distance_2_point(nearest_point_to_seg, return_point))
+                        # print nearest_point_to_seg,return_point
                         if distance_2_point(nearest_point_to_seg, return_point) < 3:
+                            
                             for dim_seg, dim_seg_point in zipped_seg:
                                 if dim_seg_point == nearest_point_to_seg:
                                     choosen_seg = dim_seg
@@ -133,14 +140,17 @@ if module.AutodeskData():
                                     break
                         t.Commit()
                     except Exception as ex:
+                        # print(traceback.format_exc())
                         if "Operation canceled by user." in str(ex):
                             break
                         else:
+                            # print(traceback.format_exc())
                             break
             main()
         else:
             module.message_box("Please use the tool in plan view.") 
     except:
+        # print(traceback.format_exc())
         pass
 
 

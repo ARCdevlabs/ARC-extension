@@ -94,6 +94,92 @@ if nances.AutodeskData():
             pass
         return largest_group[1:] # Bỏ qua giá trị đầu tiên vì giá trị đầu tiên là vector, không phải line.
     
+    # def are_colinear_and_connected(line1, line2, tol=0.0001):
+    #     """Kiểm tra xem 2 line có cùng hướng và có điểm nối không"""
+    #     dir1 = (line1.GetEndPoint(1) - line1.GetEndPoint(0)).Normalize()
+    #     dir2 = (line2.GetEndPoint(1) - line2.GetEndPoint(0)).Normalize()
+
+    #     # Kiểm tra cùng hướng hoặc ngược hướng
+    #     same_direction = dir1.IsAlmostEqualTo(dir2, tol) or dir1.IsAlmostEqualTo(-dir2, tol)
+
+    #     # Kiểm tra nếu có chung điểm
+    #     shared_points = any(line1.GetEndPoint(i).IsAlmostEqualTo(line2.GetEndPoint(j), tol)
+    #                         for i in range(2) for j in range(2))
+
+    #     return same_direction and shared_points
+
+    def are_lines_colinear(line1, line2, tol=0.001):
+        # Vector chỉ phương của mỗi line
+        dir1 = (line1.GetEndPoint(1) - line1.GetEndPoint(0)).Normalize()
+        dir2 = (line2.GetEndPoint(1) - line2.GetEndPoint(0)).Normalize()
+
+        # Kiểm tra 2 vector có cùng phương hoặc ngược phương
+        same_direction = dir1.IsAlmostEqualTo(dir2, tol) or dir1.IsAlmostEqualTo(-dir2, tol)
+
+        if not same_direction:
+            return False
+
+        # Vector nối từ điểm đầu của line1 tới điểm đầu của line2
+        vec_between = line2.GetEndPoint(0) - line1.GetEndPoint(0)
+
+        # Nếu vec_between cùng phương với dir1 → cùng nằm trên 1 đường thẳng
+        # Vì nếu 3 điểm thẳng hàng → vector nối giữa 2 điểm nằm trên cùng phương với hướng line
+        return vec_between.CrossProduct(dir1).IsZeroLength()
+
+    def merge_lines(lines):
+        merged = []
+        visited = set()
+
+        for i, line in enumerate(lines):
+            if i in visited:
+                continue
+            points = [line.GetEndPoint(0), line.GetEndPoint(1)]
+            visited.add(i)
+
+            changed = True
+            while changed:
+                changed = False
+                for j, other_line in enumerate(lines):
+                    if j in visited:
+                        continue
+                    if are_lines_colinear(line, other_line):
+                        visited.add(j)
+                        pt1 = other_line.GetEndPoint(0)
+                        pt2 = other_line.GetEndPoint(1)
+                        if not any(pt.IsAlmostEqualTo(pt1) for pt in points):
+                            points.append(pt1)
+                        if not any(pt.IsAlmostEqualTo(pt2) for pt in points):
+                            points.append(pt2)
+                        changed = True
+
+            # Sắp xếp điểm theo trục để nối thành đoạn thẳng duy nhất
+            points.sort(key=lambda p: (p.X, p.Y, p.Z))
+            new_line = Line.CreateBound(points[0], points[-1])
+            merged.append(new_line)
+        return merged   
+    
+    def are_parallel(line1, line2, tol=0.001):
+        dir1 = (line1.GetEndPoint(1) - line1.GetEndPoint(0)).Normalize()
+        dir2 = (line2.GetEndPoint(1) - line2.GetEndPoint(0)).Normalize()
+        return dir1.IsAlmostEqualTo(dir2, tol) or dir1.IsAlmostEqualTo(-dir2, tol)
+
+    def get_two_longest_parallel_lines(lines):
+        max_pair = (None, None)
+        max_total_length = 0
+
+        for i in range(len(lines)):
+            for j in range(i + 1, len(lines)):
+                line1 = lines[i]
+                line2 = lines[j]
+                if are_parallel(line1, line2):
+                    total_length = line1.Length + line2.Length
+                    if total_length > max_total_length:
+                        max_total_length = total_length
+                        max_pair = (line1, line2)
+        
+        return max_pair
+
+
     class LineSelectionFilter(Autodesk.Revit.UI.Selection.ISelectionFilter):
         def AllowElement(self, element):
             return element.Category.Name in "Lines, 線分"
@@ -302,8 +388,10 @@ if nances.AutodeskData():
                     line_chuan = check_huong (location_line)
                     line_da_chuan_hoa.append(line_chuan)
                 
-                group_song_song = tim_group_so_luong_song_song_nhieu_nhat (line_da_chuan_hoa)               
-
+                group_song_song = tim_group_so_luong_song_song_nhieu_nhat (line_da_chuan_hoa)     
+                merge_cac_line_nam_cung_duong_thang = merge_lines(group_song_song)  
+                hai_line_song_song_va_dai_nhat = get_two_longest_parallel_lines(merge_cac_line_nam_cung_duong_thang)
+                
                 # level = doc.GetElement(ElementId(339))
                 # level = doc.GetElement(active_view.GenLevel)
                 level = active_view.GenLevel
@@ -315,8 +403,8 @@ if nances.AutodeskData():
                     .OfCategory(BuiltInCategory.OST_StructuralFraming) \
                     .WhereElementIsNotElementType() \
                     .ToElements()
-
-                center_line = get_center_line(group_song_song[0],group_song_song[1])
+                center_line = get_center_line(hai_line_song_song_va_dai_nhat[0],hai_line_song_song_va_dai_nhat[1])
+                # center_line = get_center_line(group_song_song[0],group_song_song[1])
                 start_point = center_line.GetEndPoint(0)
                 end_point = center_line.GetEndPoint(1)
                 level_elevation = level.Elevation
