@@ -41,21 +41,26 @@ if module.AutodeskData():
                 ListAnotationInCurrentView.append(tung_tag)
             elif str(WhatView) == str(ParentView):
                 ListAnotationInCurrentView.append(tung_tag)
-        for i in Ele:
-            EleId = i.Id
-            for b in ListAnotationInCurrentView:
-                if b.Category.Name != "Room Tags" or b.Category.Name != "部屋タグ":
-                    bhost = b.TaggedLocalElementId
-                    if b.TaggedLocalElementId == EleId:
-                        ListTag.append(b)
+        for tung_element in Ele:
+            EleId = tung_element.Id
+            
+            for tung_tag in ListAnotationInCurrentView:
+                # if tung_tag.Category.Name != "Room Tags" or tung_tag.Category.Name != "部屋タグ":                
+                if "Room,部屋" not in tung_tag.Category.Name:
+                    tung_tag_host = tung_tag.GetTaggedLocalElementIds()                  
+                    if EleId in tung_tag_host:
+                        ListTag.append(tung_tag)
                 else:
-                    if b.TaggedLocalRoomId == EleId:
-                        ListTag.append (b)
-        for c in ListTag:
-            listid.append(c.Id)
+                    if tung_tag.TaggedLocalRoomId == EleId:
+                        ListTag.append (tung_tag)
+
+        for tung_tag in ListTag:
+            listid.append(tung_tag.Id)
         Icollection = List[ElementId](listid)
         select.SetElementIds(Icollection)
     except:
+        import traceback
+        print(traceback.format_exc())
         pass
 
 
