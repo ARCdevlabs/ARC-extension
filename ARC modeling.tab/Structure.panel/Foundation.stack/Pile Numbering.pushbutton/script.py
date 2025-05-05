@@ -11,45 +11,59 @@ if nances.AutodeskData():
     doc = uidoc.Document
     
 
-    from pyrevit import script
-    logger = script.get_logger()
-    my_config = script.get_config("parameter_pile_number")
+    # from pyrevit import script
+    # logger = script.get_logger()
+    # my_config = script.get_config("parameter_pile_number")
 
-    def load_configs():
-        parameter_input = my_config.get_option("parameter_input", [])
-        return parameter_input
+    # def load_configs():
+    #     parameter_input = my_config.get_option("parameter_input", [])
+    #     return parameter_input
 
-    def save_configs(content):
-        my_config.parameter_input = content
-        script.save_config()
+    # def save_configs(content):
+    #     my_config.parameter_input = content
+    #     script.save_config()
 
     from rpw.ui.forms import (FlexForm, Label, ComboBox, TextBox,
                                 Separator, Button, CheckBox)
-    get_parameter = ''
-    try:
-        get_configs = load_configs()
-        get_parameter = get_configs
-    except:
-        pass
-    if get_parameter != None:
-        config_parameter = get_parameter
-    else:
-        config_parameter = ''
+    # get_parameter = ''
+    # try:
+    #     get_configs = load_configs()
+    #     get_parameter = get_configs
+    # except:
+    #     pass
+    # if get_parameter != None:
+    #     config_parameter = get_parameter
+    # else:
+    #     config_parameter = ''
 
+    # components = [
+    #                 Label('Nhập số bắt đầu'),
+    #                 TextBox('textbox1', Text="1"),
+    #                 Label('Chọn cách lọc'),
+    #                 ComboBox('combobox1', ['1. Phương X: Từ nhỏ đến lớn',
+    #                                        '2. Phương X: Từ lớn đến nhỏ',
+    #                                        '3. Phương Y: Từ nhỏ đến lớn',
+    #                                        '4. Phương Y: Từ lớn đến nhỏ'
+    #                                        ]),
+    #                 Label('Parameter'),
+    #                 TextBox('textbox2', Text = config_parameter),
+    #                 Separator(),
+    #                 Button('Ok')
+    #             ]
     components = [
-                    Label('Nhập số bắt đầu'),
-                    TextBox('textbox1', Text="1"),
-                    Label('Chọn cách lọc'),
-                    ComboBox('combobox1', ['1. Phương X: Từ nhỏ đến lớn',
-                                           '2. Phương X: Từ lớn đến nhỏ',
-                                           '3. Phương Y: Từ nhỏ đến lớn',
-                                           '4. Phương Y: Từ lớn đến nhỏ'
-                                           ]),
-                    Label('Parameter'),
-                    TextBox('textbox2', Text = config_parameter),
-                    Separator(),
-                    Button('Ok')
-                ]
+                Label('Nhập số bắt đầu'),
+                TextBox('textbox1', Text="1"),
+                Label('Chọn cách lọc'),
+                ComboBox('combobox1', ['1. Phương X: Từ nhỏ đến lớn',
+                                        '2. Phương X: Từ lớn đến nhỏ',
+                                        '3. Phương Y: Từ nhỏ đến lớn',
+                                        '4. Phương Y: Từ lớn đến nhỏ'
+                                        ]),
+                Label('Parameter'),
+                TextBox('textbox2','番号'),
+                Separator(),
+                Button('Ok')
+            ]
     form = FlexForm('ARC', components)
     form.show()
     form.values    
@@ -57,8 +71,8 @@ if nances.AutodeskData():
         start_number = form.values["textbox1"]
         method = form.values["combobox1"]
         parameter = form.values["textbox2"]
-        save_configs(parameter)
-        get_parameter = load_configs()
+        # save_configs(parameter)
+        # get_parameter = load_configs()
     except:
         sys.exit()
 
