@@ -1,0 +1,14 @@
+title:   
+  en_us: Auto dim Center Joist Beam to Grid
+  ja: 
+assembly: SOAPanel
+command_class: DimFrameInSectionViewCommand
+tooltip:
+  en_us:
+    Chọn dầm rồi dim.
+
+  ja: 
+    
+    
+highlight: new
+author: Mau Cuong 
