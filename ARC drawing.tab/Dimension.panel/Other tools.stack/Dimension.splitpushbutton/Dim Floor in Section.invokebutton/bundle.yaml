@@ -1,0 +1,14 @@
+title:   
+  en_us: Auto dim Floor to host level
+  ja: 
+assembly: SOAPanel
+command_class: DimFloorInSectionViewCommand
+tooltip:
+  en_us:
+    Chọn Floor rồi dim.
+
+  ja: 
+    
+    
+highlight: new
+author: Mau Cuong 
