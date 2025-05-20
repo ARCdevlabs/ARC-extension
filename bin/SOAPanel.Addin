@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RevitAddIns>
+	<AddIn Type="Application">
+		<Name>SOAPanel</Name>
+		<Assembly>C:\ProgramData\Autodesk\Revit\Addins\SOAPanel\SOAPanel.dll</Assembly>
+		<AddInId>cb57cb4a-86cb-438d-bc56-b16c60a7fbcd</AddInId>
+		<FullClassName>CMS.SOAPanel.SOAPanel</FullClassName>
+		<VendorId>ADSK</VendorId>
+		<VendorDescription>Autodesk, www.autodesk.com</VendorDescription>
+	</AddIn>
+</RevitAddIns>
