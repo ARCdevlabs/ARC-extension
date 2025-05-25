@@ -17,36 +17,50 @@ if module.AutodeskData():
     logger = script.get_logger()
     my_config = script.get_config("setting_type_beam_by_detail_line")
 
-    from rpw.ui.forms import (FlexForm, Label, ComboBox, TextBox, TextBox,
+    from rpw.ui.forms import (FlexForm, Label, ComboBox, TextBox,
                                 Separator, Button, CheckBox)
     all_type_framing = all_type_of_framing()
-    components = [Label('Select type of Beam:'),
+    components = [Label('Chọn type của dầm:'),
                     ComboBox('combobox1', [DB.Element.Name.GetValue(x) for x in all_type_framing]),
+                    Separator(),
+                    Label('Chọn phương muốn vẽ dầm:'),
+                    ComboBox('combobox2', ["Phương dọc", "Phương ngang","Tự do"]),
+                    Separator(),
+                    Label('Nhập giá trị Entext 2 dầu dầm:'),
+                    TextBox('textbox1','2500'),
                     Separator(),
                     Button('Finish Setting')]
 
-    form = FlexForm('ARC', components)
-    form.show()
-    form.values
-    try:
-        selected_framing_type = form.values["combobox1"]
-    except:
-        import sys
-        sys.exit()
-
     def load_configs():
-        beam_type = my_config.get_option("beam_type", [])
+        beam_type_input = my_config.get_option("beam_type_input", [])
+        beam_type = [beam_type_input]
         return beam_type
 
-    def save_configs(content_list):
-        my_config.beam_type = content_list[0]
+    def save_configs(content):
+        """Save given list of categories as frequently selected"""
+        my_config.beam_type_input = content
         script.save_config()
-
+        
     if __name__ == "__main__":
-        input_value = [selected_framing_type]
-        save_configs(input_value)
+        form = FlexForm('ARC', components)
+        form.show()
+        form.values
+        input = []
+        try:
+            selected_framing_type = form.values["combobox1"]
+            phuong_dam = form.values["combobox2"]
+            extend = form.values["textbox1"]
 
+        except:
+            import sys
+            sys.exit()
+        input.append(selected_framing_type)
+        input.append(phuong_dam)
+        input.append(extend)
 
+        prev_framing_type = load_configs()
+        beam_type_input_2 = input
+        save_configs(beam_type_input_2)
 
 
 

@@ -12,25 +12,46 @@ if nances.AutodeskData():
     doc = uidoc.Document
     active_view = nances.Active_view(doc)
 
+    def xac_dinh_phuong_doc_ngang(lines):
+        list_ngang = []
+        list_doc = []
+        for line in lines:
+            try:
+                direction = line.Direction
+                if abs(direction.X) < abs(direction.Y):
+                    list_doc.append(line)            
+                else:
+                    list_ngang.append(line)
+            except:
+                # import traceback
+                # print(traceback.format_exc())
+                pass
+        return list_doc, list_ngang
+
     def check_huong (line):
         check = False
-        huong_line = line.Direction
-        point1 = line.GetEndPoint(0)
-        point2 = line.GetEndPoint(1)
-        if abs(huong_line.X) < abs(huong_line.Y):
-            if point1.Y < point2.Y:
-                check = True      
-            else:
+        try:
+            huong_line = line.Direction
+            point1 = line.GetEndPoint(0)
+            point2 = line.GetEndPoint(1)
+            if abs(huong_line.X) < abs(huong_line.Y):
+                if point1.Y < point2.Y:
+                    check = True      
+                else:
+                    check = False
+            elif point1.X < point2.X:
+                check = True
+            else: 
                 check = False
-        elif point1.X < point2.X:
-            check = True
-        else: 
-            check = False
-        if not check:
-            reversed_line = line.CreateReversed()
-            return reversed_line
-        else:
-            return line
+            if not check:
+                reversed_line = line.CreateReversed()
+                return reversed_line
+            else:
+                return line
+        except:
+            # import traceback
+            # print(traceback.format_exc())
+            pass
 
     def midpoint(point1, point2):
         """Tính trung điểm của hai điểm trong không gian 3D."""
@@ -71,6 +92,7 @@ if nances.AutodeskData():
         cross_product = vector_1.CrossProduct(vector_2)
         return cross_product.GetLength() < tolerance
     
+
     def tim_group_so_luong_song_song_nhieu_nhat (lines):
         '''Dùng thuật toán bucket sorting để tìm ra group có số lượng element song song nhiều nhất'''
         parallel_groups = []
@@ -94,20 +116,6 @@ if nances.AutodeskData():
             pass
         return largest_group[1:] # Bỏ qua giá trị đầu tiên vì giá trị đầu tiên là vector, không phải line.
     
-    # def are_colinear_and_connected(line1, line2, tol=0.0001):
-    #     """Kiểm tra xem 2 line có cùng hướng và có điểm nối không"""
-    #     dir1 = (line1.GetEndPoint(1) - line1.GetEndPoint(0)).Normalize()
-    #     dir2 = (line2.GetEndPoint(1) - line2.GetEndPoint(0)).Normalize()
-
-    #     # Kiểm tra cùng hướng hoặc ngược hướng
-    #     same_direction = dir1.IsAlmostEqualTo(dir2, tol) or dir1.IsAlmostEqualTo(-dir2, tol)
-
-    #     # Kiểm tra nếu có chung điểm
-    #     shared_points = any(line1.GetEndPoint(i).IsAlmostEqualTo(line2.GetEndPoint(j), tol)
-    #                         for i in range(2) for j in range(2))
-
-    #     return same_direction and shared_points
-
     def are_lines_colinear(line1, line2, tol=0.001):
         # Vector chỉ phương của mỗi line
         dir1 = (line1.GetEndPoint(1) - line1.GetEndPoint(0)).Normalize()
@@ -324,8 +332,6 @@ if nances.AutodeskData():
         # Lấy điểm đầu và cuối của Line
         p1, p2 = line.GetEndPoint(0), line.GetEndPoint(1)
 
-        # Tìm beam để kiểm tra giao nhau
-        # beams = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StructuralFraming).WhereElementIsNotElementType().ToElements()
         list_intersect_point = []
         list_nearby_beams = get_nearby_beams (beams,line)
         list_grid_lines = get_all_geometry_of_grids(grids, view, DatumExtentType = DatumExtentType.ViewSpecific)    
@@ -339,12 +345,6 @@ if nances.AutodeskData():
             intersection = find_intersection(line,tung_line,level_elevation)
             if intersection:
                 list_intersect_point.append(intersection)
-        # for beam in list_nearby_beams:
-        #     beam_line = beam.Location.Curve
-        #     # Tìm điểm giao giữa line mở rộng và mặt của beam
-        #     intersection = find_intersection(line,beam_line)
-        #     if intersection:
-        #         list_intersect_point.append(intersection)
 
         nearest_point = get_nearest_point(list_intersect_point,p2, extend_length)
 
@@ -361,20 +361,32 @@ if nances.AutodeskData():
     from pyrevit import script
     logger = script.get_logger()
     my_config = script.get_config("setting_type_beam_by_detail_line")
-
     import setting_config
-    source_beam_type = setting_config.load_configs()
-
     all_type_beam = all_type_of_framing()
     selected_type_beam = None
-    for tung_type in all_type_beam:
-        type_name = DB.Element.Name.GetValue(tung_type)
-        if type_name == source_beam_type:
-            selected_type_beam = tung_type
-            break
-    if  selected_type_beam == None:
-        selected_type_beam = tung_type
-        
+    try:
+        get_source = setting_config.load_configs()
+        source_beam_type = get_source[0][0]
+        source_phuong_dam = get_source[0][1]
+        extend_mm = float(get_source[0][2])
+        if source_phuong_dam == "Phương dọc":
+            phuong_dam = 0
+        if source_phuong_dam == "Phương ngang":
+            phuong_dam = 1
+        if source_phuong_dam == "Tự do":
+            phuong_dam = 2
+        if source_beam_type:
+            for tung_type in all_type_beam:
+                type_name = DB.Element.Name.GetValue(tung_type)
+                if type_name == source_beam_type:
+                    selected_type_beam = tung_type
+                    break
+            if  selected_type_beam == None:
+                selected_type_beam = tung_type
+    except:
+        selected_type_beam = all_type_beam.FirstElement()
+        phuong_dam = 2
+        extend_mm = float(2500)
     def main():
     # Bat dau vong lap lua chon
         run = True
@@ -387,13 +399,21 @@ if nances.AutodeskData():
                     location_line = tung_line.Location.Curve
                     line_chuan = check_huong (location_line)
                     line_da_chuan_hoa.append(line_chuan)
-                
-                group_song_song = tim_group_so_luong_song_song_nhieu_nhat (line_da_chuan_hoa)     
+
+                loc_phuong_doc_ngang = xac_dinh_phuong_doc_ngang(line_da_chuan_hoa)
+
+                if phuong_dam == 0:
+                    danh_sach_phuong_doc = loc_phuong_doc_ngang[0] #nếu là phương ngang thì list[1]
+                if phuong_dam == 1:
+                    danh_sach_phuong_doc = loc_phuong_doc_ngang[1] #nếu là phương ngang thì list[1]
+                if phuong_dam == 2:
+                    danh_sach_phuong_doc = line_da_chuan_hoa
+
+                group_song_song = tim_group_so_luong_song_song_nhieu_nhat (danh_sach_phuong_doc)     
                 merge_cac_line_nam_cung_duong_thang = merge_lines(group_song_song)  
                 hai_line_song_song_va_dai_nhat = get_two_longest_parallel_lines(merge_cac_line_nam_cung_duong_thang)
                 
-                # level = doc.GetElement(ElementId(339))
-                # level = doc.GetElement(active_view.GenLevel)
+
                 level = active_view.GenLevel
                 beam_type = selected_type_beam
                 
@@ -412,7 +432,9 @@ if nances.AutodeskData():
                 new_end_point = XYZ(end_point.X,end_point.Y,level.Elevation)
                 new_center_line_in_level = Autodesk.Revit.DB.Line.CreateBound(new_start_point, new_end_point)
                 grids = get_all_grid_in_current_view(doc,active_view)
-                extend = 800/304.8
+                
+                extend = extend_mm/304.8
+                
                 new_line = extend_line_lan_1(new_center_line_in_level, beams, extend,grids,active_view,level_elevation)
                 new_line = extend_line_lan_2(new_line, beams, extend,grids,active_view,level_elevation)
                 
