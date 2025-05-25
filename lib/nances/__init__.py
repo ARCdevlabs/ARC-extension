@@ -836,6 +836,7 @@ from pyrevit import revit
 import platform
 from Autodesk.Revit.DB import (FilteredElementCollector,Element, View, ElementId, FamilyInstance, FillPatternElement, Color, OverrideGraphicSettings,FilteredElementCollector, BuiltInCategory)
 from nances import forms
+from System.Windows.Forms import MessageBox, MessageBoxButtons, MessageBoxIcon
 
 import importdll
 import_class = importdll.ImportDLL()
@@ -845,45 +846,6 @@ PYREVIT_FILE_PREFIX = '{}_'.format(PYREVIT_ADDON_NAME)
 USER_ROAMING_DIR = os.getenv('appdata')
 PYREVIT_APP_DIR = op.join(USER_ROAMING_DIR, PYREVIT_ADDON_NAME)
 PYREVIT_VERSION_APP_DIR = op.join(PYREVIT_APP_DIR)
-
-
-# def _get_app_file(file_id, file_ext,
-#                 filename_only=False, stamped=False, universal=False):
-#     appdata_folder = PYREVIT_VERSION_APP_DIR
-#     file_prefix = PYREVIT_FILE_PREFIX
-#     if stamped:
-#         file_prefix = pyrevit.PYREVIT_FILE_PREFIX_STAMPED
-#     elif universal:
-#         appdata_folder = PYREVIT_APP_DIR
-#         file_prefix = pyrevit.PYREVIT_FILE_PREFIX_UNIVERSAL
-
-#     full_filename = '{}{}.{}'.format(file_prefix, file_id, file_ext)
-#     if filename_only:
-#         return full_filename
-#     else:
-#         return op.join(
-#             appdata_folder,
-#             coreutils.cleanup_filename(full_filename)
-#             )
-
-# def get_data_file(file_id, file_ext, name_only=False):
-#     return _get_app_file(file_id, file_ext, filename_only=name_only)
-
-# def get_document_data_file(file_id, file_ext, add_cmd_name=False):
-#     proj_info = revit.query.get_project_info()
-#     # print (proj_info)
-#     if add_cmd_name:
-#         script_file_id = '{}_{}'.format(EXEC_PARAMS.command_name,
-#                                         file_id)
-#                                         #    proj_info.filename
-#                                         #    or proj_info.name)
-#     else:
-#         script_file_id = '{}'.format(file_id)
-#                                         # proj_info.filename
-#                                         # or proj_info.name)
-#     # print (get_data_file(script_file_id, file_ext))
-#     return get_data_file(script_file_id, file_ext)
-
 
 def checklicense_for_info():
     import_def = import_class.get_dll()
@@ -906,10 +868,9 @@ def AutodeskDataInCode():
     funtion = import_def.LibARC_Security
     return funtion
 
-
 def thong_bao_loi_license():
     tin_nhan = "Hãy mở khóa Add-in.\nSử dụng command [Get info] và gửi mã tới skype của Sơn\nhoặc email:nguyenthanhson1712@gmail.com\n\n\nこちらのツールを使用するには、\nアドインをロック解除する必要があります。\nコマンド [Get info] を使用してコードを取得し、その後\nSonのSkypeまたは以下のメールアドレスに送信してください：nguyenthanhson1712@gmail.com"
-    MessageBox.Show(tin_nhan, "ARC", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    MessageBox.Show(tin_nhan, "ARC__init__", MessageBoxButtons.OK, MessageBoxIcon.Information)
 # Def nay cho current element
 if AutodeskData():
     def get_selected_elements(tem_uidoc, tem_doc, noti = True):
@@ -993,24 +954,6 @@ if AutodeskData():
         Mes = "Joined: " + LenJoin + " and Switch join: " + LenSwitchjoin
         Alert(Mes,title="Mes",header= "Report number Join and Switch joined")
         return 
-
-# def all_elements_of_category(idoc, category):
-# 	return FilteredElementCollector(idoc).OfCategory(category).WhereElementIsNotElementType().ToElements()
-
-# def override_graphics_in_view(idoc, view, list_element_id, color, color_cut):
-#     name_pattern = "<Solid fill> , <塗り潰し>"
-#     patterns = FilteredElementCollector(idoc).OfClass(FillPatternElement)
-#     for pattern in patterns:
-#         if pattern.Name in name_pattern:
-#             solidPatternId = pattern.Id
-#     override = OverrideGraphicSettings()
-#     for i in list_element_id:
-#         override.SetSurfaceForegroundPatternColor(color)
-#         override.SetSurfaceForegroundPatternId(solidPatternId)
-#         override.SetCutForegroundPatternColor(color_cut)
-#         override.SetCutForegroundPatternId(solidPatternId)
-#         view.SetElementOverrides(i, override)
-#     return
     
 
 def Active_view(idoc):
