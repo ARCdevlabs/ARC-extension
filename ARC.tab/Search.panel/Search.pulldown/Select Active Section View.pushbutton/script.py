@@ -1,4 +1,5 @@
-__doc__ = 'python for revit api'
+# -*- coding: utf-8 -*-
+__doc__ = 'Tool này sẽ chọn được mặt cắt chứa view mặt cắt đang active (mục đích là để tìm vị trí mặt cắt trên mặt bằng)'
 __author__ = 'NguyenThanhSon' "Email: nguyenthanhson1712@gmail.com"
 import string
 import importlib
