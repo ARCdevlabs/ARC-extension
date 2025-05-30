@@ -26,7 +26,7 @@ if module.AutodeskData():
                     Label('Chọn phương muốn vẽ dầm:'),
                     ComboBox('combobox2', ["Phương dọc", "Phương ngang","Tự do"]),
                     Separator(),
-                    Label('Nhập giá trị Entext 2 dầu dầm:'),
+                    Label('Nhập giá trị mở rộng 2 dầu dầm:'),
                     TextBox('textbox1','2500'),
                     Separator(),
                     Button('Finish Setting')]
