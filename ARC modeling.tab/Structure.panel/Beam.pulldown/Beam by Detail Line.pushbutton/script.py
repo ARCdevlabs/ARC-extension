@@ -435,14 +435,14 @@ if nances.AutodeskData():
                 
                 extend = extend_mm/304.8
                 
-                new_line = extend_line_lan_1(new_center_line_in_level, beams, extend,grids,active_view,level_elevation)
-                new_line = extend_line_lan_2(new_line, beams, extend,grids,active_view,level_elevation)
+                new_line_lan_1 = extend_line_lan_1(new_center_line_in_level, beams, extend,grids,active_view,level_elevation)
+                new_line_lan_2 = extend_line_lan_2(new_line_lan_1, beams, extend,grids,active_view,level_elevation)
                 
 
-                with revit.Transaction('Create Center Line', swallow_errors=True):
+                with revit.Transaction('Create Beam By Detail Line', swallow_errors=True):
                     active_symbol(beam_type)
                     # det_line = doc.Create.NewDetailCurve(active_view, center_line)
-                    create_beam(new_line,beam_type,level)
+                    create_beam(new_line_lan_2,beam_type,level)
                     # create_beam(center_line,beam_type,level)
             except Exception as ex:
                 # import traceback
