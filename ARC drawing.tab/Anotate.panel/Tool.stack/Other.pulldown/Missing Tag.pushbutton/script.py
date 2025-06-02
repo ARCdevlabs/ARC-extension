@@ -1,5 +1,4 @@
-__doc__ = 'python for revit api'
-__author__ = 'SonKawamura'
+# -*- coding: utf-8 -*-
 from Autodesk.Revit.UI.Selection.Selection import PickObject
 from Autodesk.Revit.UI.Selection  import ObjectType
 from Autodesk.Revit.DB import*

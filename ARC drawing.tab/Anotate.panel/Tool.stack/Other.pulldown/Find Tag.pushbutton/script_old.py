@@ -1,0 +1,98 @@
+# # -*- coding: utf-8 -*-
+# from codecs import Codec
+# import string
+# import importlib
+# ARC = string.ascii_lowercase
+# begin = ''.join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
+# module = importlib.import_module(str(begin))
+# import Autodesk
+# from Autodesk.Revit.DB import *
+# import Autodesk.Revit.DB as DB
+# from System.Collections.Generic import List
+# from Autodesk.Revit.UI.Selection import ObjectType
+# import traceback
+# if module.AutodeskData():
+#     try:
+#         uidoc = __revit__.ActiveUIDocument
+#         doc = uidoc.Document
+#         Currentview = doc.ActiveView
+#         t = Transaction (doc, "Get Tag of element in current view")
+#         t.Start()
+#         Ele = module.get_elements(uidoc,doc, 'Select Elements', noti = False)
+#         ListTag = []
+#         ListAnotation = []
+#         select = uidoc.Selection
+#         ListAnotationInCurrentView = []
+#         listid = []
+#         def all_elements_of_category(category):
+#             return FilteredElementCollector(doc).OfCategory(category).WhereElementIsNotElementType().ToElements()
+#         ListAnotation.append(all_elements_of_category(BuiltInCategory.OST_WallTags))
+#         ListAnotation.append(all_elements_of_category(BuiltInCategory.OST_DoorTags))
+#         ListAnotation.append(all_elements_of_category(BuiltInCategory.OST_WindowTags))
+#         ListAnotation.append(all_elements_of_category(BuiltInCategory.OST_FloorTags))
+#         ListAnotation.append(all_elements_of_category(BuiltInCategory.OST_StructuralColumnTags))
+#         ListAnotation.append(all_elements_of_category(BuiltInCategory.OST_StructuralFramingTags))
+#         ListAnotation.append(all_elements_of_category(BuiltInCategory.OST_RoomTags))
+#         ListAnotation.append(all_elements_of_category(BuiltInCategory.OST_GenericModelTags))
+#         ListAnotation = [item for items in ListAnotation for item in items]
+#         CurrentviewId = Currentview.Id
+#         ParentView = Currentview.GetPrimaryViewId()
+#         for a in ListAnotation:
+#             WhatView = a.OwnerViewId
+#             if str(WhatView) == str(CurrentviewId):
+#                 ListAnotationInCurrentView.append(a)
+#             elif str(WhatView) == str(ParentView):
+#                 ListAnotationInCurrentView.append(a)
+#         for i in Ele:
+#             EleId = i.Id
+#             for b in ListAnotationInCurrentView:
+#                 if b.Category.Name != "Room Tags":
+#                     bhost = b.TaggedLocalElementId
+#                     if b.TaggedLocalElementId == EleId:
+#                         ListTag.append(b)
+#                 else:
+#                     if b.TaggedLocalRoomId == EleId:
+#                         ListTag.append (b)
+#         for c in ListTag:
+#             listid.append(c.Id)
+#         Icollection = List[ElementId](listid)
+#         select.SetElementIds(Icollection)
+#         t.Commit()   
+#     except:
+#         pass
+
+# -*- coding: utf-8 -*-
+from codecs import Codec
+import string
+import importlib
+ARC = string.ascii_lowercase
+begin = ''.join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
+module = importlib.import_module(str(begin))
+import Autodesk
+from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as DB
+from System.Collections.Generic import List
+from Autodesk.Revit.UI.Selection import ObjectType
+import traceback
+import nances
+if module.AutodeskData():
+    try:
+        uidoc = __revit__.ActiveUIDocument
+        doc = uidoc.Document
+        Currentview = doc.ActiveView
+        Ele = module.get_elements(uidoc,doc, 'Select Elements', noti = False)
+        
+        filter = ElementClassFilter(IndependentTag)
+        tag_in_current_view =[]
+        for tung_element in Ele:
+            get_dependent_element = tung_element.GetDependentElements(filter)
+            for tung_tag_id in get_dependent_element:
+                element_tag = doc.GetElement(tung_tag_id)
+                if element_tag.OwnerViewId == Currentview.Id:
+                    tag_in_current_view.append(tung_tag_id)
+        select = uidoc.Selection            
+        for c in tag_in_current_view:
+            Icollection = List[ElementId](tag_in_current_view)
+            select.SetElementIds(Icollection)
+    except:
+        pass
