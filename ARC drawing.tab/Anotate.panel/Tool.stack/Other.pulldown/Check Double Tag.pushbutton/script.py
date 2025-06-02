@@ -1,24 +1,12 @@
-__doc__ = 'python for revit api'
-__author__ = 'SonKawamura'
-from Autodesk.Revit.UI.Selection.Selection import PickObject
-from Autodesk.Revit.UI.Selection  import ObjectType
+# -*- coding: utf-8 -*-
 from Autodesk.Revit.DB import*
-from Autodesk.Revit.DB import IndependentTag
-from Autodesk.Revit.DB.Architecture import RoomTag
-import Autodesk
 from Autodesk.Revit.DB import *
-from Autodesk.Revit.DB import Element
 from System.Collections.Generic import *
-import math
-from rpw import ui
-from rpw.ui.forms import Alert
 import collections
-#Get UIDocument
 uidoc = __revit__.ActiveUIDocument
-#Get Document 
 doc = uidoc.Document
 Currentview = doc.ActiveView
-Curve = []
+
 def get_selected_elements():
     selection = uidoc.Selection
     selection_ids = selection.GetElementIds()
@@ -27,27 +15,24 @@ def get_selected_elements():
         elements.append(doc.GetElement(element_id))
     return elements
 Ele = get_selected_elements()
-ListDuplicate = []
+list_duplicate = []
 select = uidoc.Selection
-NewList = []
-t = Transaction (doc, "Check double tag")
-t.Start()
+list_element = []
 try:
+    t = Transaction (doc, "Check double tag")
+    t.Start()
     for tung_tag in Ele:
-        if tung_tag.Category.Name != "Room Tags":
-            # host_tung_tag = tung_tag.TaggedLocalElementId
-            tung_tag_host = tung_tag.GetTaggedLocalElementIds()
-            for tung_doi_tuong in tung_tag_host:
-                NewList.append (tung_doi_tuong)
-        else:
-            host = tung_tag.TaggedLocalRoomId
-            NewList.append (host)
-    ListDuplicate.append([item for item, count in collections.Counter(NewList).items() if count > 1])
-    ListDuplicate = [item for items in ListDuplicate for item in items]
-    Icollection = List[ElementId](ListDuplicate)
-    select.SetElementIds(Icollection)        
+        tung_tag_host = tung_tag.GetTaggedLocalElementIds()
+        for tung_doi_tuong in tung_tag_host:
+                list_element.append (tung_doi_tuong)
+    list_duplicate.append([item for item, count in collections.Counter(list_element).items() if count > 1])
+    list_duplicate = [item for items in list_duplicate for item in items]
+    Icollection = List[ElementId](list_duplicate)
+    select.SetElementIds(Icollection)
+    t.Commit()  
 except:
+    t.RollBack
     pass
-t.Commit()
+
 
 
