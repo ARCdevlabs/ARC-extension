@@ -1,0 +1,14 @@
+title:   
+  en_us: Auto dim Foundation
+  ja: 
+assembly: SOAPanel
+command_class: DimFoundationInSection
+tooltip:
+  en_us:
+    Chọn móng trước rồi sử dụng tool.
+
+  ja: 
+    
+    
+highlight: new
+author: Mau Cuong 
