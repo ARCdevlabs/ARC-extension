@@ -60,20 +60,21 @@ try:
     t.Start()
     for tag in Ele:
         try:
-            get_element_Id = tag.TaggedLocalElementId
-            floor = doc.GetElement(get_element_Id)
-            spots = get_dependent_element(floor)
-            for spot_id in spots:
-                get_spot = doc.GetElement(spot_id)
-                owner_view = get_spot.OwnerViewId
-                view_tong = get_dependent_element_view(doc.GetElement(owner_view))
-                for dependent_view_tong in view_tong:
-                    if Currentview.Id == dependent_view_tong:
-                        is_hidden = get_spot.IsHidden(Currentview)
-                        if not is_hidden:
-                            tag_position = tag.TagHeadPosition
-                            spot_location = get_spot.Origin
-                            move = move_element (doc, get_spot, XYZ(tag_position.X - spot_location.X,tag_position.Y - spot_location.Y,spot_location.Z))
+            get_element_ids = tag.GetTaggedLocalElementIds()
+            for tung_id in get_element_ids:
+                floor = doc.GetElement(tung_id)
+                spots = get_dependent_element(floor)
+                for spot_id in spots:
+                    get_spot = doc.GetElement(spot_id)
+                    owner_view = get_spot.OwnerViewId
+                    view_tong = get_dependent_element_view(doc.GetElement(owner_view))
+                    for dependent_view_tong in view_tong:
+                        if Currentview.Id == dependent_view_tong:
+                            is_hidden = get_spot.IsHidden(Currentview)
+                            if not is_hidden:
+                                tag_position = tag.TagHeadPosition
+                                spot_location = get_spot.Origin
+                                move = move_element (doc, get_spot, XYZ(tag_position.X - spot_location.X,tag_position.Y - spot_location.Y,spot_location.Z))
         except:
             pass
     t.Commit()

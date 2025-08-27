@@ -201,6 +201,7 @@ if module.AutodeskData:
     selection = uidoc.Selection
     get_element = module.get_element(uidoc,doc, 'Select Slab', noti = False)
     element = get_element[0]
+    para_heigt_offset_goc = module.get_builtin_parameter_by_name(element, BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM)
 
     is_structural = element.get_Parameter(BuiltInParameter.FLOOR_PARAM_IS_STRUCTURAL).AsInteger()
     floor = element if isinstance(element, Floor) else None
@@ -240,6 +241,8 @@ if module.AutodeskData:
                             # new_floor = doc.Create.NewFloor(curve_array, floor_type, level, True)
                             new_floor = Floor.Create(doc, curve_loop_list, floor_type.Id, level.Id)
                             if new_floor:
+                                para_heigt_offset = module.get_builtin_parameter_by_name(new_floor, BuiltInParameter.FLOOR_HEIGHTABOVELEVEL_PARAM)
+                                para_heigt_offset.Set(para_heigt_offset_goc.AsDouble())
                                 new_floors.append(new_floor)
                         elif face.FaceNormal.Z > 0:
                             curve_loop_list  = List[CurveLoop]()
@@ -252,7 +255,6 @@ if module.AutodeskData:
                             xyz = origin.Add(face_normal)
                             sloped_arrow = Line.CreateBound(XYZModifyZ(origin, z), XYZModifyZ(xyz, z))
                             
-
                             for curve_loop in face.GetEdgesAsCurveLoops():
                                 element_curve_loop = CurveLoop()
                                 for curve in curve_loop:
