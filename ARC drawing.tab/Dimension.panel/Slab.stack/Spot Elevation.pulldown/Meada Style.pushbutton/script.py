@@ -47,19 +47,20 @@ if Ele:
         t.Start()
         for tag in Ele:
             try:
-                get_element_Id = tag.TaggedLocalElementId
-                floor = doc.GetElement(get_element_Id)
-                top = HostObjectUtils.GetTopFaces(floor)
-                tag_position = tag.TagHeadPosition
-                for ref in top:
-                    try:
-                        top_face = floor.GetGeometryObjectFromReference(ref)
-                        top_faces.append(top_face)
-                        top_ref.append(ref)
-                        last_ref = ref
-                    except:
-                        pass
-                spot_elevation(doc, Currentview, last_ref, tag_position, tag_position, tag_position,tag_position, False)
+                get_element_ids = tag.GetTaggedLocalElementIds()
+                for tung_id in get_element_ids:
+                    floor = doc.GetElement(tung_id)
+                    top = HostObjectUtils.GetTopFaces(floor)
+                    tag_position = tag.TagHeadPosition
+                    for ref in top:
+                        try:
+                            top_face = floor.GetGeometryObjectFromReference(ref)
+                            top_faces.append(top_face)
+                            top_ref.append(ref)
+                            last_ref = ref
+                        except:
+                            pass
+                    spot_elevation(doc, Currentview, last_ref, tag_position, tag_position, tag_position,tag_position, False)
             except:
                 pass
         t.Commit()

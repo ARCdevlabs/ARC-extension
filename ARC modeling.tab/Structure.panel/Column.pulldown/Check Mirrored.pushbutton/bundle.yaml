@@ -1,0 +1,9 @@
+title:   
+  en_us: Check cột bị Mirror
+  ja: ミラーされている柱をチェック
+tooltip:
+  en_us: Click vào tool, tất cả 柱 đang bị mirror sẽ được isolate.
+  ja: ツールを使用すると、ミラーされているすべての柱が選択して表示されます。
+# highlight: new      # highlight as new or update
+authors:
+  - Nguyễn Thanh Sơn
