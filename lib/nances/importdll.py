@@ -13,8 +13,8 @@ class ImportDLL:
         appdata_path = os.path.join(os.getenv('APPDATA'), 'pyRevit', 'Extensions')
         programdata_path = (r"C:\ProgramData\pyRevit\Extensions")
         nances_lib_path = os.path.join(appdata_path, 'ARC extension.extension', 'lib', 'nances', 'dll')
-        path_string = op.join(nances_lib_path, 'LibARC_250108.dll')
-        path_string_programdata = op.join(programdata_path, 'LibARC_250108.dll')
+        path_string = op.join(nances_lib_path, 'LibARC_251028.dll')
+        path_string_programdata = op.join(programdata_path, 'LibARC_251028.dll')
         try:
             clr.AddReferenceToFileAndPath(path_string)
         except:
