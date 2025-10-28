@@ -10,7 +10,6 @@ if nances.AutodeskData():
     doc = uidoc.Document
     Ele = nances.get_selected_elements(uidoc,doc)
     selection = uidoc.Selection
-    # t = Transaction (doc, "Quick Properties")
     list_noname_ref = []
     n = 1
     for tung_element in Ele:
