@@ -18,6 +18,7 @@ if nances.AutodeskData():
             list_noname_ref.append(tung_element.Id)
             sub_category = nances.get_builtin_parameter_by_name(tung_element, DB.BuiltInParameter.CLINE_SUBCATEGORY)
             sub_category_name = sub_category.AsValueString()
+            
             print name + "  ID:  " + str(tung_element.Id) + "    "+ str(sub_category_name)
     Icollection = List[ElementId](list_noname_ref)
     selection.SetElementIds(Icollection)
