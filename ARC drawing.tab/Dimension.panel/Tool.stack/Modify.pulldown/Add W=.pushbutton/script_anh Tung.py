@@ -1,149 +1,205 @@
 # -*- coding: utf-8 -*-
-import Autodesk
-from Autodesk.Revit.UI.Selection import ObjectType, ObjectSnapTypes
-from Autodesk.Revit.UI.Selection.Selection import PickObject
 from Autodesk.Revit.DB import *
-from Autodesk.Revit.Creation import ItemFactoryBase
-from System.Collections.Generic import *
-from Autodesk.Revit.DB import Reference
-import math
-import sys
-from pyrevit import forms, revit, DB, UI
+from Autodesk.Revit.UI.Selection import *
+from Autodesk.Revit.UI import TaskDialog
+from pyrevit import script
+from rpw.ui.forms import FlexForm, Label, TextBox, CheckBox, Button, Separator
 import clr
 clr.AddReference('System.Windows.Forms')
 from System.Windows.Forms import Control
 
 uidoc = __revit__.ActiveUIDocument
 doc = uidoc.Document
+config = script.get_config()
+current_view = doc.ActiveView
 
-try:
-	Currentview = doc.ActiveView
-	if Currentview.ViewType in [ViewType.FloorPlan, ViewType.EngineeringPlan, ViewType.CeilingPlan, ViewType.Section]:
-		def main():
-			shift_pressed = Control.ModifierKeys == Control.ModifierKeys.Shift
-			if shift_pressed:
-				prefix = forms.ask_for_string(
-					default="W=",
-					prompt="Nhập prefix (VD: W=)\nĐể TRỐNG là xóa prefix hiện có.",
-					title="Thêm Prefix cho Dimension"
-				)
-				if prefix is None:
-					return
+# KIỂM TRA VIEW
+is_legend = current_view.ViewType == ViewType.Legend
+is_plan_view = current_view.ViewType in [ViewType.FloorPlan, ViewType.CeilingPlan, ViewType.EngineeringPlan]
+is_section_elevation = current_view.ViewType in [ViewType.Section, ViewType.Elevation]
+
+if not (is_legend or is_plan_view or is_section_elevation):
+	TaskDialog.Show("Lỗi", "Chỉ dùng trong: FloorPlan, RCP, EngineeringPlan, Section, Elevation hoặc Legend")
+	script.exit()
+
+# SET WORK PLANE
+def set_temporary_workplane(view):
+	if view.SketchPlane is not None:
+		return True
+	
+	try:
+		if view.ViewType in [ViewType.FloorPlan, ViewType.CeilingPlan, ViewType.EngineeringPlan]:
+			plane = Plane.CreateByNormalAndOrigin(XYZ.BasisZ, XYZ.Zero)
+		else:  # Section hoặc Elevation
+			plane = Plane.CreateByNormalAndOrigin(view.ViewDirection, view.Origin)
+		
+		sp = SketchPlane.Create(doc, plane)
+		view.SketchPlane = sp
+		return True
+	except:
+		return False
+
+# KIỂM TRA VIEW LEGEND
+if not is_legend:
+	t_wp = Transaction(doc, "Temporary Workplane for Dimension Tool")
+	t_wp.Start()
+	if not set_temporary_workplane(current_view):
+		t_wp.RollBack()
+		TaskDialog.Show("Lỗi", "Không thể tạo Workplane tạm thời cho view này!\nTool sẽ thoát.")
+		script.exit()
+	t_wp.Commit()
+
+shift_pressed = Control.ModifierKeys == Control.ModifierKeys.Shift
+if not shift_pressed:
+	add_prefix_mode = True
+	replace_mode = False
+	prefix_text = "W="
+	replace_text = ""
+else:
+	last_add = config.get_option('add_prefix', True)
+	last_rep = config.get_option('replace', False)
+	last_txt = config.get_option('text', 'W=')
+	components = [
+		Label("Chọn chế độ:"),
+		CheckBox('prefix', "Thêm Prefix", default=last_add),
+		CheckBox('replace', "Thay Text hoàn toàn", default=last_rep),
+		Separator(),
+		Label("Nhập Prefix hoặc Text thay thế:"),
+		Label("(Để trống = xóa prefix / bỏ override)"),
+		TextBox('text', Text=last_txt, Height=60),
+		Button("OK")
+	]
+	form = FlexForm("Dimension Tool - Thiết lập", components)
+	if not form.show():
+		script.exit()
+	add_prefix_mode = form.values['prefix']
+	replace_mode = form.values['replace']
+	text_value = form.values['text'].strip()
+
+	if not add_prefix_mode and not replace_mode:
+		add_prefix_mode = True
+		text_value = "W="
+	
+	prefix_text = text_value if add_prefix_mode else ""
+	replace_text = text_value if replace_mode else ""
+
+	config.add_prefix = add_prefix_mode
+	config.replace = replace_mode
+	config.text = text_value
+	script.save_config()
+
+mode_text = ""
+if add_prefix_mode and replace_mode: mode_text = " - Prefix + Replace"
+elif add_prefix_mode: mode_text = " - Add Prefix"
+elif replace_mode: mode_text = " - Replace Text"
+trans_name = "Dimension Tool" + mode_text
+
+dim_elements_in_view = None
+if not is_legend:
+	dim_elements_in_view = FilteredElementCollector(doc, current_view.Id)\
+		.OfCategory(BuiltInCategory.OST_Dimensions)\
+		.WhereElementIsNotElementType()\
+		.ToElements()
+
+if is_legend:
+	class LegendDimFilter(ISelectionFilter):
+		def AllowElement(self, elem):
+			return isinstance(elem, Dimension)
+		def AllowReference(self, ref, pt):
+			return False
+
+	while True:
+		try:
+			ref = uidoc.Selection.PickObject(ObjectType.Element, LegendDimFilter())
+			dim = doc.GetElement(ref.ElementId)
+			if not isinstance(dim, Dimension): 
+				continue
+			click_pt = ref.GlobalPoint
+
+			best_seg = None
+			best_dist = float('inf')
+			if dim.NumberOfSegments == 0:
+				best_seg = dim
 			else:
-				prefix = "W="
-			while True:
-				try:
-					def set_work_plane_for_view(view):
-						current_work_plane = view.SketchPlane
-						if current_work_plane is None:
-							try:
-								if view.ViewType in [ViewType.FloorPlan, ViewType.EngineeringPlan, ViewType.CeilingPlan]:
-									plane = Plane.CreateByNormalAndOrigin(XYZ.BasisZ, XYZ.Zero)
-								elif view.ViewType == ViewType.Section:
-									plane = Plane.CreateByNormalAndOrigin(view.ViewDirection, view.Origin)
-								sketch_plane = Autodesk.Revit.DB.SketchPlane.Create(view.Document, plane)
-								view.SketchPlane = sketch_plane
-							except:
-								return False
-						return True
+				for seg in dim.Segments:
+					if not hasattr(seg, "TextPosition") or not seg.TextPosition: 
+						continue
+					d = seg.TextPosition.DistanceTo(click_pt)
+					if d < best_dist:
+						best_dist = d
+						best_seg = seg
+			if not best_seg:
+				continue
 
-					def pick_point_with_nearest_snap():       
-						snap_settings = UI.Selection.ObjectSnapTypes.None
-						prompt = "Click gần text của dimension để thêm prefix..."
-						try:
-							click_point = uidoc.Selection.PickPoint(snap_settings, prompt)
-							return click_point
-						except:
-							return None
+			t = Transaction(doc, trans_name)
+			t.Start()
+			try:
+				if add_prefix_mode and hasattr(best_seg, "Prefix"):
+					best_seg.Prefix = prefix_text
+				if replace_mode:
+					best_seg.ValueOverride = replace_text if replace_text else None
+				
+				from System.Collections.Generic import List
+				uidoc.Selection.SetElementIds(List[ElementId]([dim.Id]))
+				t.Commit()
+			except Exception as e:
+				t.RollBack()
+				TaskDialog.Show("Lỗi", "Không thể sửa dimension:\n" + str(e))
+		except:
+			break
 
-					def projected_distance(p1, p2, view):
-						vec = p2 - p1
-						view_dir = view.ViewDirection.Normalize()
-						proj_along_dir = vec.DotProduct(view_dir)
-						perp_vec = vec - (proj_along_dir * view_dir)
-						return perp_vec.GetLength()
+else:
+	view_dir = current_view.ViewDirection
 
-					def get_nearest_point(points, reference_point, view):
-						min_distance = float('inf')
-						nearest_point = None
-						for point in points:
-							distance = projected_distance(point, reference_point, view)
-							if distance < min_distance:
-								min_distance = distance
-								nearest_point = point
-						return nearest_point, min_distance
+	while True:
+		try:
+			pt = uidoc.Selection.PickPoint(ObjectSnapTypes.None)
+		except: 
+			break
 
-					def add_prefix_to_dimension(dimension, prefix_value):
-						try:
-							if prefix_value == "":
-								dimension.Prefix = ""
-							else:
-								dimension.Prefix = prefix_value
-						except:
-							pass
+		candidates = []
+		for dim in dim_elements_in_view:
+			if dim.IsHidden(current_view):
+				continue
+			if dim.NumberOfSegments > 0:
+				for seg in dim.Segments:
+					pos = getattr(seg, "TextPosition", None)
+					if pos: 
+						candidates.append((seg, pos, dim.Id))
+			else:
+				pos = getattr(dim, "TextPosition", None)
+				if pos:
+					candidates.append((dim, pos, dim.Id))
 
-					t0 = Transaction(doc, "Set workplane")
-					t0.Start()        
-					current_view = uidoc.ActiveView
-					if not set_work_plane_for_view(current_view):
-						t0.RollBack()
-						forms.alert("Không thể set Work Plane cho view hiện tại!", title="Error", warn_icon=True)
-						return
-					t0.Commit()   
+		if not candidates:
+			continue
 
-					return_point = pick_point_with_nearest_snap()
-					if not return_point:
-						break
-					
-					collector = FilteredElementCollector(uidoc.Document, current_view.Id).OfCategory(BuiltInCategory.OST_Dimensions).WhereElementIsNotElementType()
+		best_seg = best_id = None
+		min_dist = float('inf')
+		for seg, pos, pid in candidates:
+			vec = pt - pos
+			perp = vec - vec.DotProduct(view_dir) * view_dir
+			dist = perp.GetLength()
+			if dist < min_dist:
+				min_dist = dist
+				best_seg = seg
+				best_id = pid
 
-					list_dimension_and_seg = []
-					list_dim_seg_point = []
-					t = Transaction(doc, "Add/Remove Prefix")
-					t.Start()  
-					for dimension in collector:
-						if not dimension.IsHidden(current_view):
-							number_segment = dimension.NumberOfSegments
-							if number_segment > 1:
-								segments = dimension.Segments
-								for seg in segments:
-									list_dimension_and_seg.append(seg)
-									list_dim_seg_point.append(seg.TextPosition)
-							else:
-								list_dimension_and_seg.append(dimension)
-								list_dim_seg_point.append(dimension.TextPosition)
-					
-					if not list_dim_seg_point:
-						t.RollBack()
-						forms.alert("Không tìm thấy dimension nào trong view.", title="Info")
-						break
-					
-					nearest_point_to_seg, min_dist = get_nearest_point(list_dim_seg_point, return_point, current_view)
-					
-					scale_factor = 1.0 / current_view.Scale
-					threshold = max(2.0 * scale_factor, 0.3)
-					
-					if min_dist < threshold:
-						zipped_seg = zip(list_dimension_and_seg, list_dim_seg_point)
-						for dim_seg, dim_seg_point in zipped_seg:
-							if dim_seg_point.IsAlmostEqualTo(nearest_point_to_seg):
-								add_prefix_to_dimension(dim_seg, prefix)
-								break
-					else:
-						forms.alert("Không chọn được dimension — click gần text hơn.", title="Info")
-					
-					t.Commit()
+		threshold = max(3.0 / current_view.Scale, 0.5)
+		if min_dist > threshold:
+			continue
 
-				except Exception as ex:
-					if "Operation canceled by user." in str(ex):
-						break
-					else:
-						import traceback
-						forms.alert("Lỗi: " + str(ex), title="Error", warn_icon=True)
-						break
-		main()
-	else:
-		forms.alert("Vui lòng sử dụng tool ở mặt bằng hoặc mặt cắt", title="View Error", warn_icon=True)
-except:
-	import traceback
-	forms.alert("Lỗi không xác định: " + traceback.format_exc(), title="Critical Error", warn_icon=True)
+		t = Transaction(doc, trans_name)
+		t.Start()
+		try:
+			if add_prefix_mode and hasattr(best_seg, "Prefix"):
+				best_seg.Prefix = prefix_text
+			if replace_mode:
+				best_seg.ValueOverride = replace_text if replace_text else None
+			
+			from System.Collections.Generic import List
+			uidoc.Selection.SetElementIds(List[ElementId]([best_id]))
+			t.Commit()
+		except Exception as e:
+			t.RollBack()
+			TaskDialog.Show("Lỗi", "Không thể sửa dimension:\n" + str(e))
