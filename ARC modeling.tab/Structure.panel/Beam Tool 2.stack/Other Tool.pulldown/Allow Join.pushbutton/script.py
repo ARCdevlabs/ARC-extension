@@ -30,6 +30,7 @@ try:
                 # curve_reverse = curve.CreateReversed()
                 # i.Location.Curve = curve_reverse
                     allow_join_at_end(i)
+                    # disallow_join_at_end(i)
                 except:
                     pass
             t.Commit()
