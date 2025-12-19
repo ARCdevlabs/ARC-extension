@@ -119,5 +119,6 @@ try:
                 else:
                     module.message_box("View đã có trong sheet khác rồi: " + str(i.Name))
             t.Commit()
+            module.message_box("Finish")
 except:
     pass
