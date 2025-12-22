@@ -2,6 +2,10 @@ title:
   en_us: Other Tool
   ja: その他
 
-
-
-
+layout:
+  - Switch To Z Offset
+  - Switch To Start End Level Offset
+  - Detail line from Beams
+  - Align Y offset beam
+  - DisAllow Join
+  - Allow Join
