@@ -204,3 +204,30 @@ if module.AutodeskData():
         sorted_points = sorted(seg_list, key=lambda obj: distance_from_point_to_element(A, obj), reverse=True)
 
         return sorted_points
+
+
+    def get_average_point(point_list):
+        if not point_list:
+            return None
+        
+        total_x = 0
+        total_y = 0
+        total_z = 0
+        count = len(point_list)
+        
+        for point in point_list:
+            total_x += point.X
+            total_y += point.Y
+            total_z += point.Z
+            
+        return XYZ(total_x/count, total_y/count, total_z/count)
+    
+    def get_all_segment_position (dimension):
+        all_segment_position = []
+        number_of_segments =  dimension.NumberOfSegments
+        if number_of_segments != 0:
+            segments = dimension.Segments
+            for seg in segments:
+                text_ori = seg.Origin
+                all_segment_position.append(text_ori)
+        return all_segment_position
