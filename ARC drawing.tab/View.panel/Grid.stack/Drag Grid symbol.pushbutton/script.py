@@ -1,177 +1,116 @@
 # -*- coding: utf-8 -*-
-__doc__ = 'Rút ngắn chiều dài Grids và Levels'
-from Autodesk.Revit.UI.Selection import ObjectType
+__doc__='Rút ngắn chiều dài Grids và Levels'
+from Autodesk.Revit.UI.Selection import ObjectType,ObjectSnapTypes,ISelectionFilter
 from Autodesk.Revit.DB import *
-from rpw.ui.forms import *
-from pyrevit import forms
-import Autodesk
-import sys
-import traceback
-from System.Collections.Generic import *
-from Autodesk.Revit.UI import TaskDialog
-from nances import forms
-import string
-import importlib
+import Autodesk.Revit.Exceptions
+from pyrevit import forms,revit
+import string,importlib,sys
 
-ARC = string.ascii_lowercase
-begin = ''.join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
-module = importlib.import_module(str(begin))
+ARC=string.ascii_lowercase
+begin=''.join(ARC[i] for i in [13,0,13,2,4,18])
+module=importlib.import_module(str(begin))
+
 if module.AutodeskData():
 	from pyrevit.coreutils import applocales
-	current_applocale = applocales.get_current_applocale()
-
-	if str(current_applocale) == "日本語 / Japanese (ja)":
-		tin_nhan_0 = "通り及びレベルを切断します。"
-		tin_nhan_2 = "通芯又はレベルを選択します。"
-		huong_dan_1 = "通芯又はレベルを選択するためにマウスをドラッグします。"
-		huong_dan_3 = "通り長さ調整の一点をクリックして選択します。"
+	loc=str(applocales.get_current_applocale())
+	if loc=="日本語 / Japanese (ja)":
+		title_main="通り及びレベルを切断します。"
+		msg_select="Grids/Levelsを選択してください（ESCで範囲選択）"
+		msg_continue="追加選択、またはESCで切断位置選択へ"
+		msg_selected="選択済み {} 個 - ESCで切断位置選択へ"
+		msg_rectangle="通芯又はレベルを選択するためにマウスをドラッグします。"
+		msg_pick="通り長さ調整の一点をクリックして選択します。"
+		msg_none="対象が選択されていません。"
+		msg_wp="ワークプレーンの設定に失敗しました。"
 	else:
-		tin_nhan_0 = "Cắt trục và level"
-		tin_nhan_2 = "Vui lòng chọn Grids hoặc Levels."
-		huong_dan_1 = "Quét chuột để chọn các Grids và Levels."
-		huong_dan_3 = "Click chọn điểm để thay đổi chiều dài trục."    
+		title_main="Rút ngắn Grids và Levels"
+		msg_select="Click chọn Grids/Levels (ESC để quét)"
+		msg_continue="Chọn thêm hoặc ESC để chọn vị trí cắt"
+		msg_selected="Đã chọn {} đối tượng - ESC để chọn vị trí cắt"
+		msg_rectangle="Quét chuột để chọn các Grids và Levels."
+		msg_pick="Click chọn vị trí để rút ngắn Grids và Levels"
+		msg_none="Không có đối tượng nào được chọn!"
+		msg_wp="Không thể thiết lập Work Plane."
 
-uidoc = __revit__.ActiveUIDocument
-doc = uidoc.Document
+uidoc=revit.uidoc
+doc=uidoc.Document
+view=doc.ActiveView
 
-class GridSelectionFilter(Autodesk.Revit.UI.Selection.ISelectionFilter):
-	def AllowElement(self, element):
-		return element.Category.Id.IntegerValue in [int(BuiltInCategory.OST_Grids), int(BuiltInCategory.OST_Levels)]
-	
-	def AllowReference(self, reference, point):
-		return False
+class GridLevelSelectionFilter(ISelectionFilter):
+	def AllowElement(self,e): return isinstance(e,(Grid,Level))
+	def AllowReference(self,r,p): return False
 
-def pick_grid_by_rectangle():
-	while True:
-		try:
-			with forms.WarningBar(title=huong_dan_1):
-				selection = uidoc.Selection
-				selected_elements = selection.PickElementsByRectangle(GridSelectionFilter(), tin_nhan_2)
-			if selected_elements:
-				return selected_elements
-
-		except Autodesk.Revit.Exceptions.OperationCanceledException:
-			sys.exit()  # Thoát lệnh nếu nhấn ESC
-
-
-selected_ids = uidoc.Selection.GetElementIds()
-
-if not selected_ids:
-	selected_elements = pick_grid_by_rectangle()
-else:
-	selected_elements = [doc.GetElement(id) for id in selected_ids]
-
-grids = []
-levels = []
-
-for element in selected_elements:
-	if isinstance(element, Grid):
-		grids.append(element)
-	elif isinstance(element, Level):
-		levels.append(element)
-
-while not grids and not levels:
-	selected_elements = pick_grid_by_rectangle()
-	grids = [el for el in selected_elements if isinstance(el, Grid)]
-	levels = [el for el in selected_elements if isinstance(el, Level)]
-
-def set_work_plane_for_view(view):
+def set_wp(v):
 	try:
-		plane = Autodesk.Revit.DB.Plane.CreateByNormalAndOrigin(view.ViewDirection, view.Origin)
-		sketch_plane = Autodesk.Revit.DB.SketchPlane.Create(doc, plane)
-		view.SketchPlane = sketch_plane
+		v.SketchPlane=SketchPlane.Create(doc,Plane.CreateByNormalAndOrigin(v.ViewDirection,v.Origin))
 		return True
-	except:
-		return False
+	except: return False
 
-def pick_point_with_nearest_snap(iuidoc):
-	snap_settings = Autodesk.Revit.UI.Selection.ObjectSnapTypes.None
-	prompt = huong_dan_3
+def nearest(p0,p1,p):
+	v=(p1-p0).Normalize()
+	return p0+v*((p-p0).DotProduct(v))
+
+def modify(d,v,p):
+	cs=d.GetCurvesInView(DatumExtentType.ViewSpecific,v)
+	if not cs or not isinstance(cs[0],Line): return
+	p0,p1=cs[0].GetEndPoint(0),cs[0].GetEndPoint(1)
+	c=nearest(p0,p1,p)
+	nc=Line.CreateBound(c,p1) if c.DistanceTo(p0)<c.DistanceTo(p1) else Line.CreateBound(p0,c)
+	if nc.IsBound: d.SetCurveInView(DatumExtentType.ViewSpecific,v,nc)
+
+def pick_elements():
+	sel=uidoc.Selection
+	res=[]
+	for i in sel.GetElementIds():
+		e=doc.GetElement(i)
+		if isinstance(e,(Grid,Level)) and e not in res: res.append(e)
+	if res: return res
+	wb=forms.WarningBar(height=32)
+	wb._setup(title=msg_select)
+	wb.show()
 	try:
-		click_point = iuidoc.Selection.PickPoint(snap_settings, prompt)
-		return click_point
+		while True:
+			prompt=msg_select if not res else msg_continue
+			r=sel.PickObject(ObjectType.Element,GridLevelSelectionFilter(),prompt)
+			e=doc.GetElement(r.ElementId)
+			if e not in res: res.append(e)
+			wb.message_tb.Text=msg_selected.format(len(res))
 	except Autodesk.Revit.Exceptions.OperationCanceledException:
-		sys.exit()  # Thoát lệnh nếu nhấn ESC
-	except Exception:
-		return None
+		pass
+	finally:
+		try: wb.Close();wb.Dispose()
+		except: pass
+	if not res:
+		try:
+			with forms.WarningBar(title=msg_rectangle):
+				rs=sel.PickElementsByRectangle(GridLevelSelectionFilter(),msg_rectangle)
+				for r in rs:
+					e=doc.GetElement(r.Id) if hasattr(r,'Id') else r
+					if e not in res: res.append(e)
+		except Autodesk.Revit.Exceptions.OperationCanceledException:
+			pass
+	return res
 
-def nearest_point_on_line(start, end, point):
-	line_direction = (end - start).Normalize()
-	vector = point - start
-	distance = vector.DotProduct(line_direction)
-	closest_point = start + line_direction * distance
-	return closest_point
+els=pick_elements()
+grids=[e for e in els if isinstance(e,Grid)]
+levels=[e for e in els if isinstance(e,Level)]
+if not grids and not levels: forms.alert(msg_none,exitscript=True)
 
-def RUTNGAN_TRUC(grid, view, click_point):
-	datum_extent_type = Autodesk.Revit.DB.DatumExtentType.ViewSpecific
-	list_curve = grid.GetCurvesInView(datum_extent_type, view)
-	if list_curve:
-		curve = list_curve[0]
-		if isinstance(curve, Line):
-			start_point = curve.GetEndPoint(0)
-			end_point = curve.GetEndPoint(1)
-
-			closest_point = nearest_point_on_line(start_point, end_point, click_point)
-			distance_to_start = closest_point.DistanceTo(start_point)
-			distance_to_end = closest_point.DistanceTo(end_point)
-
-			new_start_point = closest_point if distance_to_start < distance_to_end else start_point
-			new_end_point = end_point if distance_to_start < distance_to_end else closest_point
-
-			new_curve = Line.CreateBound(new_start_point, new_end_point)
-			if new_curve.IsBound:
-				grid.SetCurveInView(datum_extent_type, view, new_curve)
-
-def RUTNGAN_LEVEL(level, click_point):
-	datum_extent_type = Autodesk.Revit.DB.DatumExtentType.ViewSpecific
-	list_curve = level.GetCurvesInView(datum_extent_type, doc.ActiveView)
-	if list_curve:
-		curve = list_curve[0]
-		if isinstance(curve, Line):
-			start_point = curve.GetEndPoint(0)
-			end_point = curve.GetEndPoint(1)
-
-			closest_point = nearest_point_on_line(start_point, end_point, click_point)
-			distance_to_start = closest_point.DistanceTo(start_point)
-			distance_to_end = closest_point.DistanceTo(end_point)
-
-			new_start_point = closest_point if distance_to_start < distance_to_end else start_point
-			new_end_point = end_point if distance_to_start < distance_to_end else closest_point
-
-			new_curve = Line.CreateBound(new_start_point, new_end_point)
-			if new_curve.IsBound:
-				level.SetCurveInView(datum_extent_type, doc.ActiveView, new_curve)
-
-trans_group = TransactionGroup(doc, tin_nhan_0)
-trans_group.Start()
-
+tg=TransactionGroup(doc,title_main)
+tg.Start()
 try:
-	t1 = Transaction(doc, "Set Work Plane")
+	t1=Transaction(doc,"Set Work Plane")
 	t1.Start()
-	if not set_work_plane_for_view(uidoc.ActiveView):
-		module.message_box("Không thể thiết lập Work Plane. Vui lòng thử lại.")
-		t1.RollBack()
-		trans_group.RollBack()
-		sys.exit()
+	if not set_wp(view):
+		t1.RollBack();tg.RollBack();module.message_box(msg_wp);sys.exit()
 	t1.Commit()
-
-	with forms.WarningBar(title=huong_dan_3):
-		click_point = pick_point_with_nearest_snap(uidoc)
-
-	if not click_point:
-		module.message_box("Không có điểm nào được chọn.")
-		trans_group.RollBack()
-		sys.exit()
-
-	t2 = Transaction(doc, tin_nhan_0)
+	with forms.WarningBar(title=msg_pick):
+		pt=uidoc.Selection.PickPoint(ObjectSnapTypes.None,msg_pick)
+	t2=Transaction(doc,title_main)
 	t2.Start()
-	for grid in grids:
-		RUTNGAN_TRUC(grid, doc.ActiveView, click_point)
-	for level in levels:
-		RUTNGAN_LEVEL(level, click_point)
+	for d in grids+levels: modify(d,view,pt)
 	t2.Commit()
-
-	trans_group.Assimilate()
-except:
-	trans_group.RollBack()
-	sys.exit()
+	tg.Assimilate()
+except Exception as e:
+	if tg.GetStatus()==TransactionStatus.Started: tg.RollBack()
+	forms.alert("Lỗi: {}".format(str(e)))
