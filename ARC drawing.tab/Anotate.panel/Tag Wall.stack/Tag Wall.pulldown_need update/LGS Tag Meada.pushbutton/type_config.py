@@ -17,9 +17,8 @@ from System.Drawing import Point, Size
 uidoc = __revit__.ActiveUIDocument
 doc = uidoc.Document
 
-#Get UIDocument
+
 uidoc = __revit__.ActiveUIDocument
-#Get Document 
 doc = uidoc.Document
 Currentview = doc.ActiveView
 try:
@@ -62,16 +61,6 @@ def save_configs(content):
     script.save_config()
 
 
-# def reset_defaults(options):
-#     """Reset frequently selected categories to defaults"""
-#     defaults = [revit.query.get_category(x)
-#                 for x in FREQUENTLY_SELECTED_CATEGORIES]
-#     default_names = [x.Name for x in defaults if x]
-#     for opt in options:
-#         if opt.name in default_names:
-#             opt.checked = True
-
-
 '''Code để import wpf form'''
 import clr
 clr.AddReference('System.Windows.Forms')
@@ -90,8 +79,7 @@ list_view = []
 class MyWindow(Windows.Window):
     def __init__(self):
         wpf.LoadComponent(self, xamlfile)
-        # self.setup_combobox_data()
-        # self.setup_listbox_data()
+
     @property
     def setup_family(self):
         return self.family_name.Text

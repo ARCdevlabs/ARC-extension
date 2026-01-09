@@ -1,161 +1,149 @@
 # -*- coding: utf-8 -*-
 import Autodesk
+from Autodesk.Revit.UI.Selection import ObjectType, ObjectSnapTypes
 from Autodesk.Revit.UI.Selection.Selection import PickObject
-from Autodesk.Revit.UI.Selection  import ObjectType
 from Autodesk.Revit.DB import *
-from Autodesk.Revit.DB import FailuresAccessor
-from Autodesk.Revit.DB import Line
 from Autodesk.Revit.Creation import ItemFactoryBase
 from System.Collections.Generic import *
 from Autodesk.Revit.DB import Reference
 import math
 import sys
-import string
-import importlib
-import traceback
+from pyrevit import forms, revit, DB, UI
+import clr
+clr.AddReference('System.Windows.Forms')
+from System.Windows.Forms import Control
 
-from codecs import Codec
-import string
-import importlib
-ARC = string.ascii_lowercase
-begin = ''.join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
-module = importlib.import_module(str(begin))
-import Autodesk
-from Autodesk.Revit.DB import *
-import Autodesk.Revit.DB as DB
-from System.Collections.Generic import List
-from Autodesk.Revit.UI.Selection import ObjectType
-from Autodesk.Revit.UI.Selection import ObjectType, Selection
-import traceback
-if module.AutodeskData(): 
-    uidoc = __revit__.ActiveUIDocument
-    doc = uidoc.Document
-    try:
-        Currentview = doc.ActiveView
-        view_direction = Currentview.ViewDirection
-        if view_direction.Z == 1 and str(Currentview.ViewType) != "ThreeD":
-            def main():
-                # Bat dau vong lap lua chon
-                while True:
-                    try:
-                        from pyrevit import revit, DB, UI
+uidoc = __revit__.ActiveUIDocument
+doc = uidoc.Document
 
-                        def set_work_plane_for_view(view):
+try:
+	Currentview = doc.ActiveView
+	if Currentview.ViewType in [ViewType.FloorPlan, ViewType.EngineeringPlan, ViewType.CeilingPlan, ViewType.Section]:
+		def main():
+			shift_pressed = Control.ModifierKeys == Control.ModifierKeys.Shift
+			if shift_pressed:
+				prefix = forms.ask_for_string(
+					default="W=",
+					prompt="Nhập prefix (VD: W=)\nĐể TRỐNG là xóa prefix hiện có.",
+					title="Thêm Prefix cho Dimension"
+				)
+				if prefix is None:
+					return
+			else:
+				prefix = "W="
+			while True:
+				try:
+					def set_work_plane_for_view(view):
+						current_work_plane = view.SketchPlane
+						if current_work_plane is None:
+							try:
+								if view.ViewType in [ViewType.FloorPlan, ViewType.EngineeringPlan, ViewType.CeilingPlan]:
+									plane = Plane.CreateByNormalAndOrigin(XYZ.BasisZ, XYZ.Zero)
+								elif view.ViewType == ViewType.Section:
+									plane = Plane.CreateByNormalAndOrigin(view.ViewDirection, view.Origin)
+								sketch_plane = Autodesk.Revit.DB.SketchPlane.Create(view.Document, plane)
+								view.SketchPlane = sketch_plane
+							except:
+								return False
+						return True
 
+					def pick_point_with_nearest_snap():       
+						snap_settings = UI.Selection.ObjectSnapTypes.None
+						prompt = "Click gần text của dimension để thêm prefix..."
+						try:
+							click_point = uidoc.Selection.PickPoint(snap_settings, prompt)
+							return click_point
+						except:
+							return None
 
-                            current_work_plane = view.SketchPlane
-                            
+					def projected_distance(p1, p2, view):
+						vec = p2 - p1
+						view_dir = view.ViewDirection.Normalize()
+						proj_along_dir = vec.DotProduct(view_dir)
+						perp_vec = vec - (proj_along_dir * view_dir)
+						return perp_vec.GetLength()
 
-                            if current_work_plane is None:
-                                sketch_plane = view.SketchPlane
-                                try:
-                                    sketch_plane = Autodesk.Revit.DB.SketchPlane.Create(view.Document, Autodesk.Revit.DB.Plane.CreateByNormalAndOrigin(view.ViewDirection, view.Origin))
-                                    view.SketchPlane = sketch_plane
-                                except:
-                                    pass
-                                    # print(traceback.format_exc())
-                            return True
+					def get_nearest_point(points, reference_point, view):
+						min_distance = float('inf')
+						nearest_point = None
+						for point in points:
+							distance = projected_distance(point, reference_point, view)
+							if distance < min_distance:
+								min_distance = distance
+								nearest_point = point
+						return nearest_point, min_distance
 
-                            
+					def add_prefix_to_dimension(dimension, prefix_value):
+						try:
+							if prefix_value == "":
+								dimension.Prefix = ""
+							else:
+								dimension.Prefix = prefix_value
+						except:
+							pass
 
-                        def pick_point_with_nearest_snap():       
-                            snap_settings = UI.Selection.ObjectSnapTypes.None
-                            prompt = "Click"
-                            
-                            try:
+					t0 = Transaction(doc, "Set workplane")
+					t0.Start()        
+					current_view = uidoc.ActiveView
+					if not set_work_plane_for_view(current_view):
+						t0.RollBack()
+						forms.alert("Không thể set Work Plane cho view hiện tại!", title="Error", warn_icon=True)
+						return
+					t0.Commit()   
 
-                                click_point = uidoc.Selection.PickPoint(snap_settings, prompt)
-                                
-                            except:
-                                # print(traceback.format_exc())
-                                pass
-                            return click_point
+					return_point = pick_point_with_nearest_snap()
+					if not return_point:
+						break
+					
+					collector = FilteredElementCollector(uidoc.Document, current_view.Id).OfCategory(BuiltInCategory.OST_Dimensions).WhereElementIsNotElementType()
 
+					list_dimension_and_seg = []
+					list_dim_seg_point = []
+					t = Transaction(doc, "Add/Remove Prefix")
+					t.Start()  
+					for dimension in collector:
+						if not dimension.IsHidden(current_view):
+							number_segment = dimension.NumberOfSegments
+							if number_segment > 1:
+								segments = dimension.Segments
+								for seg in segments:
+									list_dimension_and_seg.append(seg)
+									list_dim_seg_point.append(seg.TextPosition)
+							else:
+								list_dimension_and_seg.append(dimension)
+								list_dim_seg_point.append(dimension.TextPosition)
+					
+					if not list_dim_seg_point:
+						t.RollBack()
+						forms.alert("Không tìm thấy dimension nào trong view.", title="Info")
+						break
+					
+					nearest_point_to_seg, min_dist = get_nearest_point(list_dim_seg_point, return_point, current_view)
+					
+					scale_factor = 1.0 / current_view.Scale
+					threshold = max(5 * scale_factor, 2)
+					
+					if min_dist < threshold:
+						zipped_seg = zip(list_dimension_and_seg, list_dim_seg_point)
+						for dim_seg, dim_seg_point in zipped_seg:
+							if dim_seg_point.IsAlmostEqualTo(nearest_point_to_seg):
+								add_prefix_to_dimension(dim_seg, prefix)
+								break
+					else:
+						forms.alert("Không chọn được dimension — click gần text hơn.", title="Info")
+					
+					t.Commit()
 
-
-
-                        def get_nearest_point(points, reference_point):
-
-                            min_distance = float('inf')
-                            nearest_point = None
-                            
-                            for point in points:
-                                distance = point.DistanceTo(reference_point)
-                                if distance < min_distance:
-                                    min_distance = distance
-                                    nearest_point = point
-                            return nearest_point
-
-                        def distance_2_point(point , reference_point):
-                            distance = point.DistanceTo(reference_point)
-                            return distance
-
-
-                        def add_prefix_to_dimension(dimension):
-                            try:
-                                dimension.Prefix = "W="
-                            except:
-                                # print(traceback.format_exc())
-                                pass    
-                        t0 = Transaction(doc,"Set workplane")
-                        t0.Start()        
-                        current_view = uidoc.ActiveView
-                        try:
-                            set_work_plane_for_view (current_view)
-                        except:
-                            print(traceback.format_exc())
-                            pass
-                        t0.Commit()   
-                        return_point = pick_point_with_nearest_snap()
-                        
-                        collector = FilteredElementCollector(uidoc.Document, current_view.Id).OfCategory(BuiltInCategory.OST_Dimensions).WhereElementIsNotElementType()
-
-                        list_dimension_and_seg= []
-                        list_dim_seg_point = []
-                        t = Transaction(doc,"Add W=")
-                        t.Start()  
-                        for dimension in collector:
-                            number_segment = dimension.NumberOfSegments
-                            if number_segment > 1:
-                                segments = dimension.Segments
-                                for seg in segments:
-                                    list_dimension_and_seg.append(seg)
-                            else:
-                                list_dimension_and_seg.append(dimension)
-                        for each_dim in list_dimension_and_seg:
-                            seg_posi = each_dim.TextPosition
-                            list_dim_seg_point.append(seg_posi)
-                        zipped_seg = zip(list_dimension_and_seg, list_dim_seg_point)
-                        one_point_seg_z = list_dim_seg_point[0].Z
-                        return_point = DB.XYZ(return_point.X, return_point.Y, one_point_seg_z)
-                        nearest_point_to_seg = get_nearest_point(list_dim_seg_point, return_point)
-                        # print (distance_2_point(nearest_point_to_seg, return_point))
-                        # print nearest_point_to_seg,return_point
-                        if distance_2_point(nearest_point_to_seg, return_point) < 3:
-                            
-                            for dim_seg, dim_seg_point in zipped_seg:
-                                if dim_seg_point == nearest_point_to_seg:
-                                    choosen_seg = dim_seg
-                                    add_prefix_to_dimension(choosen_seg)
-                                    break
-                        t.Commit()
-                    except Exception as ex:
-                        # print(traceback.format_exc())
-                        if "Operation canceled by user." in str(ex):
-                            break
-                        else:
-                            # print(traceback.format_exc())
-                            break
-            main()
-        else:
-            module.message_box("Please use the tool in plan view.") 
-    except:
-        # print(traceback.format_exc())
-        pass
-
-
-
-
-
-
-
+				except Exception as ex:
+					if "Operation canceled by user." in str(ex):
+						break
+					else:
+						import traceback
+						forms.alert("Lỗi: " + str(ex), title="Error", warn_icon=True)
+						break
+		main()
+	else:
+		forms.alert("Vui lòng sử dụng tool ở mặt bằng hoặc mặt cắt", title="View Error", warn_icon=True)
+except:
+	import traceback
+	forms.alert("Lỗi không xác định: " + traceback.format_exc(), title="Critical Error", warn_icon=True)

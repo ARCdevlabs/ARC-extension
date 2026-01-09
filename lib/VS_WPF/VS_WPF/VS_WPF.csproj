@@ -79,6 +79,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="..\..\..\ARC drawing.tab\Dimension.panel\Beam.stack\Beam.pulldown\Modify Dim With Fukashi.pushbutton\WPF_setup_family_beam.xaml">
+      <Link>Link WPF\WPF_setup_family_beam.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

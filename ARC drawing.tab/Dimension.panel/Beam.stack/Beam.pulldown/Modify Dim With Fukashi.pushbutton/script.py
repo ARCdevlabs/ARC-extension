@@ -13,8 +13,6 @@ import sys
 import string
 import importlib
 import traceback
-__doc__ = 'nguyenthanhson1712@gmail.com'
-__author__ = 'NguyenThanhSon' "Email: nguyenthanhson1712@gmail.com"
 from codecs import Codec
 import string
 import importlib
@@ -184,11 +182,10 @@ if nances.AutodeskData():
         refp = instance.GetReferenceByName(name)
         return refp
 
-
     current_view = uidoc.ActiveView
     # pick = uidoc.Selection.PickObject(ObjectType.Element)
     Ele = module.get_selected_elements(uidoc,doc)
-    t = Transaction(doc,"Dim tăng cường_LOGI")
+    t = Transaction(doc,"Dim tăng cường")
     t.Start() 
     list_new_dim =[]
     for element in Ele:
