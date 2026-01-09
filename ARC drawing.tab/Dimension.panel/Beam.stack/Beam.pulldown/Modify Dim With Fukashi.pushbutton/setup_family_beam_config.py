@@ -19,7 +19,7 @@ from pyrevit import script
 logger = script.get_logger()
 my_config = script.get_config("setup_family_beam")
 
-default = ["中心立面図","Test lưu lại","3","4","8","下側","左側","左側","上端ふかし","下端ふかし","左ふかし","右ふかし"]
+default = ["中心立面図","6","3","4","8","下側","左側","左側","上端ふかし","下端ふかし","左ふかし","右ふかし"]
 
 def load_configs():
     setup_beam = my_config.get_option("setup_family_beam", [])
@@ -168,7 +168,6 @@ class MyWindow(Windows.Window):
 
     
     def save_setting_click(self, sender, args):
-
         top_reference_name = self.setup_top_ref_name
         bottom_reference_name = self.setup_bot_ref_name
         left_reference_name = self.setup_left_ref_name
@@ -190,7 +189,7 @@ class MyWindow(Windows.Window):
                         ]
 
         save_configs(total_setting)
-
         self.Close()
 
-MyWindow().ShowDialog()
+if __name__ == "__main__":
+    MyWindow().ShowDialog()
