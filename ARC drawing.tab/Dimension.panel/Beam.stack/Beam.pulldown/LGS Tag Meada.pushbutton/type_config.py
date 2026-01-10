@@ -63,8 +63,6 @@ def save_configs(content):
 
 '''Code để import wpf form'''
 import clr
-clr.AddReference('System.Windows.Forms')
-clr.AddReference('IronPython.Wpf')
 # find the path of ui.xaml
 from pyrevit import UI
 from pyrevit import script

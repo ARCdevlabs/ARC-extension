@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 import clr
-clr.AddReference('System.Windows.Forms')
-clr.AddReference('IronPython.Wpf')
 from pyrevit import script
-xamlfile = script.get_bundle_file('WPF_setup_family_beam.xaml')
 import wpf
 clr.AddReference("System.Windows.Forms")
 clr.AddReference("System")
@@ -50,9 +47,7 @@ class MyWindow(Windows.Window):
         self.setup_bot_fukashi_parameter_name = load_setting[9]
         self.setup_left_fukashi_parameter_name = load_setting[10]
         self.setup_right_fukashi_parameter_name = load_setting[11]
-
-          
-    load_setting = load_configs()
+         
     @property
     def setup_top_ref_name(self):
         return self.top_reference_name.Text
