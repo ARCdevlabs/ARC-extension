@@ -57,6 +57,7 @@ def find_intersect_elements(idoc, element_A, list_element_B):
 #             for face in geometry_object.Faces:
 #                 list_faces.append(face)
 #     return list_faces
+
 def get_face(geometry):
     list_faces =[]
     faces = import_def.LibARC_Geometry.GetFaces(geometry)
@@ -79,3 +80,6 @@ def get_center_plane_of_wall (wall):
     normal_vector = vector1.CrossProduct(vector2).Normalize()
     plane = DB.Plane.CreateByNormalAndOrigin(normal_vector, mid_point)
     return plane 
+
+
+    

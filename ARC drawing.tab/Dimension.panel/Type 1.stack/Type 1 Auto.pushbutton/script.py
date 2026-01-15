@@ -70,7 +70,7 @@ try:
 
             diem_trung_binh = movetextdim.get_average_point(all_segment_position)
 
-            return_point = module.move_point_along_vector(diem_trung_binh, vector_da_chuan_hoa, 0.1)
+            return_point = module.move_point_along_vector(diem_trung_binh, vector_da_chuan_hoa, 0.01)
 
             # new_line = Line.CreateBound(return_point,new_point)
             # detail_line = doc.Create.NewDetailCurve(current_view,new_line)

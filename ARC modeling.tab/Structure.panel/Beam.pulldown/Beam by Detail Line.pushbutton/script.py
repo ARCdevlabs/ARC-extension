@@ -23,8 +23,6 @@ if nances.AutodeskData():
                 else:
                     list_ngang.append(line)
             except:
-                # import traceback
-                # print(traceback.format_exc())
                 pass
         return list_doc, list_ngang
 

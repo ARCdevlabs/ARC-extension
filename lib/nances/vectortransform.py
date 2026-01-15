@@ -6,9 +6,7 @@ import importdll
 import_class = importdll.ImportDLL()
 import_def = import_class.get_dll()
 
-# def move_point_along_vector(point, vector, distance):
-#     new_point = point + vector.Normalize() * distance
-#     return new_point
+
 def move_point_along_vector(point, vector, distance):
     new_point = import_def.LibARC_VectorMath.MovePointAlongVector(point, vector, distance)
     return new_point
@@ -254,8 +252,8 @@ def create_plane_follow_line (line):
     plane = DB.Plane.CreateByNormalAndOrigin(normal_vector, mid_point)
     return plane
 
-def create_plane_from_point_and_normal(point, normal):
-    plane = Autodesk.Revit.DB.Plane(normal, point)
+def create_plane_from_point_and_normal(point, normal): #Đây là mặt phẳng của Autodesk
+    plane = DB.Plane.CreateByNormalAndOrigin(normal, point)
     return plane
 
 
@@ -379,3 +377,42 @@ def transform_line(transform, line):
 def distance_point_to_plane(point, plane):
     distance = plane.Normal.DotProduct(point - plane.Origin)
     return distance
+
+def co_phai_phuong_ngang_tuyet_doi(line,view):
+    right = view.RightDirection.Normalize()
+    up = view.UpDirection.Normalize()
+
+    dir_line = line.Direction.Normalize()
+
+    # độ song song
+    dot_right = abs(dir_line.DotProduct(right))
+    dot_up = abs(dir_line.DotProduct(up))
+
+    TOL = 0.99  # ngưỡng song song
+
+    if dot_right > TOL:
+        result = True
+    elif dot_up > TOL:
+        result = False
+    else:
+        result = "không ngang / dọc rõ ràng"
+    return result
+
+def co_phai_phuong_ngang_dai_khai(line, view): #tính là phương ngang nếu góc từ -45~45 và từ 135~225
+    right = view.RightDirection.Normalize()
+    up = view.UpDirection.Normalize()
+
+    dir_line = line.Direction.Normalize()
+
+    # tọa độ của vector line trong hệ view
+    x = dir_line.DotProduct(right)
+    y = dir_line.DotProduct(up)
+
+    # góc có hướng (độ), range: (-180, 180]
+    angle = math.degrees(math.atan2(y, x))
+
+    # phương ngang nếu trong các khoảng này
+    if (-45.0 <= angle <= 45.0) or (angle >= 135.0 or angle <= -135.0):
+        return True
+    else:
+        return False
