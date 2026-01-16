@@ -92,6 +92,26 @@ def chuan_hoa_vector(vector, view): #vector tu trai qua phai, tu duoi len tren
     else:
         return -vector
     
+def chuan_hoa_vector_kieu_nguoc (vector, view): #vector tu trai qua phai, tu tren xuong duoi
+    # view_direction = view.ViewDirection
+    view_updirection = view.UpDirection
+    view_rightdirection = view.RightDirection
+
+    xac_dinh_goc_voi_vector_right = angle_between_vectors(vector, view_rightdirection)
+    xac_dinh_goc_voi_vector_up = angle_between_vectors(vector, view_updirection)
+    if xac_dinh_goc_voi_vector_right <= 45:
+        if xac_dinh_goc_voi_vector_up <= 135:
+            return vector
+        else: 
+            return -vector
+    elif xac_dinh_goc_voi_vector_right > 45 and xac_dinh_goc_voi_vector_right < 135:
+        if xac_dinh_goc_voi_vector_up <= 45:
+            return -vector
+        else:
+            return vector
+    else:
+        return -vector    
+    
 '''Cách chuẩn hóa vector mặt bằng, mặt cắt hơi nông dân, hãy dùng hàm 
 chuan_hoa_vector(vector, view)'''
 

@@ -257,7 +257,6 @@ if module.AutodeskData():
                 ref_face_min = result.ref_face_min
                 ref_face_max = result.ref_face_max
                 max_value = result.max_value
-                print max_value
                 detail_line = get_rotate_90_location_wall (wall)
                 line = detail_line.Location.Curve
                 clone_curve = line.Clone()

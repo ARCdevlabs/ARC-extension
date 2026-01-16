@@ -266,6 +266,8 @@ if nances.AutodeskData():
 
         flat_location_line_direction = flat_location_line.Direction
 
+        chuan_hoa_vector_kieu_nguoc = vectortransform.chuan_hoa_vector_kieu_nguoc(flat_location_line_direction,current_view)
+
         line_combo_2 = get_rotate_90_location_line(location_line,current_view)
         
         #Thông thường parameter "Dimension Line Snap Distance" có giá trị là 5mm
@@ -273,9 +275,9 @@ if nances.AutodeskData():
 
         snap_dim_feet = snap_dim_mm  / 304.8  #tính bằng feet
 
-        line_combo_1 = move_line_theo_vector_theo_ty_le_view(flat_location_line_direction, line_combo_2, snap_dim_feet, current_view)
+        line_combo_1 = move_line_theo_vector_theo_ty_le_view(chuan_hoa_vector_kieu_nguoc, line_combo_2, snap_dim_feet, current_view)
 
-        line_combo_3 = move_line_theo_vector_theo_ty_le_view(-flat_location_line_direction, line_combo_2, snap_dim_feet, current_view)
+        line_combo_3 = move_line_theo_vector_theo_ty_le_view(-chuan_hoa_vector_kieu_nguoc, line_combo_2, snap_dim_feet, current_view)
 
         for grid in all_grid:
             list_grid_ref = []

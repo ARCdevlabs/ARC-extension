@@ -2,13 +2,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-        mc:Ignorable="d" Height="600" Width="970"
+        mc:Ignorable="d" Height="696" Width="1002"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Background="#FFEDEDED"
 	    Foreground="#FF0F0202"
         >
-    <Grid x:Name="stackpanel" Margin="10">
+    <Grid x:Name="stackpanel" Margin="10,10,0,16">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="339*"/>
             <ColumnDefinition Width="299*"/>
@@ -18,23 +18,25 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Column="0"
-                        Margin="10,10,10,10"
+                        Margin="10,10,10,-55"
                         >
             <GroupBox 
                         Header="Guide"
                         Background="WhiteSmoke"
-                        Height="530" BorderBrush="Black"
+                        Height="620" BorderBrush="Black"
                         >
                 <StackPanel x:Name="GroupBoxContent" 
                         Orientation="Vertical">
-                    <Label Content="Default Family of Insulation: Please load family before use this addin" />
-                    <TextBlock Text="    - Beam: gIns_Frame-ver4.0" />
-                    <TextBlock Text="    - Column: gIns_Column-ver4.0" />
-                    <Label Content="H Shape                       ロ Shape" Width="182" FontWeight="Bold" />
-                    <Image Source="/Input Insulation;component/Resource/ImageShape.png" 
-                   Width="361" 
-                   Height="200" 
-                   Stretch="Uniform" />
+                    <Label Content="Setting Reference Name, Fukashi Parameter of Beam." />
+                    <Image x:Name="guide_image_1"
+                           Width="405" 
+                           Height="359" 
+                           Stretch="Uniform" />
+                    <Label Content="Setting the dimension in need." />
+                    <Image x:Name="guide_image_2"
+                           Width="405" 
+                           Height="169" 
+                           Stretch="Uniform" />
                 </StackPanel>
             </GroupBox>
         </StackPanel>
@@ -43,6 +45,106 @@
                     Orientation="Vertical"
                     Grid.Column="1"
                     >
+            <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Top" 
+                    HorizontalAlignment ="Stretch"
+                    >
+                <Grid  Margin="1" Width="430">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Label 
+                        Grid.Column="0" 
+						HorizontalAlignment="Left"
+						Content="Select Family "
+						Foreground="#FF0A0000"
+						Height="25"
+						VerticalAlignment="Center"
+						Margin="1,0,0,0" Grid.ColumnSpan="2" FontWeight="Bold" Width="87" />
+
+                    <Grid Grid.Column="2">
+                        <ComboBox        
+                        x:Name="combo_box_select_family"    
+                        SelectionChanged="combo_box_select_family_changed"
+				        Width="260"
+				        Height="25"
+				        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Foreground="Black" 
+                        Background="White" 
+                        Focusable="True"   
+                        />
+                    </Grid>
+                </Grid>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Top" 
+                    HorizontalAlignment ="Stretch"
+                    >
+                <Grid  Margin="1" Width="430">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+
+                    <Grid Grid.Column="1">
+                        <CheckBox       
+                        x:Name="check_box_combo_3"
+                        
+                        VerticalAlignment="Center"
+                        Margin="10,10,10,10"
+                        />
+                        <Label 
+                            Grid.Column="1" 
+						    HorizontalAlignment="Left"
+						    Content="Dim 3"
+						    Foreground="#FF0A0000"
+						    VerticalAlignment="Center"
+						    Margin="25,10,10,10" Width="87" />
+                    </Grid>
+
+                    <Grid Grid.Column="2">
+                        <CheckBox       
+                        x:Name="check_box_combo_2"
+                        
+                        VerticalAlignment="Center"
+                        Margin="10,10,10,10"
+                        />
+                        <Label 
+                            Grid.Column="2" 
+						    HorizontalAlignment="Left"
+						    Content="Dim 2"
+						    Foreground="#FF0A0000"
+						    VerticalAlignment="Center"
+						    Margin="25,10,10,10" Width="87" />
+                    </Grid>
+
+                    <Grid Grid.Column="3">
+                        <CheckBox       
+                        x:Name="check_box_combo_1"
+                         
+                        VerticalAlignment="Center"
+                        Margin="10,10,10,10"
+                        />
+                        <Label 
+                            Grid.Column="1" 
+						    HorizontalAlignment="Left"
+						    Content="Dim 1"
+						    Foreground="#FF0A0000"
+						    VerticalAlignment="Center"
+						    Margin="25,10,10,10" Width="87" />
+                    </Grid>
+
+                </Grid>
+            </StackPanel>
+
             <StackPanel Orientation="Horizontal"
                     VerticalAlignment="Top" 
                     HorizontalAlignment ="Stretch"
@@ -70,8 +172,9 @@
                     >
                 <Grid  Margin="1" Width="430">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*"/>
-                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="64*"/>
+                        <ColumnDefinition Width="151*"/>
+                        <ColumnDefinition Width="215*"/>
                     </Grid.ColumnDefinitions>
                     <Label 
                         Grid.Column="0" 
@@ -80,9 +183,9 @@
 						Foreground="#FF0A0000"
 						Height="25"
 						VerticalAlignment="Center"
-						Margin="1,1,1,1" />
+						Margin="1,0,0,0" Grid.ColumnSpan="2" />
 
-                    <Grid Grid.Column="1">
+                    <Grid Grid.Column="2">
                         <TextBox   
                         Grid.Column="1"     
                         x:Name="top_reference_name"    
@@ -543,12 +646,12 @@
 
 
             <Button x:Name="save_setting"
-                    Margin="10,10,20,10"
-                    Content= "Save"
+                    Margin="10,10,36,30"
+                    Content= "Save Setting"
                     HorizontalAlignment="Right"
                     Height="40" 
-                    Width="181"
-                    Click="save_setting_click"/>
+                    Width="180"
+                    Click="save_setting_click"  FontWeight="Bold"/>
         </StackPanel>
     </Grid>
 </Window>
