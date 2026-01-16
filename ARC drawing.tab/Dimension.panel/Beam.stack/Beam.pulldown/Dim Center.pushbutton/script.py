@@ -219,7 +219,7 @@ def check_hidden(element, view):
 
 logger = script.get_logger()
 my_config = script.get_config()
-source_setting_family_beam = setup_family_beam_config.load_configs()
+source_setting_family_beam = setup_family_beam_config.load_configs_setup_family()
 
 
 if nances.AutodeskData():
