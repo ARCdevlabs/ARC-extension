@@ -92,7 +92,7 @@ def chuan_hoa_vector(vector, view): #vector tu trai qua phai, tu duoi len tren
     else:
         return -vector
     
-def chuan_hoa_vector_kieu_nguoc (vector, view): #vector tu trai qua phai, tu tren xuong duoi
+def chuan_hoa_vector_tu_trai_qua_phai_duoi_len_tren (vector, view): #vector tu trai qua phai, tu tren xuong duoi
     # view_direction = view.ViewDirection
     view_updirection = view.UpDirection
     view_rightdirection = view.RightDirection
@@ -263,6 +263,21 @@ def create_plane_follow_line (line):
     end_point = line.GetEndPoint(1)
     mid_point = line.Evaluate(0.5, True)
     offset_mid_point = DB.XYZ(start_point.X, start_point.Y, mid_point.Z +10000)
+    point1 = start_point
+    point2 = end_point
+    point3 =offset_mid_point
+    vector1 = point2 - point1
+    vector2 = point3 - point1
+    normal_vector = vector1.CrossProduct(vector2).Normalize()
+    plane = DB.Plane.CreateByNormalAndOrigin(normal_vector, mid_point)
+    return plane
+
+def create_plane_follow_line_in_view (line,view):
+    start_point = line.GetEndPoint(0)
+    end_point = line.GetEndPoint(1)
+    mid_point = line.Evaluate(0.5, True)
+    view_direction = view.ViewDirection
+    offset_mid_point = move_point_along_vector(mid_point,view_direction,1)
     point1 = start_point
     point2 = end_point
     point3 =offset_mid_point
