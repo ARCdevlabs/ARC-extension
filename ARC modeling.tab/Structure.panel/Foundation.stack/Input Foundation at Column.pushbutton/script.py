@@ -6,6 +6,10 @@ import importlib
 ARC = string.ascii_lowercase
 begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
 module = importlib.import_module(str(begin))
+import nances
+from nances import vectortransform
+import Autodesk.Revit.DB as DB
+import math
 try:
     import Autodesk
     from Autodesk.Revit.DB import *
@@ -19,23 +23,55 @@ try:
         family_instance = doc.Create.NewFamilyInstance(point,type,level,structural_type)
         return family_instance
     Ele = module.get_elements(uidoc,doc, "Select Column", noti = False)
+    trans_group = TransactionGroup(doc, 'Input Foundations at Columns')
+    trans_group.Start()
     if Ele:
-        t = Transaction (doc, "Đặt móng tại vị trí cột")
-        t.Start()
-        message = "Bây giờ hãy pick 1 móng đã vẽ sẵn, tool sẽ giúp copy ra các chân cột.\n \n既に入力された基礎を1つ選び、ツールがそれをコピーして柱脚に配置します。"
-        module.message_box(message)
-        pick = uidoc.Selection.PickObject(ObjectType.Element)
-        sample = doc.GetElement(pick.ElementId)
-        sample_offset = module.get_builtin_parameter_by_name(sample, DB.BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM)
-        sample_type = sample.Symbol
-        sample_level = doc.GetElement(sample.LevelId)
-        sample_location = sample.Location.Point
-        for i in Ele:
-            loca = i.Location.Point
-            translate = XYZ(-sample_location.X + loca.X,-sample_location.Y + loca.Y,-sample_location.Z + loca.Z)
-            copy_element = Autodesk.Revit.DB.ElementTransformUtils.CopyElement(doc, pick.ElementId, translate)
-            copy_element_offset = module.get_builtin_parameter_by_name(doc.GetElement(copy_element[0]), DB.BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM)
-            copy_element_offset.Set(sample_offset.AsDouble())
-        t.Commit()
+        try:
+            t = Transaction (doc, "Đặt móng tại vị trí cột")
+            t.Start()
+            message = "Bây giờ hãy pick 1 móng đã vẽ sẵn, tool sẽ giúp copy ra các chân cột.\n \n既に入力された基礎を1つ選び、ツールがそれをコピーして柱脚に配置します。"
+            module.message_box(message)
+            pick = uidoc.Selection.PickObject(ObjectType.Element)
+            sample = doc.GetElement(pick.ElementId)
+            sample_offset = module.get_builtin_parameter_by_name(sample, DB.BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM)
+            sample_type = sample.Symbol
+            sample_level = doc.GetElement(sample.LevelId)
+            sample_location = sample.Location.Point
+            for tung_cot in Ele:
+                loca_cot = tung_cot.Location.Point
+
+                rotate_cot = tung_cot.Location.Rotation
+
+                facing_orientation_cot = tung_cot.FacingOrientation
+
+                translate = XYZ(-sample_location.X + loca_cot.X,-sample_location.Y + loca_cot.Y,-sample_location.Z + loca_cot.Z)
+
+                copy_element = DB.ElementTransformUtils.CopyElement(doc, pick.ElementId, translate)
+
+                copy_element_offset = module.get_builtin_parameter_by_name(doc.GetElement(copy_element[0]), DB.BuiltInParameter.INSTANCE_FREE_HOST_OFFSET_PARAM)
+
+                copy_element_offset.Set(sample_offset.AsDouble())
+
+                mong_moi = doc.GetElement(copy_element[0])
+
+                facing_mong = mong_moi.FacingOrientation
+
+                loca_mong = mong_moi.Location.Point
+
+                rotate_mong = mong_moi.Location.Rotation
+
+                goc_lech = angle = rotate_cot - rotate_mong
+
+                locate_cot_offset_len = vectortransform.move_point_along_vector(loca_cot, DB.XYZ(0,0,1),1)
+                
+                line_z = DB.Line.CreateBound(loca_cot, locate_cot_offset_len)
+
+                rotate_mong = DB.ElementTransformUtils.RotateElement(doc,mong_moi.Id,line_z, goc_lech)  
+
+            t.Commit()
+        except:
+            t.RollBack()
+            pass
+    trans_group.Assimilate()
 except:
     pass
