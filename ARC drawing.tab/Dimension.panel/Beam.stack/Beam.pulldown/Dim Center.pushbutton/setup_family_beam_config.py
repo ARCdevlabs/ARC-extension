@@ -17,7 +17,16 @@ logger = script.get_logger()
 my_config = script.get_config("configs_setup_family_beam")
 
 from System import Uri, UriKind
+
 from System.Windows.Media.Imaging import BitmapImage
+
+
+image_path_guide_0 = script.get_bundle_file("guide_0.png")
+bitmap_guide_0 = BitmapImage()
+bitmap_guide_0.BeginInit()
+bitmap_guide_0.UriSource = Uri(image_path_guide_0, UriKind.Absolute)
+bitmap_guide_0.EndInit()
+
 
 image_path_guide_1 = script.get_bundle_file("guide_1.png")
 bitmap_guide_1 = BitmapImage()
@@ -25,81 +34,142 @@ bitmap_guide_1.BeginInit()
 bitmap_guide_1.UriSource = Uri(image_path_guide_1, UriKind.Absolute)
 bitmap_guide_1.EndInit()
 
-
 image_path_guide_2 = script.get_bundle_file("guide_2.png")
 bitmap_guide_2 = BitmapImage()
 bitmap_guide_2.BeginInit()
 bitmap_guide_2.UriSource = Uri(image_path_guide_2, UriKind.Absolute)
 bitmap_guide_2.EndInit()
 
+# image_path_guide_3 = script.get_bundle_file("guide_3_new.png")
+# bitmap_guide_3 = BitmapImage()
+# bitmap_guide_3.BeginInit()
+# bitmap_guide_3.UriSource = Uri(image_path_guide_3, UriKind.Absolute)
+# bitmap_guide_3.EndInit()
 
 default_settup_family = ["中心立面図","6","3","4","8","下側","左側","右側","上端ふかし","下端ふかし","左ふかし","右ふかし"]
-default_settup_dim_in_need = [bool(True),bool(True),bool(True)]
+
+default_settup_dim_in_need_in_plan_view = [bool(True),bool(True),bool(True)]
+
+default_settup_dim_in_need_in_section_view = [bool(True),bool(True),bool(True),bool(True),bool(True)]
+
+default_settup_type_dim_in_section_view = [bool(True),bool(False)]
 
 def load_configs_setup_family():
     setup_beam = my_config.get_option("setup_family_beam", [])
     get_setup_beam = [(x) for x in (setup_beam or default_settup_family)]
     return filter(None, get_setup_beam)
 
-def load_configs_setup_dim_in_need():
-    setup_dim = my_config.get_option("setup_dim_in_need", [])
-    get_setup_dim = [(x) for x in (setup_dim or default_settup_dim_in_need)]
-    return get_setup_dim
-
 def save_configs_setup_family(content):
     my_config.setup_family_beam = content
     script.save_config()
 
-def save_configs_setup_dim_in_need(content):
-    my_config.setup_dim_in_need = content
+def load_configs_setup_dim_in_need_in_plan_view():
+    setup_dim_in_plan = my_config.get_option("setup_dim_in_need_in_plan_view", [])
+    get_setup_dim_in_plan = [(x) for x in (setup_dim_in_plan or default_settup_dim_in_need_in_plan_view)]
+    return get_setup_dim_in_plan
+
+
+def save_configs_setup_dim_in_need_in_plan_view(content):
+    my_config.setup_dim_in_need_in_plan_view = content
     script.save_config()
 
+def load_configs_setup_dim_in_need_in_section_view():
+    setup_dim_in_section = my_config.get_option("setup_dim_in_need_in_section_view", [])
+    get_setup_dim_in_section = [(x) for x in (setup_dim_in_section or default_settup_dim_in_need_in_section_view)]
+    return get_setup_dim_in_section
 
+def save_configs_setup_dim_in_need_in_section_view(content):
+    my_config.setup_dim_in_need_in_section_view = content
+    script.save_config()
+
+def load_configs_setup_type_dim_in_section_view():
+    setup_type_dim_in_section = my_config.get_option("setup_type_dim_in_section_view", [])
+    get_setup_type_dim_in_section = [(x) for x in (setup_type_dim_in_section or default_settup_type_dim_in_section_view)]
+    return get_setup_type_dim_in_section
+
+def save_configs_get_setup_type_dim_in_section(content):
+    my_config.setup_type_dim_in_section_view = content
+    script.save_config()
 
 xamlfile = script.get_bundle_file('WPF_setup_family_beam_for_dim.xaml')
+
 class MyWindow(Windows.Window):
     def __init__(self):
         wpf.LoadComponent(self, xamlfile)
 
         self.guide_image_1.Source = bitmap_guide_1
         self.guide_image_2.Source = bitmap_guide_2
+        self.guide_image_0.Source = bitmap_guide_0
 
         self.MK_梁_RC = ["中心立面図","6","3","4","8","下側","左側","右側","上端ふかし","下端ふかし","左ふかし","右ふかし"]
         self.MK_S_構フ_RC_梁 = ["中心立面図","中央_梁せい","中央_梁幅_1","中央_梁幅_2","上部_ふかし厚さ","下部_中央_ふかし_厚さ","左部_ふかし_厚さ_中央","右部_ふかし_厚さ_中央","Srb011_上部_ふかし厚さ","Srb012_下部_ふかし厚さ","Srb013_側1_ふかし厚さ","Srb014_側2_ふかし厚さ"]
+        self.custom_family = ["Top","Bot","Left","Right","Top fukashi","Bot fukashi","Left fukashi","Right fukashi","上端ふかし","下端ふかし","左ふかし","右ふかし"]
         self.list_other = [""] * 12 #Tạo ra list có 12 đối tượng trống.
 
         values =[
                     "Last setting",
                     "MK_梁〈RC〉",
-                    "MK_S_構フ_RC_梁",
+                    "Custom Family",
                     "Other"
                 ]
         self.combo_box_select_family.ItemsSource = values
         self.combo_box_select_family.SelectedIndex = 0
 
-        load_setting_dim = load_configs_setup_dim_in_need()
-        self.apply_load_setting_dim_in_need(load_setting_dim)
+        load_setting_dim_in_plan_view = load_configs_setup_dim_in_need_in_plan_view()
+
+        load_setting_dim_in_section_view = load_configs_setup_dim_in_need_in_section_view()
+
+        load_setting_type_dim_in_section_view = load_configs_setup_type_dim_in_section_view()
+
+        self.apply_load_setting_dim_in_need_in_plan_view(load_setting_dim_in_plan_view)
+
+        self.apply_load_setting_dim_in_need_in_section_view(load_setting_dim_in_section_view)
+
+        self.apply_load_setting_type_dim_in_section_view(load_setting_type_dim_in_section_view)   
 
     def combo_box_select_family_changed(self, sender, args): 
         #Điều này có nghĩa là bất cứ khi nào combox bị đổi giá trị thì 
         #dòng cuối [self.apply_load_setting(load_setting)] sẽ load lại 1 lần, và từ đó gán lại giá trị cho các text box.
         selected = self.combo_box_select_family.SelectedItem
 
-        if selected == "MK_S_構フ_RC_梁":
-            load_setting = self.MK_S_構フ_RC_梁
+        # if selected == "MK_S_構フ_RC_梁":
+        #     load_setting = self.MK_S_構フ_RC_梁
 
-        elif selected == "MK_梁〈RC〉":
+        if selected == "MK_梁〈RC〉":
             load_setting = self.MK_梁_RC
 
         elif selected == "Last setting":
             load_setting = load_configs_setup_family()
+
+        elif selected == "Custom Family":
+            load_setting = self.custom_family
 
         elif selected == "Other":
             load_setting = self.list_other
        
         self.apply_load_setting(load_setting)
 
-        
+    def radio_button_type_1_changed(self, sender, args):
+        if self.radio_button_type_1.IsChecked:
+            # self.combo_box_select_family.IsEnabled = True
+            self.set_guide_image("guide_3_type_1.png")
+            # print "type 1"
+
+    def radio_button_type_2_changed(self, sender, args):
+        if self.radio_button_type_2.IsChecked:
+            # self.combo_box_select_family.IsEnabled = True
+            self.set_guide_image("guide_3_type_2.png")
+            # print "type 2"
+
+    def set_guide_image(self, image_name):
+        image_path = script.get_bundle_file(image_name)
+
+        bitmap = BitmapImage()
+        bitmap.BeginInit()
+        bitmap.UriSource = Uri(image_path, UriKind.Absolute)
+        bitmap.EndInit()
+
+        self.guide_image_3.Source = bitmap
 
     def apply_load_setting(self, load_setting):
         self.setup_top_ref_name = load_setting[0] #Dòng này sẽ gán vào giá trị value ở hàm  @setup_top_ref_name.setter
@@ -116,10 +186,21 @@ class MyWindow(Windows.Window):
         self.setup_left_fukashi_parameter_name = load_setting[10]
         self.setup_right_fukashi_parameter_name = load_setting[11]
 
-    def apply_load_setting_dim_in_need(self, load_setting_dim):
-        self.setup_dim_3 = load_setting_dim[0]
-        self.setup_dim_2 = load_setting_dim[1]
-        self.setup_dim_1 = load_setting_dim[2]
+    def apply_load_setting_dim_in_need_in_plan_view(self, load_setting_dim_in_plan_view):
+        self.setup_dim_3 = load_setting_dim_in_plan_view[0]
+        self.setup_dim_2 = load_setting_dim_in_plan_view[1]
+        self.setup_dim_1 = load_setting_dim_in_plan_view[2]
+
+    def apply_load_setting_dim_in_need_in_section_view(self, load_setting_dim_in_section_dim):
+        self.setup_dim_A = load_setting_dim_in_section_dim[0]
+        self.setup_dim_B = load_setting_dim_in_section_dim[1]
+        self.setup_dim_C = load_setting_dim_in_section_dim[2]
+        self.setup_dim_D = load_setting_dim_in_section_dim[3]
+        self.setup_dim_E = load_setting_dim_in_section_dim[4]
+
+    def apply_load_setting_type_dim_in_section_view(self, load_setting_type_dim_in_section):
+        self.setup_type_dim_1 = load_setting_type_dim_in_section[0]
+        self.setup_type_dim_2 = load_setting_type_dim_in_section[1]
 
 
     @property
@@ -235,7 +316,7 @@ class MyWindow(Windows.Window):
         self.right_fukashi_parameter_name.Text = value
 
 
-    # Setup dim in need
+    # Setup dim in need_in_plan_view
     @property
     def setup_dim_3(self):
         return self.check_box_combo_3.IsChecked
@@ -257,6 +338,65 @@ class MyWindow(Windows.Window):
     @setup_dim_1.setter
     def setup_dim_1(self,value):
         self.check_box_combo_1.IsChecked =  bool(value)
+
+    # Setup dim in need_in_section_view
+    @property
+    def setup_dim_A(self):
+        return self.check_box_combo_A_section.IsChecked
+    
+    @setup_dim_A.setter
+    def setup_dim_A(self,value):
+        self.check_box_combo_A_section.IsChecked =  bool(value)
+
+    @property
+    def setup_dim_B(self):
+        return self.check_box_combo_B_section.IsChecked
+    
+    @setup_dim_B.setter
+    def setup_dim_B(self,value):
+        self.check_box_combo_B_section.IsChecked =  bool(value)
+
+    @property
+    def setup_dim_C(self):
+        return self.check_box_combo_C_section.IsChecked
+    
+    @setup_dim_C.setter
+    def setup_dim_C(self,value):
+        self.check_box_combo_C_section.IsChecked =  bool(value)
+
+    @property
+    def setup_dim_D(self):
+        return self.check_box_combo_D_section.IsChecked
+    
+    @setup_dim_D.setter
+    def setup_dim_D(self,value):
+        self.check_box_combo_D_section.IsChecked =  bool(value)
+
+    @property
+    def setup_dim_E(self):
+        return self.check_box_combo_E_section.IsChecked
+    
+    @setup_dim_E.setter
+    def setup_dim_E(self,value):
+        self.check_box_combo_E_section.IsChecked =  bool(value)
+
+    #Radio button
+    @property
+    def setup_type_dim_1(self):
+        return self.radio_button_type_1.IsChecked
+    
+    @setup_type_dim_1.setter
+    def setup_type_dim_1(self,value):
+        self.radio_button_type_1.IsChecked =  bool(value)
+
+    @property
+    def setup_type_dim_2(self):
+        return self.radio_button_type_2.IsChecked
+    
+    @setup_type_dim_2.setter
+    def setup_type_dim_2(self,value):
+        self.radio_button_type_2.IsChecked =  bool(value)
+
     
     def save_setting_click(self, sender, args): #save_setting_click là tên của biến button và hành động click trong file xaml
         top_reference_name = self.setup_top_ref_name #"top_reference_name" là tên biến của textbox trong xaml, "setup_top_ref_name" là tên của biến trong python
@@ -282,9 +422,31 @@ class MyWindow(Windows.Window):
         is_check_dim_3 = self.setup_dim_3
         is_check_dim_2 = self.setup_dim_2
         is_check_dim_1 = self.setup_dim_1
-        total_setting_dim_in_need = [is_check_dim_3,is_check_dim_2,is_check_dim_1]
+
+        total_setting_dim_in_need_in_plan_view = [is_check_dim_3,is_check_dim_2,is_check_dim_1]
+
+
+        is_check_dim_A = self.setup_dim_A
+        is_check_dim_B = self.setup_dim_B
+        is_check_dim_C = self.setup_dim_C
+        is_check_dim_D = self.setup_dim_D
+        is_check_dim_E = self.setup_dim_E
+
+        total_setting_dim_in_need_in_section_view = [is_check_dim_A,is_check_dim_B,is_check_dim_C,is_check_dim_D,is_check_dim_E]
+
+        is_check_dim_type_dim_1 = self.setup_type_dim_1
+        is_check_dim_type_dim_2 = self.setup_type_dim_2
+
+        total_setting_type_dim_in_section_view = [is_check_dim_type_dim_1,is_check_dim_type_dim_2]
+
         save_configs_setup_family(total_setting)
-        save_configs_setup_dim_in_need(total_setting_dim_in_need)
+
+        save_configs_setup_dim_in_need_in_plan_view(total_setting_dim_in_need_in_plan_view)
+
+        save_configs_setup_dim_in_need_in_section_view(total_setting_dim_in_need_in_section_view)
+
+        save_configs_get_setup_type_dim_in_section(total_setting_type_dim_in_section_view)
+        
         self.Close()
 
 if __name__ == "__main__": #Cần phải có hàm này bởi vì nếu không có thì khi lần đầu mở revit và mở tool lên, form xaml sẽ hiện lên dù không nhấn shift

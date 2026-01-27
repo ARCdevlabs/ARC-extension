@@ -2,54 +2,76 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-        mc:Ignorable="d" Height="696" Width="1002"
+        mc:Ignorable="d" Height="888" Width="1238"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Background="#FFEDEDED"
 	    Foreground="#FF0F0202"
         >
-    <Grid x:Name="stackpanel" Margin="10,10,0,16">
+    <Grid x:Name="stackpanel" Margin="10,10,10,10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="339*"/>
-            <ColumnDefinition Width="299*"/>
+            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Column="0"
-                        Margin="10,10,10,-55"
+                        Margin="10,10,10,41"
                         >
             <GroupBox 
                         Header="Guide"
-                        Background="WhiteSmoke"
-                        Height="620" BorderBrush="Black"
+                        Background="White"
+                        Height="820" BorderBrush="Black"
                         >
                 <StackPanel x:Name="GroupBoxContent" 
-                        Orientation="Vertical">
-                    <Label Content="Setting Reference Name, Fukashi Parameter of Beam." />
-                    <Image x:Name="guide_image_1"
-                           Width="405" 
-                           Height="359" 
-                           Stretch="Uniform" />
+                        Orientation="Vertical" Height="781" Margin="0,0,14,0">
+                    <Label Content="Setting Reference Name, Fukashi Parameter of Beam.&#10;The parameter [Is a referenece] is not [Not a reference]" />
+                    <Grid  Margin="1"  Height="287">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="4*"/>
+                            <ColumnDefinition Width="6*"/>
+                        </Grid.ColumnDefinitions>
+                        <Image x:Name="guide_image_0"
+                           Stretch="Uniform"
+                           Grid.Column="0"/>
+                        <Image x:Name="guide_image_1"
+                           Width="351" 
+                           Height="287" 
+                           Stretch="Uniform"
+                               Grid.Column="1"/>
+                    </Grid>
                     <Label Content="Setting the dimension in need." />
-                    <Image x:Name="guide_image_2"
-                           Width="405" 
-                           Height="169" 
-                           Stretch="Uniform" />
+                    <Grid  Margin="1" Width="670" Height="421">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="5*"/>
+                        </Grid.ColumnDefinitions>
+                        <Image x:Name="guide_image_2"
+                               
+                           Margin="1,1,1,1"
+                           Grid.Column="0"
+                            />
+                        <Image x:Name="guide_image_3"
+                           Margin="0,1,0,1"
+                           Grid.Column="1"
+                           Width="404" 
+                           HorizontalAlignment ="Left"
+                           />
+                    </Grid>
                 </StackPanel>
             </GroupBox>
         </StackPanel>
 
-        <StackPanel Margin="0,20,10,10"
-                    Orientation="Vertical"
-                    Grid.Column="1"
+        <StackPanel Margin="721,20,10,41"
+                    Orientation="Vertical" Grid.ColumnSpan="2"
                     >
             <StackPanel Orientation="Horizontal"
                     VerticalAlignment="Top" 
                     HorizontalAlignment ="Stretch"
                     >
-                <Grid  Margin="1" Width="430">
+                <Grid  Margin="1" Width="505">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="50"/>
@@ -58,7 +80,7 @@
                     <Label 
                         Grid.Column="0" 
 						HorizontalAlignment="Left"
-						Content="Select Family "
+						Content="Select Family: "
 						Foreground="#FF0A0000"
 						Height="25"
 						VerticalAlignment="Center"
@@ -68,7 +90,7 @@
                         <ComboBox        
                         x:Name="combo_box_select_family"    
                         SelectionChanged="combo_box_select_family_changed"
-				        Width="260"
+				        Width="300"
 				        Height="25"
 				        VerticalAlignment="Center"
                         HorizontalAlignment="Center"
@@ -81,22 +103,34 @@
                 </Grid>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal"
+            <StackPanel 
+                    Margin="0,0,0,0"
+                    Orientation="Horizontal"
                     VerticalAlignment="Top" 
                     HorizontalAlignment ="Stretch"
                     >
-                <Grid  Margin="1" Width="430">
+                <Grid  Margin="0,5,5,5" Width="430">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+
                     </Grid.ColumnDefinitions>
+                    <Label 
+                        Grid.Column="0" 
+						HorizontalAlignment="Left"
+						Content="Plan view:"
+						Foreground="#FF0A0000"
+						Height="25"
+						VerticalAlignment="Center"
+						Margin="1,0,0,0" FontWeight="Bold" Width="85" />
 
 
                     <Grid Grid.Column="1">
                         <CheckBox       
-                        x:Name="check_box_combo_3"
+                        x:Name="check_box_combo_1"
                         
                         VerticalAlignment="Center"
                         Margin="10,10,10,10"
@@ -104,7 +138,7 @@
                         <Label 
                             Grid.Column="1" 
 						    HorizontalAlignment="Left"
-						    Content="Dim 3"
+						    Content="Dim 1"
 						    Foreground="#FF0A0000"
 						    VerticalAlignment="Center"
 						    Margin="25,10,10,10" Width="87" />
@@ -128,7 +162,7 @@
 
                     <Grid Grid.Column="3">
                         <CheckBox       
-                        x:Name="check_box_combo_1"
+                        x:Name="check_box_combo_3"
                          
                         VerticalAlignment="Center"
                         Margin="10,10,10,10"
@@ -136,10 +170,139 @@
                         <Label 
                             Grid.Column="1" 
 						    HorizontalAlignment="Left"
-						    Content="Dim 1"
+						    Content="Dim 3"
 						    Foreground="#FF0A0000"
 						    VerticalAlignment="Center"
 						    Margin="25,10,10,10" Width="87" />
+                    </Grid>
+
+                </Grid>
+            </StackPanel>
+            <StackPanel 
+                    Margin="0,0,0,0"
+                    Orientation="Horizontal" 
+                    HorizontalAlignment ="Stretch" Width="487"
+                    >
+                <Grid  Margin="0,5,5,5" Width="490">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label 
+                        Grid.Column="0" 
+						HorizontalAlignment="Left"
+						Content="Section view:"
+						Foreground="#FF0A0000"
+						Height="25"
+						VerticalAlignment="Center"
+						Margin="1,0,0,0" FontWeight="Bold" Width="97" />
+                    <RadioButton x:Name="radio_button_type_1"
+                                 Content="Type 1"                                
+                                 VerticalAlignment="Center"
+                                 Grid.Column="1"
+                                 Checked="radio_button_type_1_changed"
+                                 />
+                    <RadioButton x:Name="radio_button_type_2"
+                                 Content="Type 2"                                
+                                 VerticalAlignment="Center"
+                                 Grid.Column="2" 
+                                 Checked="radio_button_type_2_changed"/>
+                </Grid>
+            </StackPanel>
+            <StackPanel 
+                    Margin="0,0,0,0"
+                    Orientation="Horizontal" 
+                    HorizontalAlignment ="Stretch" Width="487"
+                    >
+                <Grid  Margin="0,5,5,5" Width="490">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label 
+                        Grid.Column="0" 
+						HorizontalAlignment="Left"
+						Content="Section view:"
+						Foreground="#FF0A0000"
+						Height="25"
+						VerticalAlignment="Center"
+						Margin="1,0,0,0" FontWeight="Bold" Width="97" />
+                    <Grid Grid.Column="1">
+                        <CheckBox       
+                        x:Name="check_box_combo_A_section"
+                        
+                        VerticalAlignment="Center"
+                        Margin="10,10,10,10"
+                        />
+                        <Label 
+						    HorizontalAlignment="Left"
+						    Content="Dim A"
+						    Foreground="#FF0A0000"
+						    VerticalAlignment="Center"
+						    Margin="25,0,0,0" Width="58" />
+                    </Grid>
+
+                    <Grid Grid.Column="2">
+                        <CheckBox       
+                        x:Name="check_box_combo_B_section"
+                        
+                        VerticalAlignment="Center"
+                        Margin="10,10,10,10"
+                        />
+                        <Label 
+						    HorizontalAlignment="Left"
+						    Content="Dim B"
+						    Foreground="#FF0A0000"
+						    VerticalAlignment="Center"
+						    Margin="25,0,0,0" Width="58" />
+                    </Grid>
+
+                    <Grid Grid.Column="3">
+                        <CheckBox       
+                        x:Name="check_box_combo_C_section"
+                         
+                        VerticalAlignment="Center"
+                        Margin="10,10,10,10"
+                        />
+                        <Label 
+						    HorizontalAlignment="Left"
+						    Content="Dim C"
+						    Foreground="#FF0A0000"
+						    VerticalAlignment="Center"
+						    Margin="25,0,0,0" Width="58" />
+                    </Grid>
+                    <Grid Grid.Column="4">
+                        <CheckBox       
+                        x:Name="check_box_combo_D_section"
+                         
+                        VerticalAlignment="Center"
+                        Margin="10,10,10,10"
+                        />
+                        <Label 
+						    HorizontalAlignment="Left"
+						    Content="Dim D"
+						    Foreground="#FF0A0000"
+						    VerticalAlignment="Center"
+						    Margin="25,0,0,0" Width="58" />
+                    </Grid>
+                    <Grid Grid.Column="5">
+                        <CheckBox       
+                        x:Name="check_box_combo_E_section"
+                         
+                        VerticalAlignment="Center"
+                        Margin="10,10,10,10"
+                        />
+                        <Label 
+						    HorizontalAlignment="Left"
+						    Content="Dim E"
+						    Foreground="#FF0A0000"
+						    VerticalAlignment="Center"
+						    Margin="25,0,0,0" Width="58" />
                     </Grid>
 
                 </Grid>
@@ -170,11 +333,10 @@
                     VerticalAlignment="Top" 
                     HorizontalAlignment ="Stretch"
                     >
-                <Grid  Margin="1" Width="430">
+                <Grid  Margin="1" Width="505">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="64*"/>
-                        <ColumnDefinition Width="151*"/>
-                        <ColumnDefinition Width="215*"/>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <Label 
                         Grid.Column="0" 
@@ -185,14 +347,13 @@
 						VerticalAlignment="Center"
 						Margin="1,0,0,0" Grid.ColumnSpan="2" />
 
-                    <Grid Grid.Column="2">
-                        <TextBox   
-                        Grid.Column="1"     
+                    <Grid Grid.Column="1">
+                        <TextBox     
                         x:Name="top_reference_name"    
-				        Width="180"
+				        Width="240"
 				        Height="25"
 				        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
+                        HorizontalAlignment="Left"
                         TextAlignment="Center"
                         VerticalContentAlignment="Center"
                         Foreground="Black" 
@@ -209,9 +370,10 @@
                     VerticalAlignment="Top" 
                     HorizontalAlignment ="Stretch"
                     >
-                <Grid  Margin="1" Width="430">
+                <Grid  Margin="1" Width="505
+">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <Label 
@@ -225,12 +387,13 @@
 
                     <Grid Grid.Column="1">
                         <TextBox   
-                        Grid.Column="1"     
+                        Grid.Column="1" 
+                            
                         x:Name="bottom_reference_name"    
-				        Width="180"
+				        Width="240"
 				        Height="25"
 				        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
+                        HorizontalAlignment="Left"
                         TextAlignment="Center"
                         VerticalContentAlignment="Center"
                         Foreground="Black" 
@@ -246,9 +409,9 @@
                     VerticalAlignment="Top" 
                     HorizontalAlignment ="Stretch"
                     >
-                <Grid  Margin="1" Width="430">
+                <Grid  Margin="1" Width="505">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <Label 
@@ -264,10 +427,10 @@
                         <TextBox   
                         Grid.Column="1"     
                         x:Name="left_reference_name"    
-				        Width="180"
+				        Width="240"
 				        Height="25"
 				        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
+                        HorizontalAlignment="Left"
                         TextAlignment="Center"
                         VerticalContentAlignment="Center"
                         Foreground="Black" 
@@ -284,9 +447,9 @@
                     VerticalAlignment="Top" 
                     HorizontalAlignment ="Stretch"
                     >
-                <Grid  Margin="1" Width="430">
+                <Grid  Margin="1" Width="505">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <Label 
@@ -302,10 +465,10 @@
                         <TextBox   
                         Grid.Column="1"     
                         x:Name="right_reference_name"    
-				        Width="180"
+				        Width="240"
 				        Height="25"
 				        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
+                        HorizontalAlignment="Left"
                         TextAlignment="Center"
                         VerticalContentAlignment="Center"
                         Foreground="Black" 
@@ -322,9 +485,9 @@
                     VerticalAlignment="Top" 
                     HorizontalAlignment ="Stretch"
                     >
-                <Grid  Margin="1" Width="430">
+                <Grid  Margin="1" Width="505">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <Label 
@@ -340,10 +503,10 @@
                         <TextBox   
                         Grid.Column="1"     
                         x:Name="top_fukashi_reference_name"    
-				        Width="180"
+				        Width="240"
 				        Height="25"
 				        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
+                        HorizontalAlignment="Left"
                         TextAlignment="Center"
                         VerticalContentAlignment="Center"
                         Foreground="Black" 
@@ -359,9 +522,9 @@
                     VerticalAlignment="Top" 
                     HorizontalAlignment ="Stretch"
                     >
-                <Grid  Margin="1" Width="430">
+                <Grid  Margin="1" Width="505">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <Label 
@@ -377,10 +540,10 @@
                         <TextBox   
                         Grid.Column="1"     
                         x:Name="bottom_fukashi_reference_name"    
-				        Width="180"
+				        Width="240"
 				        Height="25"
 				        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
+                        HorizontalAlignment="Left"
                         TextAlignment="Center"
                         VerticalContentAlignment="Center"
                         Foreground="Black" 
@@ -397,9 +560,9 @@
                     VerticalAlignment="Top" 
                     HorizontalAlignment ="Stretch"
                     >
-                <Grid  Margin="1" Width="430">
+                <Grid  Margin="1" Width="505">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <Label 
@@ -415,10 +578,10 @@
                         <TextBox   
                         Grid.Column="1"     
                         x:Name="left_fukashi_reference_name"    
-				        Width="180"
+				        Width="240"
 				        Height="25"
 				        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
+                        HorizontalAlignment="Left"
                         TextAlignment="Center"
                         VerticalContentAlignment="Center"
                         Foreground="Black" 
@@ -435,9 +598,9 @@
                     VerticalAlignment="Top" 
                     HorizontalAlignment ="Stretch"
                     >
-                <Grid  Margin="1" Width="430">
+                <Grid  Margin="1" Width="505">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <Label 
@@ -453,10 +616,10 @@
                         <TextBox   
                         Grid.Column="1"     
                         x:Name="right_fukashi_reference_name"    
-				        Width="180"
+				        Width="240"
 				        Height="25"
 				        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
+                        HorizontalAlignment="Left"
                         TextAlignment="Center"
                         VerticalContentAlignment="Center"
                         Foreground="Black" 
@@ -473,7 +636,7 @@
                     VerticalAlignment="Top" 
                     HorizontalAlignment ="Stretch"
                     >
-                <Grid  Margin="1" Width="430">
+                <Grid  Margin="1" Width="505">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="5*"/>
                         <ColumnDefinition Width="5*"/>
@@ -495,9 +658,9 @@
                     VerticalAlignment="Top" 
                     HorizontalAlignment ="Stretch"
                     >
-                <Grid  Margin="1" Width="430">
+                <Grid  Margin="1" Width="505">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <Label 
@@ -513,10 +676,10 @@
                         <TextBox   
                         Grid.Column="1"     
                         x:Name="top_fukashi_parameter_name"    
-				        Width="180"
+				        Width="240"
 				        Height="25"
 				        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
+                        HorizontalAlignment="Left"
                         TextAlignment="Center"
                         VerticalContentAlignment="Center"
                         Foreground="Black" 
@@ -533,9 +696,9 @@
                     VerticalAlignment="Top" 
                     HorizontalAlignment ="Stretch"
                     >
-                <Grid  Margin="1" Width="430">
+                <Grid  Margin="1" Width="505">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <Label 
@@ -551,10 +714,10 @@
                         <TextBox   
                         Grid.Column="1"     
                         x:Name="bottom_fukashi_parameter_name"    
-				        Width="180"
+				        Width="240"
 				        Height="25"
 				        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
+                        HorizontalAlignment="Left"
                         TextAlignment="Center"
                         VerticalContentAlignment="Center"
                         Foreground="Black" 
@@ -571,9 +734,9 @@
                     VerticalAlignment="Top" 
                     HorizontalAlignment ="Stretch"
                     >
-                <Grid  Margin="1" Width="430">
+                <Grid  Margin="1" Width="505">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <Label 
@@ -589,10 +752,10 @@
                         <TextBox   
                         Grid.Column="1"     
                         x:Name="left_fukashi_parameter_name"    
-				        Width="180"
+				        Width="240"
 				        Height="25"
 				        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
+                        HorizontalAlignment="Left"
                         TextAlignment="Center"
                         VerticalContentAlignment="Center"
                         Foreground="Black" 
@@ -610,9 +773,9 @@
                     VerticalAlignment="Top" 
                     HorizontalAlignment ="Stretch"
                     >
-                <Grid  Margin="1" Width="430">
+                <Grid  Margin="1" Width="505">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <Label 
@@ -628,10 +791,10 @@
                         <TextBox   
                         Grid.Column="1"     
                         x:Name="right_fukashi_parameter_name"    
-				        Width="180"
+				        Width="240"
 				        Height="25"
 				        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
+                        HorizontalAlignment="Left"
                         TextAlignment="Center"
                         VerticalContentAlignment="Center"
                         Foreground="Black" 
@@ -650,7 +813,7 @@
                     Content= "Save Setting"
                     HorizontalAlignment="Right"
                     Height="40" 
-                    Width="180"
+                    Width="152"
                     Click="save_setting_click"  FontWeight="Bold"/>
         </StackPanel>
     </Grid>

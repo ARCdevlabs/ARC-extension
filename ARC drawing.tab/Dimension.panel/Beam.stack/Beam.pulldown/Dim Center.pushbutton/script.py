@@ -266,6 +266,17 @@ def loc_grid_nam_ben_trong_dam(grids):
             break
     return list_grid_ref
 
+def check_is_max_bounding_box_with_host_level (element,level):
+    try:
+        bounding_box = element.get_BoundingBox(None)
+        max_pt = bounding_box.Max
+        z_point_max = max_pt.Z
+        if round(level.Elevation,3) == round(z_point_max,3):
+            return True
+        else:
+            return False
+    except:
+        return True
 """Cũ"""
 
 def get_all_grid():
@@ -298,8 +309,11 @@ my_config = script.get_config()
 
 source_setting_family_beam = setup_family_beam_config.load_configs_setup_family()
 
-source_setting_dim_in_need = setup_family_beam_config.load_configs_setup_dim_in_need()
+source_setting_dim_in_need_in_plan_view = setup_family_beam_config.load_configs_setup_dim_in_need_in_plan_view()
 
+source_setting_dim_in_need_in_section_view = setup_family_beam_config.load_configs_setup_dim_in_need_in_section_view()
+
+source_setting_type_dim_in_section_view = setup_family_beam_config.load_configs_setup_type_dim_in_section_view()
 
 if nances.AutodeskData():
     uiapp = __revit__
@@ -315,13 +329,23 @@ if nances.AutodeskData():
     is_plan_view = current_view.ViewType in [ViewType.FloorPlan, ViewType.CeilingPlan, ViewType.EngineeringPlan]
     is_section_elevation = current_view.ViewType in [ViewType.Section, ViewType.Elevation]
 
-    option_dim_combo_3 = source_setting_dim_in_need[0]
-    option_dim_combo_2 = source_setting_dim_in_need[1]
-    option_dim_combo_1 = source_setting_dim_in_need[2]
+    option_dim_combo_3 = source_setting_dim_in_need_in_plan_view[0]
+    option_dim_combo_2 = source_setting_dim_in_need_in_plan_view[1]
+    option_dim_combo_1 = source_setting_dim_in_need_in_plan_view[2]
+
+    option_dim_combo_A = source_setting_dim_in_need_in_section_view[0]
+    option_dim_combo_B = source_setting_dim_in_need_in_section_view[1]
+    option_dim_combo_C = source_setting_dim_in_need_in_section_view[2]
+    option_dim_combo_D = source_setting_dim_in_need_in_section_view[3]
+    option_dim_combo_E = source_setting_dim_in_need_in_section_view[4]
+
+    option_type_1 = source_setting_type_dim_in_section_view[0]
+    option_type_2 = source_setting_type_dim_in_section_view[1]
 
     Ele = nances.get_elements(uidoc,doc, 'Select Beams', noti = False)
 
     list_new_dim =[]
+    list_dim_need_modify_text = []
 
     all_grid = get_all_grid()
     trans_group = TransactionGroup(doc, 'Dimension beam_new version')
@@ -338,8 +362,10 @@ if nances.AutodeskData():
         combo_ref_A = ReferenceArray()
         combo_ref_B = ReferenceArray()
         combo_ref_C = ReferenceArray()
-        combo_ref_D = ReferenceArray()
-        combo_ref_E = ReferenceArray()
+        combo_ref_D_type_1 = ReferenceArray()
+        combo_ref_D_type_2 = ReferenceArray()
+        combo_ref_E_type_1 = ReferenceArray()
+        combo_ref_E_type_2 = ReferenceArray()
 
         all_ref.Clear()
 
@@ -387,29 +413,8 @@ if nances.AutodeskData():
             line_combo_1 = move_line_theo_vector_theo_ty_le_view(chuan_hoa_vector_kieu_nguoc, line_combo_2, snap_dim_feet, current_view)
 
             line_combo_3 = move_line_theo_vector_theo_ty_le_view(-chuan_hoa_vector_kieu_nguoc, line_combo_2, snap_dim_feet, current_view)
-
-            # for grid in all_grid:
-            #     list_grid_ref = []
-            #     get_hide_isolate = check_hide_isolate(current_view, grid)
-            #     get_hidden_element = check_hidden(grid,current_view)
-
-            #     if get_hide_isolate and get_hidden_element:
-            #         geo_all_grid = get_all_geometry_of_grids(grid, DatumExtentType)
-            #         for one_grid_curve in geo_all_grid:
-            #             for two_grid_curve in one_grid_curve:
-            #                 grid_plane = vectortransform.create_plane_follow_line_in_view (two_grid_curve,current_view)
-            #                 check_pararel_beam_with_grid = vectortransform.are_planes_parallel(center_plane_normal,grid_plane.Normal)
-            #                 if check_pararel_beam_with_grid:
-            #                     distance_grid_with_beam =  abs(vectortransform.distance_between_parallel_planes(grid_plane, center_plane))
-            #                     if distance_grid_with_beam < (chieu_rong/2):
-            #                         ref_grid = Reference(grid)
-            #                         all_ref.Append(ref_grid)
-            #                         list_grid_ref.append(ref_grid)
-            #     if len(list_grid_ref) > 0: #Dòng này thêm vào mục đích tránh cho việc dim thêm grid khác nữa.
-            #         break
-            
+           
         type_of_ele = tung_beam.GetType()
-
 
         tc_trai = 0
         tc_phai = 0
@@ -538,17 +543,20 @@ if nances.AutodeskData():
                 if  option_dim_combo_1:
                     new_dim_combo_1 = doc.Create.NewDimension(current_view, line_combo_1, combo_ref_1)
                     list_new_dim.append(new_dim_combo_1)
+                    list_dim_need_modify_text.append(new_dim_combo_1)
                 if option_dim_combo_2:
                     new_dim_combo_2 = doc.Create.NewDimension(current_view, line_combo_2, combo_ref_2)
 
                     #Dòng này dùng để tính toán xem dim số 2 có cần phải move text không?
                     if tinh_toan_can_thiet_move_text_dim (new_dim_combo_2, current_view): 
                         list_new_dim.append(new_dim_combo_2)
+                        list_dim_need_modify_text.append(new_dim_combo_2)
 
                 if option_dim_combo_3:    
                     if float(tc_trai) > 0 or float(tc_phai) > 0:
                         new_dim_combo_3 = doc.Create.NewDimension(current_view, line_combo_3, combo_ref_3)
                         list_new_dim.append(new_dim_combo_3)
+                        list_dim_need_modify_text.append(new_dim_combo_3)
                 t.Commit()
             except:                
                 pass
@@ -580,7 +588,8 @@ if nances.AutodeskData():
                
             #Line dim phương ngang
             #Thêm hàm để so sánh cao độ dầm so với level. Thông thường dầm dưới 1F thì là dầm móng. Còn dầm trên 1F là dầm thường.
-            if 0 > giong_len_plane_cua_view.Z:
+            # if 0 > giong_len_plane_cua_view.Z: #không dùng cách này nữa vì đôi khi dầm 1F không phải dầm móng mà dim cũng kì
+            if chieu_cao_dam * 304.8  > 1600:   #Dùng cách nếu dầm cao hơn 1600 (gồm cả tăng cường thì coi như đó là dầm móng, phương pháp này cũng hên xui)
                 line_combo_C = line_ngang_ngay_tam  
             else:
                 tinh_toan_offset_tinh_tu_mat_dam_phuong_chieu_cao = (chieu_cao_dam/2 + 450/304.8) / view_scale #chia trước cho scale vì def move_line_theo_vector_theo_ty_le_view nhân scale lên lại.
@@ -592,7 +601,7 @@ if nances.AutodeskData():
 
             #Line dim phương dọc
             
-            tinh_toan_offset_tinh_tu_mat_dam_theo_chieu_rong = (chieu_rong/2 + 450/304.8) / view_scale #chia trước cho scale vì def move_line_theo_vector_theo_ty_le_view nhân scale lên lại.
+            tinh_toan_offset_tinh_tu_mat_dam_theo_chieu_rong = (chieu_rong/2 + 700/304.8) / view_scale #chia trước cho scale vì def move_line_theo_vector_theo_ty_le_view nhân scale lên lại.
             
             line_combo_E =  move_line_theo_vector_theo_ty_le_view(right_direction , line_doc_ngay_tam, tinh_toan_offset_tinh_tu_mat_dam_theo_chieu_rong, current_view)
 
@@ -625,39 +634,68 @@ if nances.AutodeskData():
             if float(tc_phai) > 0:
                 combo_ref_C.Append(ref_phai)
 
+            #Combo D 1_dim tăng cường
+            combo_ref_D_type_1.Append(ref_fukashi_bot)
+            if not check_is_max_bounding_box_with_host_level (tung_beam,host_level):
+                combo_ref_D_type_1.Append(ref_fukashi_top)      
+            combo_ref_D_type_1.Append(Reference(host_level))
+
+            #Combo E_1 dim tăng cường
+            combo_ref_E_type_1.Append(ref_fukashi_bot)
+            combo_ref_E_type_1.Append(ref_fukashi_top) 
+            if float(tc_top) > 0:
+                combo_ref_E_type_1.Append(ref_top)
+            if float(tc_bot) > 0:
+                combo_ref_E_type_1.Append(ref_bot)        
+
             #Combo D_dim tăng cường
-            combo_ref_D.Append(ref_fukashi_bot)
-            combo_ref_D.Append(ref_fukashi_top)      
-            combo_ref_D.Append(Reference(host_level))
-     
+            combo_ref_D_type_2.Append(ref_fukashi_bot)
+            combo_ref_D_type_2.Append(Reference(host_level))
 
             #Combo E_dim tăng cường
-            combo_ref_E.Append(ref_fukashi_bot)
-            combo_ref_E.Append(ref_fukashi_top) 
-            if float(tc_top) > 0:
-                combo_ref_E.Append(ref_top)
+            combo_ref_E_type_2.Append(ref_fukashi_bot)
+            if not check_is_max_bounding_box_with_host_level (tung_beam,host_level):
+                combo_ref_E_type_2.Append(ref_top) 
+            combo_ref_E_type_2.Append(Reference(host_level))
+
             if float(tc_bot) > 0:
-                combo_ref_E.Append(ref_bot)            
+                combo_ref_E_type_2.Append(ref_bot)            
 
             t = Transaction(doc,"Dim beam in section")
             t.Start() 
             try:
-                
-                new_dim_combo_C = doc.Create.NewDimension(current_view, line_combo_C, combo_ref_C)
 
-                new_dim_combo_B = doc.Create.NewDimension(current_view, line_combo_B, combo_ref_B)
+                if option_dim_combo_C:
+                    if float(tc_trai) > 0 or float(tc_phai) > 0:
+                        new_dim_combo_C = doc.Create.NewDimension(current_view, line_combo_C, combo_ref_C)
+                        list_new_dim.append(new_dim_combo_C)
+                        list_dim_need_modify_text.append(new_dim_combo_C)
 
-                if tinh_toan_can_thiet_move_text_dim (new_dim_combo_B, current_view): 
-                    list_new_dim.append(new_dim_combo_B)
+                if option_dim_combo_B:
+                    new_dim_combo_B = doc.Create.NewDimension(current_view, line_combo_B, combo_ref_B)
+                    if tinh_toan_can_thiet_move_text_dim (new_dim_combo_B, current_view): 
+                        list_new_dim.append(new_dim_combo_B)
+                        list_dim_need_modify_text.append(new_dim_combo_B)
 
-                new_dim_combo_A = doc.Create.NewDimension(current_view, line_combo_A, combo_ref_A)
+                if option_dim_combo_A:
+                    new_dim_combo_A = doc.Create.NewDimension(current_view, line_combo_A, combo_ref_A)
+                    list_new_dim.append(new_dim_combo_A)
+                if option_dim_combo_D:
+                    if option_type_1:
+                        new_dim_combo_D = doc.Create.NewDimension(current_view, line_combo_D, combo_ref_D_type_1)
+                        list_new_dim.append(new_dim_combo_D)
+                    elif option_type_2:
+                        new_dim_combo_D = doc.Create.NewDimension(current_view, line_combo_D, combo_ref_D_type_2)
+                        list_new_dim.append(new_dim_combo_D)
 
-                new_dim_combo_D = doc.Create.NewDimension(current_view, line_combo_D, combo_ref_D)
+                if option_dim_combo_E:
+                    if option_type_1:
+                        new_dim_combo_E = doc.Create.NewDimension(current_view, line_combo_E, combo_ref_E_type_1)
+                        list_new_dim.append(new_dim_combo_E)
 
-                new_dim_combo_E = doc.Create.NewDimension(current_view, line_combo_E, combo_ref_E)
-
-                list_new_dim.append(new_dim_combo_C)
-                list_new_dim.append(new_dim_combo_E)
+                    elif option_type_2:
+                        new_dim_combo_E = doc.Create.NewDimension(current_view, line_combo_E, combo_ref_E_type_2)
+                        list_new_dim.append(new_dim_combo_E)
 
                 t.Commit()
 
@@ -666,7 +704,7 @@ if nances.AutodeskData():
                 pass
                 t.RollBack()
 
-    select_sau_khi_chay_tool (list_new_dim, uidoc)
+    select_sau_khi_chay_tool (list_dim_need_modify_text, uidoc)
 
     set_error = list(set(list_error))
     if len(set_error) > 0:
@@ -674,9 +712,10 @@ if nances.AutodeskData():
         logger = script.get_logger()
         logger.warning("Please hold Shift and click to the tool to setup input family")
         for tung_loi in set_error:
-            print tung_loi                      
+            print (tung_loi)              
     trans_group.Assimilate()    
-    if len(list_new_dim) > 0 :
+    if len(list_dim_need_modify_text) > 0 :
         run_move_text_type_1 = uiapp.PostCommand(RevitCommandId.LookupCommandId("CustomCtrl_%CustomCtrl_%ARC drawing%Dimension%Type 1 Auto"))
+
 
     
