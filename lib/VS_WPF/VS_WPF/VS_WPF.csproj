@@ -79,7 +79,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\..\ARC drawing.tab\Dimension.panel\Beam.stack\Beam.pulldown\Dim Center.pushbutton\WPF_setup_family_beam_for_dim.xaml">
+    <Page Include="..\..\..\ARC drawing.tab\Dimension.panel\Beam.stack\Beam.pulldown\Dim Beam With Fukashi.pushbutton\WPF_setup_family_beam_for_dim.xaml">
       <Link>Link WPF\WPF_setup_family_beam_for_dim.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

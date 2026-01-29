@@ -42,7 +42,6 @@ def get_link_image (ten_image):
 
 
 image_path_guide_0 = get_link_image ("guide_0.png")
-# image_path_guide_0 = script.get_bundle_file("guide_0.png")
 bitmap_guide_0 = BitmapImage()
 bitmap_guide_0.BeginInit()
 bitmap_guide_0.UriSource = Uri(image_path_guide_0, UriKind.Absolute)
@@ -50,24 +49,17 @@ bitmap_guide_0.EndInit()
 
 
 image_path_guide_1 = get_link_image ("guide_1.png")
-# image_path_guide_1 = script.get_bundle_file("guide_1.png")
 bitmap_guide_1 = BitmapImage()
 bitmap_guide_1.BeginInit()
 bitmap_guide_1.UriSource = Uri(image_path_guide_1, UriKind.Absolute)
 bitmap_guide_1.EndInit()
 
 image_path_guide_2 = get_link_image ("guide_2.png")
-# image_path_guide_2 = script.get_bundle_file("guide_2.png")
 bitmap_guide_2 = BitmapImage()
 bitmap_guide_2.BeginInit()
 bitmap_guide_2.UriSource = Uri(image_path_guide_2, UriKind.Absolute)
 bitmap_guide_2.EndInit()
 
-# image_path_guide_3 = script.get_bundle_file("guide_3_new.png")
-# bitmap_guide_3 = BitmapImage()
-# bitmap_guide_3.BeginInit()
-# bitmap_guide_3.UriSource = Uri(image_path_guide_3, UriKind.Absolute)
-# bitmap_guide_3.EndInit()
 
 default_settup_family = ["中心立面図","6","3","4","8","下側","左側","右側","上端ふかし","下端ふかし","左ふかし","右ふかし"]
 
@@ -114,6 +106,8 @@ def save_configs_get_setup_type_dim_in_section(content):
     my_config.setup_type_dim_in_section_view = content
     script.save_config()
 
+import re
+
 xamlfile = script.get_bundle_file('WPF_setup_family_beam_for_dim.xaml')
 
 class MyWindow(Windows.Window):
@@ -124,15 +118,19 @@ class MyWindow(Windows.Window):
         self.guide_image_2.Source = bitmap_guide_2
         self.guide_image_0.Source = bitmap_guide_0
 
+        self._updating = False
+
         self.MK_梁_RC = ["中心立面図","6","3","4","8","下側","左側","右側","上端ふかし","下端ふかし","左ふかし","右ふかし"]
-        self.MK_S_構フ_RC_梁 = ["中心立面図","中央_梁せい","中央_梁幅_1","中央_梁幅_2","上部_ふかし厚さ","下部_中央_ふかし_厚さ","左部_ふかし_厚さ_中央","右部_ふかし_厚さ_中央","Srb011_上部_ふかし厚さ","Srb012_下部_ふかし厚さ","Srb013_側1_ふかし厚さ","Srb014_側2_ふかし厚さ"]
-        self.custom_family = ["Top","Bot","Left","Right","Top fukashi","Bot fukashi","Left fukashi","Right fukashi","上端ふかし","下端ふかし","左ふかし","右ふかし"]
+        # self.MK_S_構フ_RC_梁 = ["中心立面図","中央_梁せい","中央_梁幅_1","中央_梁幅_2","上部_ふかし厚さ","下部_中央_ふかし_厚さ","左部_ふかし_厚さ_中央","右部_ふかし_厚さ_中央","Srb011_上部_ふかし厚さ","Srb012_下部_ふかし厚さ","Srb013_側1_ふかし厚さ","Srb014_側2_ふかし厚さ"]
+        self.custom_family_meada = ["Top","Bot","Left","Right","Top fukashi","Bot fukashi","Left fukashi","Right fukashi","Srb011_上部_ふかし厚さ","Srb012_下部_ふかし厚さ","Srb013_側1_ふかし厚さ","Srb014_側2_ふかし厚さ"]
+        self.custom_family_obayashi = ["中心高","D_c","2","1","Mt","Mu","Mf","Mb","増打ち_z正面_object","増打ち_z負面_object","増打ち_y正面_object","増打ち_y負面_object"]
         self.list_other = [""] * 12 #Tạo ra list có 12 đối tượng trống.
 
         values =[
                     "Last setting",
                     "MK_梁〈RC〉",
-                    "Custom Family",
+                    "Custom family_Meada",
+                    "Custom family_Obayashi",
                     "Other"
                 ]
         self.combo_box_select_family.ItemsSource = values
@@ -150,6 +148,97 @@ class MyWindow(Windows.Window):
 
         self.apply_load_setting_type_dim_in_section_view(load_setting_type_dim_in_section_view)   
 
+        self.update_total_input()
+
+    def top_reference_name_changed(self, sender, args):
+        self.update_total_input()
+
+    def bottom_reference_name_changed(self, sender, args):
+        self.update_total_input()
+
+    def left_reference_name_changed(self, sender, args):
+        self.update_total_input()
+
+    def right_reference_name_changed(self, sender, args):
+        self.update_total_input()
+
+    def top_fukashi_reference_name_changed(self, sender, args):
+        self.update_total_input()
+
+    def bottom_fukashi_reference_name_changed(self, sender, args):
+        self.update_total_input()
+
+    def left_fukashi_reference_name_changed(self, sender, args):
+        self.update_total_input()
+
+    def right_fukashi_reference_name_changed(self, sender, args):
+        self.update_total_input()
+
+    def top_fukashi_parameter_name_changed(self, sender, args):
+        self.update_total_input()
+
+    def bottom_fukashi_parameter_name_changed(self, sender, args):
+        self.update_total_input()
+
+    def left_fukashi_parameter_name_changed(self, sender, args):
+        self.update_total_input()
+
+    def right_fukashi_parameter_name_changed(self, sender, args):
+        self.update_total_input()
+
+    def update_total_input(self): 
+        self.all_textboxes = [
+            self.top_reference_name,
+            self.bottom_reference_name,
+            self.left_reference_name,
+            self.right_reference_name,
+            self.top_fukashi_reference_name,
+            self.bottom_fukashi_reference_name,
+            self.left_fukashi_reference_name,
+            self.right_fukashi_reference_name,
+            self.top_fukashi_parameter_name,
+            self.bottom_fukashi_parameter_name,
+            self.left_fukashi_parameter_name,
+            self.right_fukashi_parameter_name,
+        ]
+        #tránh vòng lặp vô hạn
+        if self._updating:
+            return
+
+        self._updating = True
+        values = [tb.Text or "" for tb in self.all_textboxes]
+        self.total_input.Text = u'["{}"]'.format(u'","'.join(values))
+        self._updating = False
+
+    def parse_total_input(self, text):
+        """
+        Nhận:
+        ["A","B","C"]
+        Trả:
+        ["A","B","C"]
+        """
+        if not text:
+            return []
+
+        # Lấy tất cả chuỗi nằm trong dấu "
+        values = re.findall(r'"(.*?)"', text)
+        return values
+    
+    def on_total_input_changed(self, sender, args):
+        if self._updating:
+            return
+
+        self._updating = True
+        values = self.parse_total_input(self.total_input.Text)
+
+        if len(values) == len(self.all_textboxes):
+            for tb, value in zip(self.all_textboxes, values):
+                tb.Text = value
+
+        self._updating = False
+
+
+
     def combo_box_select_family_changed(self, sender, args): 
         #Điều này có nghĩa là bất cứ khi nào combox bị đổi giá trị thì 
         #dòng cuối [self.apply_load_setting(load_setting)] sẽ load lại 1 lần, và từ đó gán lại giá trị cho các text box.
@@ -164,13 +253,19 @@ class MyWindow(Windows.Window):
         elif selected == "Last setting":
             load_setting = load_configs_setup_family()
 
-        elif selected == "Custom Family":
-            load_setting = self.custom_family
+        elif selected == "Custom family_Meada":
+            load_setting = self.custom_family_meada
+        
+        elif selected == "Custom family_Obayashi":
+            load_setting = self.custom_family_obayashi
 
         elif selected == "Other":
             load_setting = self.list_other
        
         self.apply_load_setting(load_setting)
+
+        self.update_total_input()
+
 
     def radio_button_type_1_changed(self, sender, args):
         if self.radio_button_type_1.IsChecked:

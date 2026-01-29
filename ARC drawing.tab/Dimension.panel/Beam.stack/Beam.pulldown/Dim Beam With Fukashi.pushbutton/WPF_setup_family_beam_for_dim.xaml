@@ -360,6 +360,7 @@
                         Background="White" 
                         Text="中心立面図" 
                         Focusable="True"   
+                        TextChanged="top_reference_name_changed"
                         />
                     </Grid>
                 </Grid>
@@ -399,7 +400,8 @@
                         Foreground="Black" 
                         Background="White" 
                         Text="6" 
-                        Focusable="True"   
+                        Focusable="True"  
+                        TextChanged="bottom_reference_name_changed"
                         />
                     </Grid>
                 </Grid>
@@ -437,6 +439,7 @@
                         Background="White" 
                         Text="3" 
                         Focusable="True"   
+                        TextChanged="left_reference_name_changed"
                         />
                     </Grid>
                 </Grid>
@@ -474,7 +477,8 @@
                         Foreground="Black" 
                         Background="White" 
                         Text="4" 
-                        Focusable="True"   
+                        Focusable="True"
+                        TextChanged="right_reference_name_changed"
                         />
                     </Grid>
                 </Grid>
@@ -512,7 +516,8 @@
                         Foreground="Black" 
                         Background="White" 
                         Text="8" 
-                        Focusable="True"   
+                        Focusable="True"
+                        TextChanged="top_fukashi_reference_name_changed"
                         />
                     </Grid>
                 </Grid>
@@ -549,7 +554,8 @@
                         Foreground="Black" 
                         Background="White" 
                         Text="下側" 
-                        Focusable="True"   
+                        Focusable="True" 
+                        TextChanged="bottom_fukashi_reference_name_changed"
                         />
                     </Grid>
                 </Grid>
@@ -588,6 +594,7 @@
                         Background="White" 
                         Text="左側" 
                         Focusable="True"   
+                        TextChanged="left_fukashi_reference_name_changed"
                         />
                     </Grid>
                 </Grid>
@@ -625,7 +632,8 @@
                         Foreground="Black" 
                         Background="White" 
                         Text="左側" 
-                        Focusable="True"   
+                        Focusable="True"
+                        TextChanged="right_fukashi_reference_name_changed"
                         />
                     </Grid>
                 </Grid>
@@ -685,7 +693,8 @@
                         Foreground="Black" 
                         Background="White" 
                         Text="上端ふかし" 
-                        Focusable="True"   
+                        Focusable="True" 
+                        TextChanged="top_fukashi_parameter_name_changed"
                         />
                     </Grid>
                 </Grid>
@@ -723,7 +732,8 @@
                         Foreground="Black" 
                         Background="White" 
                         Text="下端ふかし" 
-                        Focusable="True"   
+                        Focusable="True"
+                        TextChanged="bottom_fukashi_parameter_name_changed"
                         />
                     </Grid>
                 </Grid>
@@ -761,7 +771,8 @@
                         Foreground="Black" 
                         Background="White" 
                         Text="左ふかし" 
-                        Focusable="True"   
+                        Focusable="True"
+                        TextChanged="left_fukashi_parameter_name_changed"
                         />
                     </Grid>
                 </Grid>
@@ -801,12 +812,47 @@
                         Background="White" 
                         Text="右ふかし" 
                         Focusable="True"   
+                        TextChanged="right_fukashi_parameter_name_changed"
                         />
                     </Grid>
                 </Grid>
             </StackPanel>
 
+            <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Top" 
+                    HorizontalAlignment ="Stretch"
+                    >
+                <Grid  Margin="1" Width="505">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label 
+                        Grid.Column="0" 
+						HorizontalAlignment="Left"
+						Content="Total input"
+						Foreground="#FF0A0000"
+						Height="25"
+						VerticalAlignment="Center"
+						Margin="20,20,20,20" />
 
+                    <Grid Grid.Column="1" Margin="0,0,10,0">
+                        <TextBox     
+                        x:Name="total_input"    
+				        Width="347"
+				        Height="25"
+				        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        TextAlignment= "Left"
+                        VerticalContentAlignment="Center"
+                        Foreground="Black" 
+                        Background="White" 
+                        Focusable="True" 
+                        TextChanged="on_total_input_changed"
+                        />
+                    </Grid>
+                </Grid>
+            </StackPanel>
 
             <Button x:Name="save_setting"
                     Margin="10,10,36,30"
