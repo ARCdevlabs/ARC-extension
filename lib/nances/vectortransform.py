@@ -8,13 +8,22 @@ import_def = import_class.get_dll()
 
 
 def move_point_along_vector(point, vector, distance):
-    new_point = import_def.LibARC_VectorMath.MovePointAlongVector(point, vector, distance)
-    return new_point
+    try:
+        new_point = import_def.LibARC_VectorMath.MovePointAlongVector(point, vector, distance)
+        return new_point
+    except:
+        pass
+        return
 
-def normalize(vector):
+def normalize(vector): #thuần toán học
     """Hàm để chuẩn hóa một vector."""
     norm = math.sqrt(sum(x ** 2 for x in vector))
     return tuple(x / norm for x in vector)
+
+def normalize_revit(vector): #trả về vector trong Revit
+    """Hàm để chuẩn hóa một vector."""
+    norm = math.sqrt(vector[0] ** 2 + vector[1] ** 2 + vector[2] ** 2)
+    return DB.XYZ(vector[0] / norm, vector[1] / norm, vector[2] / norm)
 
 def dot_product(v1, v2):
     """Hàm để tính tích vô hướng của hai vector."""
@@ -300,7 +309,8 @@ def distance_between_planes(normal1, point_on_plane1, normal2):
     distance = vector_between_planes.GetLength()
     return distance
 
-def rotate_vector_around_axis(vector, axis, angle_degrees):
+def rotate_vector_around_axis(vector, axis, angle_degrees): #vector đầu vào là vector toán học
+    import math
     """Hàm để xoay một vector quanh một trục cho trước một góc nhất định."""
     # Chuyển đổi góc từ độ sang radian
     angle_radians = math.radians(angle_degrees)
@@ -330,7 +340,38 @@ def rotate_vector_around_axis(vector, axis, angle_degrees):
     
     return DB.XYZ(rotated_x, rotated_y, rotated_z)
 
-def angle_between_vectors(vector1, vector2):
+def rotate_vector_around_axis_revit(vector_revit, axis, angle_degrees): #vector đầu vào là vector revit
+    import math
+    """Hàm để xoay một vector quanh một trục cho trước một góc nhất định."""
+    # Chuyển đổi góc từ độ sang radian
+    angle_radians = math.radians(angle_degrees)
+    
+    # Chuẩn hóa trục xoay
+    axis = normalize_revit(axis)
+    
+    # Các thành phần của trục xoay
+    u = axis.X
+    v = axis.Y
+    w = axis.Z
+    
+    # Các thành phần của vector gốc
+    x = vector_revit.X
+    y = vector_revit.Y
+    z = vector_revit.Z
+    
+    # Công thức xoay vector quanh trục (rotation matrix)
+    cos_angle = math.cos(angle_radians)
+    sin_angle = math.sin(angle_radians)
+    one_minus_cos = 1 - cos_angle
+    
+    # Ma trận xoay
+    rotated_x = (u*u*one_minus_cos + cos_angle)*x + (u*v*one_minus_cos - w*sin_angle)*y + (u*w*one_minus_cos + v*sin_angle)*z
+    rotated_y = (v*u*one_minus_cos + w*sin_angle)*x + (v*v*one_minus_cos + cos_angle)*y + (v*w*one_minus_cos - u*sin_angle)*z
+    rotated_z = (w*u*one_minus_cos - v*sin_angle)*x + (w*v*one_minus_cos + u*sin_angle)*y + (w*w*one_minus_cos + cos_angle)*z
+    
+    return DB.XYZ(rotated_x, rotated_y, rotated_z)
+
+def angle_between_vectors(vector1, vector2): #góc cũng phụ thuộc vào hướng của vector
     # Tích vô hướng của 2 vector
     dot_prod = vector1.DotProduct(vector2)
     # Tính độ lớn của hai vector
@@ -451,3 +492,95 @@ def co_phai_phuong_ngang_dai_khai(line, view): #tính là phương ngang nếu g
         return True
     else:
         return False
+    
+def project_point_to_plane_by_view(point, plane, view):
+    #Gióng point lên plane theo hướng NGƯỢC ViewDirection
+    P = point
+    D = -view.ViewDirection.Normalize()   # hướng gióng
+
+    P0 = plane.Origin
+    N = plane.Normal.Normalize()
+
+    denom = D.DotProduct(N)
+    if abs(denom) < 1e-9:
+        return None  # song song → không cắt plane
+
+    t = (P0 - P).DotProduct(N) / denom
+    projected_point = P + D.Multiply(t)
+
+    return projected_point
+
+def rotate_line_around_view_direction(line, view, angle_deg):
+    """
+    Xoay line quanh ViewDirection một góc angle_deg (độ)
+    """
+    # điểm xoay (lấy midpoint)
+    P = (line.GetEndPoint(0) + line.GetEndPoint(1)) / 2
+
+    # trục xoay
+    axis_dir = view.ViewDirection.Normalize()
+    axis = DB.Line.CreateUnbound(P, axis_dir)
+
+    # transform xoay
+    angle_rad = math.radians(angle_deg)
+    transform = DB.Transform.CreateRotationAtPoint(axis_dir, angle_rad, P)
+
+    # line mới sau khi xoay
+    new_line = line.CreateTransformed(transform)
+
+    return new_line
+
+def tao_plane_man_hinh (view):
+    origin = view.Origin
+    vector_direction = view.ViewDirection
+    plane_man_hinh = create_plane_from_point_and_normal(origin,vector_direction)
+    return plane_man_hinh
+
+def project_line_to_plane (line, view): #mục đích tạo 1 line phẳng trên view màn hình
+    view_direction = view.ViewDirection
+    start = line.GetEndPoint(0)
+    end = line.GetEndPoint(1)
+    plane_man_hinh = create_plane_from_point_and_normal(start,view_direction)
+    flat_start = project_point_to_plane_by_view(start,plane_man_hinh,view)
+    flat_end = project_point_to_plane_by_view(end,plane_man_hinh,view)
+    flat_line =  DB.Line.CreateBound(flat_start,flat_end)
+    return flat_line
+
+def get_rotate_90_location_line(line, view):
+    start = line.GetEndPoint(0)
+    end = line.GetEndPoint(1)
+    view_direction = view.ViewDirection
+    plane_man_hinh = create_plane_from_point_and_normal(start,view_direction) #mặt phẳng đại diện cho màn hình.
+    flat_start = project_point_to_plane_by_view(start,plane_man_hinh,view)
+    flat_end = project_point_to_plane_by_view(end,plane_man_hinh,view)
+    flat_line =  DB.Line.CreateBound(flat_start,flat_end)
+    rotate_line = rotate_line_around_view_direction(flat_line, view, 90)
+    return rotate_line
+
+
+def get_center_plane (wall):
+    wall_location = wall.Location
+    wall_location_curve = wall_location.Curve
+    start_point = wall_location_curve.GetEndPoint(0)
+    endpoint = wall_location_curve.GetEndPoint(1)
+    mid_point = wall_location_curve.Evaluate(0.5, True)
+    offset_mid_point = DB.XYZ(start_point.X, start_point.Y, mid_point.Z +10000)
+    point1 = start_point
+    point2 = endpoint
+    point3 =offset_mid_point
+    vector1 = point2 - point1
+    vector2 = point3 - point1
+    normal_vector = vector1.CrossProduct(vector2).Normalize()
+    plane = DB.Plane.CreateByNormalAndOrigin(normal_vector, mid_point)
+    return plane
+
+def move_line_theo_vector_theo_ty_le_view(vector_de_move_line, line, snap_dim, view):
+    start = line.GetEndPoint(0)
+    end = line.GetEndPoint(1)
+    view_scale = view.Scale
+    # snap_dim = (5*(5/3)) * (1/304.8)* view_scale #1mm bang 0.003084
+    khoang_cach_move = snap_dim * view_scale
+    move_start_point = move_point_along_vector(start, vector_de_move_line, khoang_cach_move)
+    move_end_point = move_point_along_vector(end, vector_de_move_line, khoang_cach_move)
+    new_line = DB.Line.CreateBound(move_start_point, move_end_point)
+    return new_line

@@ -20,21 +20,44 @@ from System import Uri, UriKind
 
 from System.Windows.Media.Imaging import BitmapImage
 
+def get_link_image (ten_image):
+    import os
 
-image_path_guide_0 = script.get_bundle_file("guide_0.png")
+    base_appdata = os.environ["APPDATA"]
+
+    image_link = os.path.join(
+        base_appdata,
+        "pyRevit",
+        "Extensions",
+        "ARC extension.extension",
+        "lib",
+        "nances",
+        "allpictureloadtoxaml",
+        "tooldimbeamwithfukashi",
+        "09012026picture",
+        str(ten_image)
+        )
+
+    return image_link
+
+
+image_path_guide_0 = get_link_image ("guide_0.png")
+# image_path_guide_0 = script.get_bundle_file("guide_0.png")
 bitmap_guide_0 = BitmapImage()
 bitmap_guide_0.BeginInit()
 bitmap_guide_0.UriSource = Uri(image_path_guide_0, UriKind.Absolute)
 bitmap_guide_0.EndInit()
 
 
-image_path_guide_1 = script.get_bundle_file("guide_1.png")
+image_path_guide_1 = get_link_image ("guide_1.png")
+# image_path_guide_1 = script.get_bundle_file("guide_1.png")
 bitmap_guide_1 = BitmapImage()
 bitmap_guide_1.BeginInit()
 bitmap_guide_1.UriSource = Uri(image_path_guide_1, UriKind.Absolute)
 bitmap_guide_1.EndInit()
 
-image_path_guide_2 = script.get_bundle_file("guide_2.png")
+image_path_guide_2 = get_link_image ("guide_2.png")
+# image_path_guide_2 = script.get_bundle_file("guide_2.png")
 bitmap_guide_2 = BitmapImage()
 bitmap_guide_2.BeginInit()
 bitmap_guide_2.UriSource = Uri(image_path_guide_2, UriKind.Absolute)
@@ -162,8 +185,8 @@ class MyWindow(Windows.Window):
             # print "type 2"
 
     def set_guide_image(self, image_name):
-        image_path = script.get_bundle_file(image_name)
-
+        # image_path = script.get_bundle_file(image_name)
+        image_path = get_link_image (image_name)
         bitmap = BitmapImage()
         bitmap.BeginInit()
         bitmap.UriSource = Uri(image_path, UriKind.Absolute)

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import Autodesk.Revit.DB as DB
+from Autodesk.Revit.DB import *
 import importdll
 import_class = importdll.ImportDLL()
 import_def = import_class.get_dll()
@@ -83,3 +84,121 @@ def get_center_plane_of_wall (wall):
 
 
     
+"""def viết thêm"""
+def tinh_chieu_rong_dam(beam):
+    #Lấy vector trục dầm
+
+    # Xác định vector vuông góc với trục dầm
+
+    # Chiếu các điểm bounding box lên vector đó
+
+    # Lấy max – min → ra chiều rộng
+
+    loc_curve = beam.Location.Curve
+    direction_beam = (loc_curve.GetEndPoint(1) - loc_curve.GetEndPoint(0)).Normalize() #chuan hoa vector huong dam
+    Z = XYZ.BasisZ
+    width_direction = direction_beam.CrossProduct(Z).Normalize() #ket qua la vector
+
+    bbox = beam.get_BoundingBox(None)
+    min_pt = bbox.Min
+    max_pt = bbox.Max
+    points = [
+    DB.XYZ(min_pt.X, min_pt.Y, min_pt.Z),
+    XYZ(min_pt.X, min_pt.Y, max_pt.Z),
+    XYZ(min_pt.X, max_pt.Y, min_pt.Z),
+    XYZ(min_pt.X, max_pt.Y, max_pt.Z),
+    XYZ(max_pt.X, min_pt.Y, min_pt.Z),
+    XYZ(max_pt.X, min_pt.Y, max_pt.Z),
+    XYZ(max_pt.X, max_pt.Y, min_pt.Z),
+    XYZ(max_pt.X, max_pt.Y, max_pt.Z),
+    ]
+    projections = [p.DotProduct(width_direction) for p in points]  
+    
+    #Ta đổ bóng (chiếu) từng điểm point lên vector vuông góc với dầm và
+    #lấy khoảng cách có dấu từ gốc tọa độ đến điểm chiếu. (khoảng cách lúc này rất lớn vì tính từ mốc 0,0,0)
+  
+    width = max(projections) - min(projections) #Hàm này sẽ triệt tiêu khoảng cách tính từ tọa độ.
+
+    return width
+
+def tinh_chieu_cao_dam(beam):
+    # Vector phương thẳng đứng
+    height_direction = XYZ.BasisZ  # (0,0,1)
+
+    # Bounding box của dầm
+    bbox = beam.get_BoundingBox(None)
+    min_pt = bbox.Min
+    max_pt = bbox.Max
+
+    # 8 điểm của bounding box
+    points = [
+        XYZ(min_pt.X, min_pt.Y, min_pt.Z),
+        XYZ(min_pt.X, min_pt.Y, max_pt.Z),
+        XYZ(min_pt.X, max_pt.Y, min_pt.Z),
+        XYZ(min_pt.X, max_pt.Y, max_pt.Z),
+        XYZ(max_pt.X, min_pt.Y, min_pt.Z),
+        XYZ(max_pt.X, min_pt.Y, max_pt.Z),
+        XYZ(max_pt.X, max_pt.Y, min_pt.Z),
+        XYZ(max_pt.X, max_pt.Y, max_pt.Z),
+    ]
+
+    # Chiếu các điểm lên trục Z
+    projections = [p.DotProduct(height_direction) for p in points]
+
+    # Chiều cao = max - min
+    height = max(projections) - min(projections)
+
+    return height
+
+
+def tinh_diem_trung_tam_bounding_box(element):
+    bbox = element.get_BoundingBox(None)
+    min_pt = bbox.Min
+    max_pt = bbox.Max
+    trung_diem = (min_pt + max_pt ) /2
+    return trung_diem
+
+def get_geometry_to_solid(element):
+    options = Options()
+    options.ComputeReferences = True
+    options.DetailLevel = ViewDetailLevel.Fine  
+    curves = CurveArray() #khong can lay curve thi bo qua
+    solids = []
+    all_geometry =  element.get_Geometry(options)
+    for tung_loai_geometry in all_geometry: # Curve
+        if isinstance(tung_loai_geometry, Curve):
+            curves.Append(tung_loai_geometry)
+            continue
+        # Solid
+        if isinstance(tung_loai_geometry, Solid):
+            # loại bỏ solid rỗng
+            if tung_loai_geometry.Volume > 0:
+                solids.append(tung_loai_geometry)
+            continue
+        if isinstance(tung_loai_geometry, GeometryInstance):
+            # transformed_geometry = tung_loai_geometry.GetInstanceGeometry(tung_loai_geometry.Transform)  #Dong nay khong can dung nua        
+            transformed_geometry = tung_loai_geometry.GetInstanceGeometry()    
+            for tung_dang_geometry in transformed_geometry:
+                # loại bỏ solid rỗng
+                if hasattr(tung_dang_geometry, "Volume"):
+                    if tung_dang_geometry.Volume > 0:
+                        solids.append(tung_dang_geometry)
+    return solids #Trả về dạng list các solid
+
+def get_face_from_solid(solid):
+    list_faces =[]
+    if hasattr(solid, "Faces"):
+        for face in solid.Faces:
+            if str(type(face)) == "<type 'PlanarFace'>":
+                list_faces.append(face)
+    return list_faces
+
+def get_all_geometry_of_grids(grid, current_view, DatumExtentType = DatumExtentType.ViewSpecific):
+    all_geometry = []
+    DatumExtentType = DatumExtentType.ViewSpecific
+    try:
+        geometry_element = grid.GetCurvesInView(DatumExtentType,current_view)
+        all_geometry.append(geometry_element)
+    except:
+        pass
+    return all_geometry
