@@ -13,7 +13,7 @@ if module.AutodeskData():
 try:
     import width_of_text_of_dim_config
     source_width_of_text_of_dim = width_of_text_of_dim_config.load_configs()
-    out_put = float(source_width_of_text_of_dim[0][0])
+    out_put = float(source_width_of_text_of_dim[0])
 except:
     # print (traceback.format_exc())
     out_put = 1.8

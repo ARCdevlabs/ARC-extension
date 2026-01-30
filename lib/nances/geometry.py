@@ -29,7 +29,7 @@ def get_geometry_non_reference(element):
 #     return geo_ref
 
 
-def get_geometry(element):
+def get_geometry(element): 
     geo_ref = import_def.LibARC_Geometry.GetGeometry(element)
     return geo_ref
 
@@ -83,7 +83,6 @@ def get_center_plane_of_wall (wall):
     return plane 
 
 
-    
 """def viết thêm"""
 def tinh_chieu_rong_dam(beam):
     #Lấy vector trục dầm

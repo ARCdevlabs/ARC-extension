@@ -267,7 +267,7 @@ def distance_between_parallel_planes(plane1, plane2):
     distance = (distance1 - distance2)
     return distance
 
-def create_plane_follow_line (line):
+def create_plane_follow_line (line): #Chỉ tạo plane song song với mặt phẳng Z = 0
     start_point = line.GetEndPoint(0)
     end_point = line.GetEndPoint(1)
     mid_point = line.Evaluate(0.5, True)

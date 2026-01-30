@@ -121,14 +121,15 @@ class MyWindow(Windows.Window):
         self._updating = False
 
         self.MK_梁_RC = ["中心立面図","6","3","4","8","下側","左側","右側","上端ふかし","下端ふかし","左ふかし","右ふかし"]
-        # self.MK_S_構フ_RC_梁 = ["中心立面図","中央_梁せい","中央_梁幅_1","中央_梁幅_2","上部_ふかし厚さ","下部_中央_ふかし_厚さ","左部_ふかし_厚さ_中央","右部_ふかし_厚さ_中央","Srb011_上部_ふかし厚さ","Srb012_下部_ふかし厚さ","Srb013_側1_ふかし厚さ","Srb014_側2_ふかし厚さ"]
-        self.custom_family_meada = ["Top","Bot","Left","Right","Top fukashi","Bot fukashi","Left fukashi","Right fukashi","Srb011_上部_ふかし厚さ","Srb012_下部_ふかし厚さ","Srb013_側1_ふかし厚さ","Srb014_側2_ふかし厚さ"]
+        self.T_梁RC = ["構造体-上","構造体-下","構造体-左","構造体-右","外形-上","外形-下","外形-左","外形-右","梁上端増打","梁下端増打","梁側面増打2","梁側面増打1"]
+        self.custom_family_meada = ["Top","Bot","Left","Right","Top fukashi","Bot fukashi","Left fukashi","Right fukashi","Srb011_上部_ふかし厚さ","Srb012_下部_ふかし厚さ","Srb014_側2_ふかし厚さ","Srb013_側1_ふかし厚さ"]
         self.custom_family_obayashi = ["中心高","D_c","2","1","Mt","Mu","Mf","Mb","増打ち_z正面_object","増打ち_z負面_object","増打ち_y正面_object","増打ち_y負面_object"]
         self.list_other = [""] * 12 #Tạo ra list có 12 đối tượng trống.
 
         values =[
                     "Last setting",
                     "MK_梁〈RC〉",
+                    "T_梁RC",
                     "Custom family_Meada",
                     "Custom family_Obayashi",
                     "Other"
@@ -212,9 +213,9 @@ class MyWindow(Windows.Window):
 
     def parse_total_input(self, text):
         """
-        Nhận:
+        Nhận: Định dạng giống với list python
         ["A","B","C"]
-        Trả:
+        Trả: Định dạng list python chuẩn
         ["A","B","C"]
         """
         if not text:
@@ -238,7 +239,6 @@ class MyWindow(Windows.Window):
         self._updating = False
 
 
-
     def combo_box_select_family_changed(self, sender, args): 
         #Điều này có nghĩa là bất cứ khi nào combox bị đổi giá trị thì 
         #dòng cuối [self.apply_load_setting(load_setting)] sẽ load lại 1 lần, và từ đó gán lại giá trị cho các text box.
@@ -249,6 +249,9 @@ class MyWindow(Windows.Window):
 
         if selected == "MK_梁〈RC〉":
             load_setting = self.MK_梁_RC
+        
+        elif selected == "T_梁RC":
+            load_setting = self.T_梁RC
 
         elif selected == "Last setting":
             load_setting = load_configs_setup_family()
