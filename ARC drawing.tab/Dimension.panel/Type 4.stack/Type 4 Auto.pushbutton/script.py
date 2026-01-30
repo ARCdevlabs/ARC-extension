@@ -7,6 +7,7 @@ from Autodesk.Revit.UI.Selection import ObjectType
 import movetextdim
 import nances as module
 from nances import vectortransform
+from nances import allinone
 if module.AutodeskData():
 	uidoc = __revit__.ActiveUIDocument
 	doc = uidoc.Document
@@ -38,6 +39,9 @@ try:
         try:
             t = Transaction(doc,"Modify Text's Position of Dimension")
             t.Start() 
+            
+            allinone.reset_text_position(element)
+
             dim_type = doc.GetElement(element.GetTypeId())
 
             text_size_para = module.get_builtin_parameter_by_name(dim_type, DB.BuiltInParameter.TEXT_SIZE)
@@ -64,8 +68,13 @@ try:
             vector_da_chuan_hoa = movetextdim.chuan_hoa_vector(vector_of_dim, current_view)
 
             '''auto tinh vi tri origin, move qua phai 1 chut'''
-            origin_point = dim_line.Origin #vi tri ngau nhien, khong biet tinh the nao
-            return_point = module.move_point_along_vector(origin_point, vector_da_chuan_hoa, 0.01)
+            all_segment_position = movetextdim.get_all_segment_position(element)
+
+            diem_trung_binh = movetextdim.get_average_point(all_segment_position)
+
+            # origin_point = dim_line.Origin #vi tri ngau nhien, khong biet tinh the nao
+            
+            return_point = module.move_point_along_vector(diem_trung_binh, vector_da_chuan_hoa, 0.01)
 
             kich_thuoc_moi_chu = out_put
 

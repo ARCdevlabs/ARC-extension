@@ -10,8 +10,6 @@ from nances import geometry,vectortransform,selection,allinone
 import setup_family_beam_config #cần import dòng này, đây là tên của script config
 import traceback
 import math
-from Autodesk.Revit.UI import RevitCommandId
-
 def tinh_toan_can_thiet_move_text_dim_2_seg (dim, return_point_chinh_giua,vector_da_chuan_hoa, view):
     list_return = []
     view_direction = view.ViewDirection
@@ -232,7 +230,7 @@ if nances.AutodeskData():
 
     current_view = uidoc.ActiveView
     is_legend = current_view.ViewType == ViewType.Legend
-    is_plan_view = current_view.ViewType in [ViewType.FloorPlan, ViewType.CeilingPlan, ViewType.EngineeringPlan]
+    is_plan_view = current_view.ViewType in [ViewType.FloorPlan, ViewType.CeilingPlan, ViewType.EngineeringPlan, ViewType.AreaPlan ]
     is_section_elevation = current_view.ViewType in [ViewType.Section, ViewType.Elevation]
 
     option_dim_combo_3 = source_setting_dim_in_need_in_plan_view[0]
@@ -316,7 +314,7 @@ if nances.AutodeskData():
                                 if distance_grid_with_beam < (chieu_rong/2):
                                     ref_grid = Reference(grid)
                                     all_ref.Append(ref_grid)
-                                    list_grid_ref.append(ref_grid)
+                                    list_grid_ref.append(ref_grid)                                    
                 if len(list_grid_ref) > 0: #Dòng này thêm vào mục đích tránh cho việc dim thêm grid khác nữa.
                     break
 
@@ -428,7 +426,6 @@ if nances.AutodeskData():
                     pass 
 
             if is_plan_view:
-
                 #Combo 1_dim tổng
                 combo_ref_1.Append(ref_fukashi_trai)
                 combo_ref_1.Append(ref_fukashi_phai)

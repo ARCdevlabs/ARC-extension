@@ -14,6 +14,7 @@ from System.Collections.Generic import *
 import math
 import traceback
 import movetextdim
+from nances import allinone
 if module.AutodeskData():
 	uidoc = __revit__.ActiveUIDocument
 	doc = uidoc.Document
@@ -50,6 +51,7 @@ try:
         try:
             t = Transaction(doc,"Modify Text's Position of Dimension")
             t.Start() 
+            allinone.reset_text_position(element)
             # return_point = module.pick_point_with_nearest_snap(uidoc)
 
             dim_type = doc.GetElement(element.GetTypeId())

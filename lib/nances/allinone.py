@@ -205,7 +205,17 @@ if nances.AutodeskData():
             pass
         t0.Commit() 
 
-
+    def reset_text_position(element):
+        try:
+            number_of_segments =  element.NumberOfSegments
+            if number_of_segments != 0:
+                segments = element.Segments
+                for tung_seg in segments:
+                    tung_seg.ResetTextPosition()
+            else:
+                element.ResetTextPosition()
+        except:
+            pass
 
 
     def move_text_dim (dim, view, leader_dim = False):

@@ -53,7 +53,7 @@ if module.AutodeskData():
 
         value_segment = segment.Value
         
-        vi_tri = segment.Origin
+        vi_tri = segment.TextPosition
 
         cong_thuc = total_value - (value_segment)/2 + (kich_co_chu/304.8)/2 + khoang_cach_dim_toi_text
         
@@ -70,7 +70,7 @@ if module.AutodeskData():
 
         value_segment = segment.Value
         
-        vi_tri = segment.Origin
+        vi_tri = segment.TextPosition
 
         cong_thuc = (value_segment)/2 + (kich_co_chu_0/304.8)/2 + 2* khoang_cach_dim_toi_text + kich_co_chu_1/304.8
         

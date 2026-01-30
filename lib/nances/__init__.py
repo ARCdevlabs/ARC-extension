@@ -1414,9 +1414,12 @@ def move_segment_xa_nhat (list_sorted, vector_cua_dim, kich_co_chu, khoang_cach_
 
     value_segment = seg_xa_nhat.Value
     
-    vi_tri = seg_xa_nhat.Origin
+    # vi_tri = seg_xa_nhat.Origin   #cần phải thêm 1 dòng nữa để có thể điều chỉnh lại offset của dim
+
+    vi_tri = seg_xa_nhat.TextPosition 
 
     cong_thuc = ((kich_co_chu/304.8)/2) + ((value_segment)/2) + khoang_cach_dim_toi_text
+    
     if huong_phai:
         move = move_point_along_vector(vi_tri, vector_cua_dim, cong_thuc) #move theo don vi feet
     else:
