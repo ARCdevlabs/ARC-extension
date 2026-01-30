@@ -20,18 +20,22 @@ def get_geometry_non_reference(element):
     except:
         return all_gemetry
 
+
+'''2 def get_geometry và get_face hoạt động ổn định trên tool dim bằng geometry, tốt nhất đừng đụng vào'''
 #get_geometry: Sẽ lấy geometry và có những Reference để có thể áp dụng vào việc tạo dimension.
 #Phương pháp này chỉ áp dụng được với các đối tượng với HasModifiedGeometry() == True
-# def get_geometry(element):
-#     option = DB.Options()
-#     option.ComputeReferences = True
-#     geo_ref = element.get_Geometry(option)
-#     return geo_ref
-
-
 def get_geometry(element): 
     geo_ref = import_def.LibARC_Geometry.GetGeometry(element)
     return geo_ref
+
+def get_face(geometry):
+    list_faces =[]
+    faces = import_def.LibARC_Geometry.GetFaces(geometry)
+    for face in faces:
+        list_faces.append(face)
+    return list_faces
+
+'''2 def get_geometry và get_face hoạt động ổn định trên tool dim bằng geometry, tốt nhất đừng đụng vào'''
 
 # find_intersect_elements: Lọc các đối tượng giao nhau với 1 đối tượng đầu vào.
 def find_intersect_elements(idoc, element_A, list_element_B):
@@ -50,21 +54,7 @@ def find_intersect_elements(idoc, element_A, list_element_B):
     except:
         return result_element
 
-# get_face:Lấy tất cả các face của một geometry. 
-# def get_face(geometry):
-#     list_faces =[]
-#     for geometry_object in geometry:
-#         if hasattr(geometry_object, "Faces"):
-#             for face in geometry_object.Faces:
-#                 list_faces.append(face)
-#     return list_faces
 
-def get_face(geometry):
-    list_faces =[]
-    faces = import_def.LibARC_Geometry.GetFaces(geometry)
-    for face in faces:
-        list_faces.append(face)
-    return list_faces
 
 def get_center_plane_of_wall (wall):
     wall_location = wall.Location
@@ -157,6 +147,12 @@ def tinh_diem_trung_tam_bounding_box(element):
     trung_diem = (min_pt + max_pt ) /2
     return trung_diem
 
+
+
+
+
+
+'''Cần kiểm chứng thêm về code này'''
 def get_geometry_to_solid(element):
     options = Options()
     options.ComputeReferences = True
@@ -191,6 +187,12 @@ def get_face_from_solid(solid):
             if str(type(face)) == "<type 'PlanarFace'>":
                 list_faces.append(face)
     return list_faces
+
+'''Cần kiểm chứng thêm về code ở trên'''
+
+
+
+
 
 def get_all_geometry_of_grids(grid, current_view, DatumExtentType = DatumExtentType.ViewSpecific):
     all_geometry = []

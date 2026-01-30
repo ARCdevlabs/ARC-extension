@@ -578,9 +578,16 @@ def move_line_theo_vector_theo_ty_le_view(vector_de_move_line, line, snap_dim, v
     start = line.GetEndPoint(0)
     end = line.GetEndPoint(1)
     view_scale = view.Scale
-    # snap_dim = (5*(5/3)) * (1/304.8)* view_scale #1mm bang 0.003084
-    khoang_cach_move = snap_dim * view_scale
+    khoang_cach_move = snap_dim * view_scale #khoang cach tren ty le 1:1 (don vi feet) VD: 5/ 304.8
     move_start_point = move_point_along_vector(start, vector_de_move_line, khoang_cach_move)
     move_end_point = move_point_along_vector(end, vector_de_move_line, khoang_cach_move)
     new_line = DB.Line.CreateBound(move_start_point, move_end_point)
+    return new_line
+
+def move_line_theo_vector(vector_de_move_line, line, distance): 
+    start_point = line.GetEndPoint(0)
+    end_point = line.GetEndPoint(1)
+    new_start_point = move_point_along_vector(start_point,vector_de_move_line ,distance)
+    new_end_point = move_point_along_vector(end_point, vector_de_move_line,distance)
+    new_line= DB.Line.CreateBound(new_start_point,new_end_point)
     return new_line

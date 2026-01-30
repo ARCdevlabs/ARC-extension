@@ -6,7 +6,7 @@ from nances import revit
 import Autodesk
 from Autodesk.Revit.DB import *
 import nances as module
-from nances import vectortransform,geometry
+from nances import vectortransform,geometry,allinone
 from System.Collections.Generic import *
 import tim_reference_beam 
 import traceback
@@ -18,38 +18,12 @@ if module.AutodeskData():
     view_scale = Currentview.Scale
     Curve = []
 
-    def get_geometry(element):
-        option = Options()
-        option.ComputeReferences = True
-        geo_ref =  element.get_Geometry(option)
-        return geo_ref
 
-
-    def get_face(geometry):
-        list_faces =[]
-        for geometry_object in geometry:
-            if hasattr(geometry_object, "Faces"):
-                for face in geometry_object.Faces:
-                    if str(type(face)) == "<type 'PlanarFace'>":
-                        list_faces.append(face)
-        return list_faces
-
-    
     def get_all_grid():
         collector = FilteredElementCollector(doc).OfClass(Grid)
         grids = collector.ToElements()
         return grids
     
-    def get_all_geometry_of_grids(grid, DatumExtentType = DatumExtentType.ViewSpecific):
-        all_geometry = []
-        DatumExtentType = DatumExtentType.ViewSpecific
-        try:
-            geometry_element = grid.GetCurvesInView(DatumExtentType,Currentview)
-            all_geometry.append(geometry_element)
-        except:
-            pass
-        return all_geometry
-
     def check_hide_isolate(view, element):
         view_mode = TemporaryViewMode.TemporaryHideIsolate
         boolean = view.IsElementVisibleInTemporaryViewMode(view_mode, element.Id)
@@ -135,7 +109,7 @@ if module.AutodeskData():
                     get_hide_isolate = check_hide_isolate(Currentview, grid)
                     get_hidden_element = check_hidden(grid,Currentview)
                     if get_hide_isolate and get_hidden_element:
-                        geo_all_grid = get_all_geometry_of_grids(grid, DatumExtentType)
+                        geo_all_grid = geometry.get_all_geometry_of_grids(grid, DatumExtentType)
                         for one_grid_curve in geo_all_grid:
                             for two_grid_curve in one_grid_curve:
                                 grid_plane = vectortransform.create_plane_follow_line(two_grid_curve)
@@ -177,41 +151,8 @@ if module.AutodeskData():
 
                     dim_tong = doc.Create.NewDimension(Currentview, line_combo_1, tung_beam_reference_dim_tong)
 
-                curve_dim_direction = dim_chia_tam.Curve.Direction
-                seg_1_position = dim_chia_tam.Segments.Item[0].TextPosition 
-                seg_2_position = dim_chia_tam.Segments.Item[1].TextPosition
-                seg_1_value = float(dim_chia_tam.Segments.Item[0].Value * 304.8)
-                seg_2_value = float(dim_chia_tam.Segments.Item[1].Value * 304.8)
-                round_format_value_1 = round(seg_1_value,2)
-                round_format_value_2 = round(seg_2_value,2)
-                formatted_value_1 = str(round_format_value_1).rstrip('0').rstrip('.')
-                formatted_value_2 = str(round_format_value_2).rstrip('0').rstrip('.')
-                len_formatted_value_1 = len(formatted_value_1)
-                len_formatted_value_2 = len(formatted_value_2)
-                one_unit_width = 2 #Chieu rong 1 don vi text
-                width_text_1 = float(len_formatted_value_1 * one_unit_width * (Currentview.Scale))
-                width_text_2 = float(len_formatted_value_2 * one_unit_width * (Currentview.Scale))
-                total_value = seg_1_value + seg_2_value
-                ti_le_1 = seg_1_value / (total_value)
-                ti_le_2 = seg_2_value / (total_value)
-                width_1 = total_value
-                khoang_cach_tu_dim = 1.5 * (Currentview.Scale)
-                if seg_1_value < width_text_1: 
-                    width_offset_text_1 = (seg_1_value/2 + khoang_cach_tu_dim + width_text_1/2 ) 
-                else:
-                    width_offset_text_1 = 0
-                
-                if seg_2_value < width_text_2: 
-                    width_offset_text_2 = (seg_2_value/2 + khoang_cach_tu_dim + width_text_2/2 )
-                else:
-                    width_offset_text_2 = 0
+                allinone.move_text_dim (dim_chia_tam, Currentview, leader_dim = False)
 
-                move_seg_1 = vectortransform.move_point_along_vector(seg_1_position,curve_dim_direction, - (width_offset_text_1/304.8))
-                move_seg_2 = vectortransform.move_point_along_vector(seg_2_position,curve_dim_direction, (width_offset_text_2/304.8))
-                dim_chia_tam.Segments.Item[0].TextPosition = move_seg_1
-                dim_chia_tam.Segments.Item[1].TextPosition = move_seg_2
-                leader_dim = dim_chia_tam.get_Parameter(BuiltInParameter.DIM_LEADER)
-                leader_dim.Set(False) 
             except:
                 # print(traceback.format_exc())
                 pass
