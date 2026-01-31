@@ -523,7 +523,7 @@ if nances.AutodeskData():
 
                 #Line dim phương dọc
                 
-                tinh_toan_offset_tinh_tu_mat_dam_theo_chieu_rong = (chieu_rong/2 + 700/304.8) / view_scale #chia trước cho scale vì def move_line_theo_vector_theo_ty_le_view nhân scale lên lại.
+                tinh_toan_offset_tinh_tu_mat_dam_theo_chieu_rong = (chieu_rong/2 + 600/304.8) / view_scale #chia trước cho scale vì def move_line_theo_vector_theo_ty_le_view nhân scale lên lại.
                 
                 line_combo_E =  vectortransform.move_line_theo_vector_theo_ty_le_view(right_direction , line_doc_ngay_tam, tinh_toan_offset_tinh_tu_mat_dam_theo_chieu_rong, current_view)
 
