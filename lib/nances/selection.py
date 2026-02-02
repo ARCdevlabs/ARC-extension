@@ -47,3 +47,8 @@ def select_sau_khi_chay_tool (list_elements, uidoc):
         Icollection = List[DB.ElementId](list_id)
         select.SetElementIds(Icollection)
     return
+
+def get_all_grid(doc, active_view):
+    collector = DB.FilteredElementCollector(doc, active_view.Id).OfClass(DB.Grid)
+    visible_grids = [grid for grid in collector if not grid.ViewSpecific]
+    return visible_grids

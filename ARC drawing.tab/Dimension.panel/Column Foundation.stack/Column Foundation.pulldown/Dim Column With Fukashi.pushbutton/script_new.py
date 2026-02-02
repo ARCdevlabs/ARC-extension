@@ -6,16 +6,72 @@ import Autodesk.Revit.DB as DB
 from System.Collections.Generic import List
 from Autodesk.Revit.UI.Selection import ObjectType
 from pyrevit import script
-from nances import geometry,vectortransform,selection,allinone, visible
+from nances import geometry,vectortransform,selection,allinone
 import setup_family_beam_config #cần import dòng này, đây là tên của script config
 import traceback
 import math
+def tinh_toan_can_thiet_move_text_dim_2_seg (dim, return_point_chinh_giua,vector_da_chuan_hoa, view):
+    list_return = []
+    view_direction = view.ViewDirection
+    seg_1 = dim.Segments.Item[0]
+    seg_2 = dim.Segments.Item[1]
+    seg_1_value = float(seg_1.Value * 304.8)
+    seg_2_value = float(seg_2.Value * 304.8)
+    round_format_value_1 = round(seg_1_value,2)
+    round_format_value_2 = round(seg_2_value,2)
+    formatted_value_1 = str(round_format_value_1).rstrip('0').rstrip('.')
+    formatted_value_2 = str(round_format_value_2).rstrip('0').rstrip('.')
+    len_formatted_value_1 = len(formatted_value_1)
+    len_formatted_value_2 = len(formatted_value_2)
+    one_unit_width = 2 #Chieu rong 1 don vi text
+    width_text_1 = float(len_formatted_value_1 * one_unit_width * (view.Scale))
+
+    width_text_2 = float(len_formatted_value_2 * one_unit_width * (view.Scale))
+
+    xac_dinh_phia = xac_dinh_phia_can_chinh_text_2_segment(dim,return_point_chinh_giua, vector_da_chuan_hoa, view_direction)
+    if xac_dinh_phia[0] == "Bên phải":
+        return_seg_1 = seg_1
+        return_seg_2 = seg_2
+    if xac_dinh_phia[0] == "Bên trái":
+        return_seg_1 = seg_2
+        return_seg_2 = seg_1
+
+    return_seg_1_value = float(return_seg_1.Value * 304.8)
+    
+    return_seg_2_value = float(return_seg_2.Value * 304.8)
+
+    if return_seg_1_value < width_text_1:
+        return_trai = True
+    else:
+        return_trai = False
+
+    if return_seg_2_value < width_text_2:
+
+        return_phai = True
+    else:
+        return_phai = False
+
+    list_return.append(return_phai)
+    list_return.append(return_trai)
+
+    return list_return
+
+def xac_dinh_phia_can_chinh_text_2_segment (element,return_point_chinh_giua, vector_da_chuan_hoa,view_direction):
+    seg_1 = element.Segments.Item[0]
+    seg_2 = element.Segments.Item[1]
+    text_ori_1 = seg_1.Origin
+    text_ori_2 = seg_2.Origin
+    xoay_vector_90_do = vectortransform.rotate_vector_around_axis_revit(vector_da_chuan_hoa, view_direction, 90)
+    phia_seg_1 = allinone.xac_dinh_phia(text_ori_1, return_point_chinh_giua, xoay_vector_90_do,view_direction)
+    phia_seg_2 = allinone.xac_dinh_phia(text_ori_2, return_point_chinh_giua, xoay_vector_90_do,view_direction)
+    return phia_seg_1,phia_seg_2
+
 
 def loc_grid_nam_ben_trong_dam(grids):
     for grid in grids:
         list_grid_ref = []
-        get_hide_isolate = visible.check_hide_isolate(current_view, grid)
-        get_hidden_element = visible.check_hidden(grid,current_view)
+        get_hide_isolate = check_hide_isolate(current_view, grid)
+        get_hidden_element = check_hidden(grid,current_view)
         if get_hide_isolate and get_hidden_element:
             geo_all_grid = geometry.get_all_geometry_of_grids(grid, DatumExtentType)
             for one_grid_curve in geo_all_grid:
@@ -58,6 +114,21 @@ def check_goc_cua_dam_so_voi_view_direction(dam,view):
     else: 
         return False
 
+
+def get_all_grid():
+    collector = FilteredElementCollector(doc).OfClass(Grid)
+    grids = collector.ToElements()
+    return grids
+
+def check_hide_isolate(view, element):
+    view_mode = TemporaryViewMode.TemporaryHideIsolate
+    boolean = view.IsElementVisibleInTemporaryViewMode(view_mode, element.Id)
+    return boolean
+def check_hidden(element, view):
+    boolean = element.IsHidden(view)
+    not_boolean = not(boolean)
+    return not_boolean
+
 def set_work_plane(uidoc):
     import nances
     current_view = uidoc.ActiveView
@@ -66,6 +137,75 @@ def set_work_plane(uidoc):
     except:
         pass
 
+def move_text_dim_type_1_auto (element, current_view,return_point, kich_co_chu = 1.8):
+    try:
+        import nances
+        para_leader_line = nances.get_builtin_parameter_by_name(element, DB.BuiltInParameter.DIM_LEADER)
+        para_leader_line.Set(int(0))
+
+        seg_phai = []
+        seg_trai = []
+        none_segment = []
+
+        view_direction = current_view.ViewDirection
+
+        dim_line = element.Curve
+
+        vector_of_dim = dim_line.Direction
+
+        vector_da_chuan_hoa = vectortransform.chuan_hoa_vector(vector_of_dim, current_view)
+
+        kich_thuoc_moi_chu = kich_co_chu
+
+        kick_thuoc_tu_dim_toi_text = 1
+
+        quy_doi_theo_ty_le = (kick_thuoc_tu_dim_toi_text * current_view.Scale) /304.8
+
+        number_of_segments =  element.NumberOfSegments
+        if number_of_segments != 0:
+            segments = element.Segments
+            for seg in segments:
+                text_ori = seg.Origin
+                value = (seg.Value) * 304.8 #Don vi dang la mm
+                kich_co = nances.xac_dinh_kich_co_chu(current_view, value, kich_thuoc_moi_chu)
+                xoay_vector_90_do = vectortransform.rotate_vector_around_axis_revit(vector_da_chuan_hoa, view_direction, 90)
+
+                phia = allinone.xac_dinh_phia(text_ori, return_point, xoay_vector_90_do,view_direction)
+                if phia == "Bên phải":
+                    seg_phai.append(seg)
+                if phia == "Bên trái":
+                    seg_trai.append(seg)            
+
+            if round(float(vector_of_dim.Z),3) == 0:
+                sorted_phai =  nances.sort_seg_by_distance_mat_bang(return_point,seg_phai) #Sort segment xa nhất tới gần nhất tính tình point đã click
+                sorted_trai =  nances.sort_seg_by_distance_mat_bang(return_point,seg_trai) #Sort segment xa nhất tới gần nhất tính tình point đã click
+            else:
+                sorted_phai =  nances.sort_seg_by_distance_mat_cat(return_point,seg_phai) #Sort segment xa nhất tới gần nhất tính tình point đã click
+                sorted_trai =  nances.sort_seg_by_distance_mat_cat(return_point,seg_trai) #Sort segment xa nhất tới gần nhất tính tình point đã click            
+            if len(sorted_phai) > 0:
+                value_phai_0 = (sorted_phai[0].Value) * 304.8 
+                kich_co_phai_0 = nances.xac_dinh_kich_co_chu(current_view, value_phai_0, kich_thuoc_moi_chu)
+                nances.move_segment_xa_nhat(sorted_phai, vector_da_chuan_hoa, kich_co_phai_0,quy_doi_theo_ty_le, huong_phai = True)
+            if len(sorted_trai) > 0:
+                value_trai_0 = (sorted_trai[0].Value) * 304.8 
+                kich_co_trai_0 = nances.xac_dinh_kich_co_chu(current_view, value_trai_0, kich_thuoc_moi_chu)
+                nances.move_segment_xa_nhat(sorted_trai, vector_da_chuan_hoa,kich_co_trai_0,quy_doi_theo_ty_le, huong_phai = False)
+        else:
+            seg = element
+            none_segment.append(seg)
+            text_ori = seg.Origin
+            value = (seg.Value) * 304.8 #Don vi dang la mm
+            kich_co = nances.xac_dinh_kich_co_chu(current_view, value, kich_thuoc_moi_chu)
+            xoay_vector_90_do = vectortransform.rotate_vector_around_axis_revit(vector_da_chuan_hoa, view_direction, 90)
+            phia = allinone.xac_dinh_phia(text_ori, return_point, xoay_vector_90_do,view_direction)
+            if phia == "Bên trái":
+                nances.move_segment_xa_nhat(none_segment, vector_da_chuan_hoa, kich_co,quy_doi_theo_ty_le, huong_phai = True)
+            else:
+                nances.move_segment_xa_nhat(none_segment, vector_da_chuan_hoa,kich_co,quy_doi_theo_ty_le, huong_phai = False)
+
+    except Exception as e:
+        print(e)
+        pass
 
 def get_reference_by_name_in_family (instance, name):
     ref = instance.GetReferenceByName(name)
@@ -111,7 +251,7 @@ if nances.AutodeskData():
     list_new_dim =[]
     list_dim_need_modify_text = []
 
-    all_grid = selection.get_all_grid(doc,current_view)
+    all_grid = get_all_grid()
 
     trans_group = TransactionGroup(doc, 'Dimension beam_new version')
     trans_group.Start()
@@ -160,8 +300,8 @@ if nances.AutodeskData():
 
             for grid in all_grid:
                 list_grid_ref = []
-                get_hide_isolate = visible.check_hide_isolate(grid, current_view)
-                get_hidden_element = visible.check_hidden(grid,current_view)
+                get_hide_isolate = check_hide_isolate(current_view, grid)
+                get_hidden_element = check_hidden(grid,current_view)
 
                 if get_hide_isolate and get_hidden_element:
                     geo_all_grid = geometry.get_all_geometry_of_grids(grid, current_view, DatumExtentType)
@@ -527,27 +667,27 @@ if nances.AutodeskData():
 
                     if number_of_segments == 3:
 
-                        allinone.move_text_dim_type_1_auto (tung_dim, current_view, return_point_chinh_giua, kich_co_chu = 1.8)    
+                        move_text_dim_type_1_auto (tung_dim, current_view, return_point_chinh_giua, kich_co_chu = 1.8)    
 
                     if number_of_segments == 2:
 
-                        tinh_toan = allinone.tinh_toan_can_thiet_move_text_dim_2_seg (tung_dim,return_point_chinh_giua, vector_da_chuan_hoa, current_view)  #0 là segment bên phải, 1 là segment bên phải
+                        tinh_toan = tinh_toan_can_thiet_move_text_dim_2_seg (tung_dim,return_point_chinh_giua, vector_da_chuan_hoa, current_view)  #0 là segment bên phải, 1 là segment bên phải
 
                         if tinh_toan[0] and tinh_toan[1]: #0 là segment bên phải, 1 là segment bên phải
                             
-                            allinone.move_text_dim_type_1_auto (tung_dim, current_view, return_point_chinh_giua, kich_co_chu = 1.8)   
+                            move_text_dim_type_1_auto (tung_dim, current_view, return_point_chinh_giua, kich_co_chu = 1.8)   
 
                         if tinh_toan[0] and not tinh_toan [1]: #0 là segment bên phải, 1 là segment bên phải
 
                             return_point_lech = vectortransform.move_point_along_vector(diem_trung_binh, vector_da_chuan_hoa, 5)
 
-                            allinone.move_text_dim_type_1_auto (tung_dim, current_view, return_point_lech, kich_co_chu = 1.8)   
+                            move_text_dim_type_1_auto (tung_dim, current_view, return_point_lech, kich_co_chu = 1.8)   
 
                         if not tinh_toan [0] and tinh_toan[1]: #0 là segment bên phải, 1 là segment bên phải
 
                             return_point_lech = vectortransform.move_point_along_vector(diem_trung_binh, vector_da_chuan_hoa, -5)
 
-                            allinone.move_text_dim_type_1_auto (tung_dim, current_view, return_point_lech, kich_co_chu = 1.8)   
+                            move_text_dim_type_1_auto (tung_dim, current_view, return_point_lech, kich_co_chu = 1.8)   
                     
 
             except Exception as e:

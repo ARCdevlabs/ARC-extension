@@ -591,3 +591,49 @@ def move_line_theo_vector(vector_de_move_line, line, distance):
     new_end_point = move_point_along_vector(end_point, vector_de_move_line,distance)
     new_line= DB.Line.CreateBound(new_start_point,new_end_point)
     return new_line
+
+def get_Y_vector(column):
+    Y_orient = column.FacingOrientation
+    return Y_orient
+
+def get_X_vector(column):
+    X_orient = column.HandOrientation
+    return X_orient
+
+def line_for_dim_Y (column,view):
+    point = column.Location.Point
+    Y_vector = get_Y_vector(column)
+    vector_chuan_hoa = chuan_hoa_vector_tu_trai_qua_phai_duoi_len_tren(Y_vector,view)
+    point_Y_2 = move_point_along_vector(point,vector_chuan_hoa,1)
+    line_Y = DB.Line.CreateBound(point,point_Y_2)
+    return line_Y
+
+def line_for_dim_X (column,view):
+    point = column.Location.Point
+    X_vector =get_X_vector(column)
+    vector_chuan_hoa = chuan_hoa_vector_tu_trai_qua_phai_duoi_len_tren(X_vector,view)
+    point_X_2 = move_point_along_vector(point,vector_chuan_hoa,1)
+    line_X = DB.Line.CreateBound(point,point_X_2)
+    return line_X
+
+def tinh_toan_line_dim_cot_1_2_3 (line_ngay_tam_cot, vector ,nua_chieu_rong_cot, view):
+
+    view_scale = view.Scale
+
+    khoang_cach_dim_3 = (9 / 304.8)
+
+    snap_dim =  (5 / 304.8)
+
+    tinh_toan_dim_3 = nua_chieu_rong_cot/view_scale + (khoang_cach_dim_3)
+
+    tinh_toan_dim_2 = nua_chieu_rong_cot/view_scale + (khoang_cach_dim_3 + snap_dim)
+
+    tinh_toan_dim_1 = nua_chieu_rong_cot/view_scale + (khoang_cach_dim_3 + snap_dim + snap_dim)
+
+    line_dim_3 = move_line_theo_vector_theo_ty_le_view(vector, line_ngay_tam_cot, tinh_toan_dim_3, view)
+
+    line_dim_2 = move_line_theo_vector_theo_ty_le_view(vector, line_ngay_tam_cot, tinh_toan_dim_2, view)
+
+    line_dim_1 = move_line_theo_vector_theo_ty_le_view(vector, line_ngay_tam_cot, tinh_toan_dim_1, view)
+
+    return line_dim_3,line_dim_2,line_dim_1

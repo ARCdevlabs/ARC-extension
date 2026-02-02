@@ -250,3 +250,130 @@ if nances.AutodeskData():
             dim.Segments.Item[1].TextPosition = move_seg_2
             leader_dim_param = dim.get_Parameter(BuiltInParameter.DIM_LEADER)
             leader_dim_param.Set(leader_dim)
+
+    def move_text_dim_type_1_auto (element, current_view,return_point, kich_co_chu = 1.8):
+        try:
+            import nances
+            para_leader_line = nances.get_builtin_parameter_by_name(element, DB.BuiltInParameter.DIM_LEADER)
+            para_leader_line.Set(int(0))
+
+            seg_phai = []
+            seg_trai = []
+            none_segment = []
+
+            view_direction = current_view.ViewDirection
+
+            dim_line = element.Curve
+
+            vector_of_dim = dim_line.Direction
+
+            vector_da_chuan_hoa = vectortransform.chuan_hoa_vector(vector_of_dim, current_view)
+
+            kich_thuoc_moi_chu = kich_co_chu
+
+            kick_thuoc_tu_dim_toi_text = 1
+
+            quy_doi_theo_ty_le = (kick_thuoc_tu_dim_toi_text * current_view.Scale) /304.8
+
+            number_of_segments =  element.NumberOfSegments
+            if number_of_segments != 0:
+                segments = element.Segments
+                for seg in segments:
+                    text_ori = seg.Origin
+                    value = (seg.Value) * 304.8 #Don vi dang la mm
+                    kich_co = nances.xac_dinh_kich_co_chu(current_view, value, kich_thuoc_moi_chu)
+                    xoay_vector_90_do = vectortransform.rotate_vector_around_axis_revit(vector_da_chuan_hoa, view_direction, 90)
+
+                    phia = xac_dinh_phia(text_ori, return_point, xoay_vector_90_do,view_direction)
+                    if phia == "Bên phải":
+                        seg_phai.append(seg)
+                    if phia == "Bên trái":
+                        seg_trai.append(seg)            
+
+                if round(float(vector_of_dim.Z),3) == 0:
+                    sorted_phai =  nances.sort_seg_by_distance_mat_bang(return_point,seg_phai) #Sort segment xa nhất tới gần nhất tính tình point đã click
+                    sorted_trai =  nances.sort_seg_by_distance_mat_bang(return_point,seg_trai) #Sort segment xa nhất tới gần nhất tính tình point đã click
+                else:
+                    sorted_phai =  nances.sort_seg_by_distance_mat_cat(return_point,seg_phai) #Sort segment xa nhất tới gần nhất tính tình point đã click
+                    sorted_trai =  nances.sort_seg_by_distance_mat_cat(return_point,seg_trai) #Sort segment xa nhất tới gần nhất tính tình point đã click            
+                if len(sorted_phai) > 0:
+                    value_phai_0 = (sorted_phai[0].Value) * 304.8 
+                    kich_co_phai_0 = nances.xac_dinh_kich_co_chu(current_view, value_phai_0, kich_thuoc_moi_chu)
+                    nances.move_segment_xa_nhat(sorted_phai, vector_da_chuan_hoa, kich_co_phai_0,quy_doi_theo_ty_le, huong_phai = True)
+                if len(sorted_trai) > 0:
+                    value_trai_0 = (sorted_trai[0].Value) * 304.8 
+                    kich_co_trai_0 = nances.xac_dinh_kich_co_chu(current_view, value_trai_0, kich_thuoc_moi_chu)
+                    nances.move_segment_xa_nhat(sorted_trai, vector_da_chuan_hoa,kich_co_trai_0,quy_doi_theo_ty_le, huong_phai = False)
+            else:
+                seg = element
+                none_segment.append(seg)
+                text_ori = seg.Origin
+                value = (seg.Value) * 304.8 #Don vi dang la mm
+                kich_co = nances.xac_dinh_kich_co_chu(current_view, value, kich_thuoc_moi_chu)
+                xoay_vector_90_do = vectortransform.rotate_vector_around_axis_revit(vector_da_chuan_hoa, view_direction, 90)
+                phia = xac_dinh_phia(text_ori, return_point, xoay_vector_90_do,view_direction)
+                if phia == "Bên trái":
+                    nances.move_segment_xa_nhat(none_segment, vector_da_chuan_hoa, kich_co,quy_doi_theo_ty_le, huong_phai = True)
+                else:
+                    nances.move_segment_xa_nhat(none_segment, vector_da_chuan_hoa,kich_co,quy_doi_theo_ty_le, huong_phai = False)
+
+        except Exception as e:
+            print(e)
+            pass
+        
+    def tinh_toan_can_thiet_move_text_dim_2_seg (dim, return_point_chinh_giua,vector_da_chuan_hoa, view):
+        list_return = []
+        view_direction = view.ViewDirection
+        seg_1 = dim.Segments.Item[0]
+        seg_2 = dim.Segments.Item[1]
+        seg_1_value = float(seg_1.Value * 304.8)
+        seg_2_value = float(seg_2.Value * 304.8)
+        round_format_value_1 = round(seg_1_value,2)
+        round_format_value_2 = round(seg_2_value,2)
+        formatted_value_1 = str(round_format_value_1).rstrip('0').rstrip('.')
+        formatted_value_2 = str(round_format_value_2).rstrip('0').rstrip('.')
+        len_formatted_value_1 = len(formatted_value_1)
+        len_formatted_value_2 = len(formatted_value_2)
+        one_unit_width = 2 #Chieu rong 1 don vi text
+        width_text_1 = float(len_formatted_value_1 * one_unit_width * (view.Scale))
+
+        width_text_2 = float(len_formatted_value_2 * one_unit_width * (view.Scale))
+
+        xac_dinh_phia = xac_dinh_phia_can_chinh_text_2_segment(dim,return_point_chinh_giua, vector_da_chuan_hoa, view_direction)
+        if xac_dinh_phia[0] == "Bên phải":
+            return_seg_1 = seg_1
+            return_seg_2 = seg_2
+        if xac_dinh_phia[0] == "Bên trái":
+            return_seg_1 = seg_2
+            return_seg_2 = seg_1
+
+        return_seg_1_value = float(return_seg_1.Value * 304.8)
+        
+        return_seg_2_value = float(return_seg_2.Value * 304.8)
+
+        if return_seg_1_value < width_text_1:
+            return_trai = True
+        else:
+            return_trai = False
+
+        if return_seg_2_value < width_text_2:
+
+            return_phai = True
+        else:
+            return_phai = False
+
+        list_return.append(return_phai)
+        list_return.append(return_trai)
+
+        return list_return
+    
+
+    def xac_dinh_phia_can_chinh_text_2_segment (element,return_point_chinh_giua, vector_da_chuan_hoa,view_direction):
+        seg_1 = element.Segments.Item[0]
+        seg_2 = element.Segments.Item[1]
+        text_ori_1 = seg_1.Origin
+        text_ori_2 = seg_2.Origin
+        xoay_vector_90_do = vectortransform.rotate_vector_around_axis_revit(vector_da_chuan_hoa, view_direction, 90)
+        phia_seg_1 = xac_dinh_phia(text_ori_1, return_point_chinh_giua, xoay_vector_90_do,view_direction)
+        phia_seg_2 = xac_dinh_phia(text_ori_2, return_point_chinh_giua, xoay_vector_90_do,view_direction)
+        return phia_seg_1,phia_seg_2
