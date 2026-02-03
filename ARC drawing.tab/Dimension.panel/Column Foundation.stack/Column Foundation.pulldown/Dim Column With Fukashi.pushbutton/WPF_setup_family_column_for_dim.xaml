@@ -28,22 +28,21 @@
                 <StackPanel x:Name="GroupBoxContent" 
                         Orientation="Vertical" Height="781" Margin="0,0,14,0">
                     <Label Content="Setting Reference Name, Fukashi Parameter of Column.&#xA;The parameter [Is a referenece] is not [Not a reference]" />
-                    <Grid  Margin="1"  Height="287">
+                    <Grid  Margin="1"  Height="320">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="4*"/>
+                            <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="6*"/>
                         </Grid.ColumnDefinitions>
                         <Image x:Name="guide_image_0"
                            Stretch="Uniform"
                            Grid.Column="0"/>
-                        <Image x:Name="guide_image_1"
-                           Width="351" 
+                        <Image x:Name="guide_image_1" 
                            Height="287" 
                            Stretch="Uniform"
-                               Grid.Column="1"/>
+                               Grid.Column="1" Margin="16,16,15,16"/>
                     </Grid>
                     <Label Content="Setting the position of dim." />
-                    <Grid  Margin="1" Width="670" Height="421">
+                    <Grid  Margin="1" Width="670" Height="377">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="0.5*"/>
                             <ColumnDefinition Width="5*"/>

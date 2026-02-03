@@ -102,16 +102,18 @@ class MyWindow(Windows.Window):
         self._updating = False
 
         self.MK_柱_RC = ["背面","正面","左","右","D","B","C","A","フカシD","フカシB","フカシC","フカシA"]
-        self.T_梁RC = ["構造体-上","構造体-下","構造体-左","構造体-右","外形-上","外形-下","外形-左","外形-右","梁上端増打","梁下端増打","梁側面増打2","梁側面増打1"]
-        self.custom_family_meada = ["Top","Bot","Left","Right","Top fukashi","Bot fukashi","Left fukashi","Right fukashi","Srb011_上部_ふかし厚さ","Srb012_下部_ふかし厚さ","Srb014_側2_ふかし厚さ","Srb013_側1_ふかし厚さ"]
-        self.custom_family_obayashi = ["中心高","D_c","2","1","Mt","Mu","Mf","Mb","増打ち_z正面_object","増打ち_z負面_object","増打ち_y正面_object","増打ち_y負面_object"]
+        self.custom_KJ_RC柱 = ["背面","正面","左","右","D","B","C","A","フカシ上","フカシ下","フカシ左","フカシ右"]
+        self.MK_S_構柱_RC_柱 = ["背面","正面","左","右","前ふかし_厚さ","後ふかし_厚さ","左ふかし_厚さ","右ふかし_厚さ","Srp005_前部_ふかし厚さF","Srp006_後部_ふかし厚さF","Srp007_左部_ふかし厚さF","Srp008_右部_ふかし厚さF"]
+        self.T_柱RC角柱 = ["構造体-Y方向R","構造体-Y方向L","構造体-X方向L","構造体-X方向R","外形-Y方向R","外形-Y方向L","外形-X方向L","外形-X方向R","Y方向Rﾌｶｼ","Y方向Lﾌｶｼ","X方向Lﾌｶｼ","X方向Rﾌｶｼ"]
+        self.custom_family_obayashi = ["背面","正面","左","右","背面+Y+","正面+Y-","左+X-","右+X+","増打ち_Y正面_project","増打ち_Y負面_project","増打ち_X負面_project","増打ち_X正面_project"]
         self.list_other = [""] * 12 #Tạo ra list có 12 đối tượng trống.
 
         values =[
                     "Last setting",
                     "MK_柱〈RC〉",
-                    "T_梁RC",
-                    "Custom family_Meada",
+                    "T_柱RC-角柱",                   
+                    "MK_S_構柱_RC_柱 or MK_S_構柱_RC_根巻柱",
+                    "Custom_KJ_RC柱",
                     "Custom family_Obayashi",
                     "Other"
                 ]
@@ -227,15 +229,18 @@ class MyWindow(Windows.Window):
         if selected == "MK_柱〈RC〉":
             load_setting = self.MK_柱_RC
         
-        elif selected == "T_梁RC":
-            load_setting = self.T_梁RC
+        if selected == "custom_KJ_RC柱":
+            load_setting = self.custom_KJ_RC柱
+        
+        elif selected == "T_柱RC-角柱":
+            load_setting = self.T_柱RC角柱
+
+        elif selected == "MK_S_構柱_RC_柱 or MK_S_構柱_RC_根巻柱":
+            load_setting = self.MK_S_構柱_RC_柱
 
         elif selected == "Last setting":
             load_setting = load_configs_setup_family()
-
-        elif selected == "Custom family_Meada":
-            load_setting = self.custom_family_meada
-        
+    
         elif selected == "Custom family_Obayashi":
             load_setting = self.custom_family_obayashi
 

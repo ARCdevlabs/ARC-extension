@@ -121,17 +121,19 @@ class MyWindow(Windows.Window):
         self._updating = False
 
         self.MK_梁_RC = ["中心立面図","6","3","4","8","下側","左側","右側","上端ふかし","下端ふかし","左ふかし","右ふかし"]
-        self.T_梁RC = ["構造体-上","構造体-下","構造体-左","構造体-右","外形-上","外形-下","外形-左","外形-右","梁上端増打","梁下端増打","梁側面増打2","梁側面増打1"]
+        self.custom_T_梁RC = ["構造体-上","構造体-下","構造体-左","構造体-右","外形-上","外形-下","外形-左","外形-右","梁上端増打","梁下端増打","梁側面増打2","梁側面増打1"]
         self.custom_family_meada = ["Top","Bot","Left","Right","Top fukashi","Bot fukashi","Left fukashi","Right fukashi","Srb011_上部_ふかし厚さ","Srb012_下部_ふかし厚さ","Srb014_側2_ふかし厚さ","Srb013_側1_ふかし厚さ"]
         self.custom_family_obayashi = ["中心高","D_c","2","1","Mt","Mu","Mf","Mb","増打ち_z正面_object","増打ち_z負面_object","増打ち_y正面_object","増打ち_y負面_object"]
+        self.custom_family_kajima = ["中心立面図","6","3","4","8","下側","左側","右側","フカシ上","フカシ下","フカシ右","フカシ左"]
         self.list_other = [""] * 12 #Tạo ra list có 12 đối tượng trống.
 
         values =[
                     "Last setting",
                     "MK_梁〈RC〉",
-                    "T_梁RC",
+                    "Custom T_梁RC",
                     "Custom family_Meada",
                     "Custom family_Obayashi",
+                    "Custom family_Kajima",
                     "Other"
                 ]
         self.combo_box_select_family.ItemsSource = values
@@ -250,8 +252,8 @@ class MyWindow(Windows.Window):
         if selected == "MK_梁〈RC〉":
             load_setting = self.MK_梁_RC
         
-        elif selected == "T_梁RC":
-            load_setting = self.T_梁RC
+        elif selected == "Custom T_梁RC":
+            load_setting = self.custom_T_梁RC
 
         elif selected == "Last setting":
             load_setting = load_configs_setup_family()
@@ -261,6 +263,9 @@ class MyWindow(Windows.Window):
         
         elif selected == "Custom family_Obayashi":
             load_setting = self.custom_family_obayashi
+        
+        elif selected == "Custom family_Kajima":
+            load_setting = self.custom_family_kajima
 
         elif selected == "Other":
             load_setting = self.list_other

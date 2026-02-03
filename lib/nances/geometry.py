@@ -203,3 +203,38 @@ def get_all_geometry_of_grids(grid, current_view, DatumExtentType = DatumExtentT
     except:
         pass
     return all_geometry
+
+def tinh_chieu_rong_cot(cot, vector):
+    #Lấy vector trục dầm
+
+    # Xác định vector vuông góc với trục dầm
+
+    # Chiếu các điểm bounding box lên vector đó
+
+    # Lấy max – min → ra chiều rộng
+
+    Z = XYZ.BasisZ
+
+    width_direction = vector.CrossProduct(Z).Normalize() #ket qua la vector
+
+    bbox = cot.get_BoundingBox(None)
+    min_pt = bbox.Min
+    max_pt = bbox.Max
+    points = [
+    DB.XYZ(min_pt.X, min_pt.Y, min_pt.Z),
+    XYZ(min_pt.X, min_pt.Y, max_pt.Z),
+    XYZ(min_pt.X, max_pt.Y, min_pt.Z),
+    XYZ(min_pt.X, max_pt.Y, max_pt.Z),
+    XYZ(max_pt.X, min_pt.Y, min_pt.Z),
+    XYZ(max_pt.X, min_pt.Y, max_pt.Z),
+    XYZ(max_pt.X, max_pt.Y, min_pt.Z),
+    XYZ(max_pt.X, max_pt.Y, max_pt.Z),
+    ]
+    projections = [p.DotProduct(width_direction) for p in points]  
+
+    #Ta đổ bóng (chiếu) từng điểm point lên vector vuông góc với dầm và
+    #lấy khoảng cách có dấu từ gốc tọa độ đến điểm chiếu. (khoảng cách lúc này rất lớn vì tính từ mốc 0,0,0)
+
+    width = max(projections) - min(projections) #Hàm này sẽ triệt tiêu khoảng cách tính từ tọa độ.
+
+    return width

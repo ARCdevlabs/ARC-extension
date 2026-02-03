@@ -44,43 +44,6 @@ if nances.AutodeskData():
         value = param.AsValueString()
         return value
     
-    def tinh_chieu_rong_cot(cot, vector):
-        #Lấy vector trục dầm
-
-        # Xác định vector vuông góc với trục dầm
-
-        # Chiếu các điểm bounding box lên vector đó
-
-        # Lấy max – min → ra chiều rộng
-
-        Z = XYZ.BasisZ
-
-        width_direction = vector.CrossProduct(Z).Normalize() #ket qua la vector
-
-        bbox = cot.get_BoundingBox(None)
-        min_pt = bbox.Min
-        max_pt = bbox.Max
-        points = [
-        DB.XYZ(min_pt.X, min_pt.Y, min_pt.Z),
-        XYZ(min_pt.X, min_pt.Y, max_pt.Z),
-        XYZ(min_pt.X, max_pt.Y, min_pt.Z),
-        XYZ(min_pt.X, max_pt.Y, max_pt.Z),
-        XYZ(max_pt.X, min_pt.Y, min_pt.Z),
-        XYZ(max_pt.X, min_pt.Y, max_pt.Z),
-        XYZ(max_pt.X, max_pt.Y, min_pt.Z),
-        XYZ(max_pt.X, max_pt.Y, max_pt.Z),
-        ]
-        projections = [p.DotProduct(width_direction) for p in points]  
-    
-        #Ta đổ bóng (chiếu) từng điểm point lên vector vuông góc với dầm và
-        #lấy khoảng cách có dấu từ gốc tọa độ đến điểm chiếu. (khoảng cách lúc này rất lớn vì tính từ mốc 0,0,0)
-    
-        width = max(projections) - min(projections) #Hàm này sẽ triệt tiêu khoảng cách tính từ tọa độ.
-
-        return width
-    
-
-
     logger = script.get_logger()
 
     my_config = script.get_config()
@@ -163,9 +126,9 @@ if nances.AutodeskData():
                     combo_ref_right_2 = ReferenceArray()
                     combo_ref_right_3 = ReferenceArray()
 
-                    chieu_rong = tinh_chieu_rong_cot(tung_column, Y_vector)
+                    chieu_rong = geometry.tinh_chieu_rong_cot(tung_column, Y_vector)
 
-                    chieu_cao = tinh_chieu_rong_cot(tung_column, X_vector)
+                    chieu_cao = geometry.tinh_chieu_rong_cot(tung_column, X_vector)
                     
                     #Thông thường parameter "Dimension Line Snap Distance" có giá trị là 5mm
                     snap_dim_mm = 5 #tính bằng mm
