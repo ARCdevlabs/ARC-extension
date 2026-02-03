@@ -89,6 +89,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="..\..\..\ARC drawing.tab\Dimension.panel\Column Foundation.stack\Column Foundation.pulldown\Dim Column No Fukashi.pushbutton\WPF_setup_position_of_dim_foundation_column.xaml">
+      <Link>Link WPF\WPF_setup_position_of_dim_foundation_column.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="..\..\..\ARC drawing.tab\Dimension.panel\Column Foundation.stack\Column Foundation.pulldown\Dim Column With Fukashi.pushbutton\WPF_setup_family_column_for_dim.xaml">
       <Link>Link WPF\WPF_setup_family_column_for_dim.xaml</Link>
       <Generator>MSBuild:Compile</Generator>

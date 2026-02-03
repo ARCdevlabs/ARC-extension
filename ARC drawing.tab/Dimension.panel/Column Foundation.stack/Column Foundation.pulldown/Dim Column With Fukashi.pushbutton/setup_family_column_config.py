@@ -102,7 +102,7 @@ class MyWindow(Windows.Window):
         self._updating = False
 
         self.MK_柱_RC = ["背面","正面","左","右","D","B","C","A","フカシD","フカシB","フカシC","フカシA"]
-        self.custom_KJ_RC柱 = ["背面","正面","左","右","D","B","C","A","フカシ上","フカシ下","フカシ左","フカシ右"]
+        self.KJ_RC柱 = ["背面","正面","左","右","D","B","C","A","フカシ上","フカシ下","フカシ左","フカシ右"]
         self.MK_S_構柱_RC_柱 = ["背面","正面","左","右","前ふかし_厚さ","後ふかし_厚さ","左ふかし_厚さ","右ふかし_厚さ","Srp005_前部_ふかし厚さF","Srp006_後部_ふかし厚さF","Srp007_左部_ふかし厚さF","Srp008_右部_ふかし厚さF"]
         self.T_柱RC角柱 = ["構造体-Y方向R","構造体-Y方向L","構造体-X方向L","構造体-X方向R","外形-Y方向R","外形-Y方向L","外形-X方向L","外形-X方向R","Y方向Rﾌｶｼ","Y方向Lﾌｶｼ","X方向Lﾌｶｼ","X方向Rﾌｶｼ"]
         self.custom_family_obayashi = ["背面","正面","左","右","背面+Y+","正面+Y-","左+X-","右+X+","増打ち_Y正面_project","増打ち_Y負面_project","増打ち_X負面_project","増打ち_X正面_project"]
@@ -229,8 +229,8 @@ class MyWindow(Windows.Window):
         if selected == "MK_柱〈RC〉":
             load_setting = self.MK_柱_RC
         
-        if selected == "custom_KJ_RC柱":
-            load_setting = self.custom_KJ_RC柱
+        if selected == "Custom_KJ_RC柱":
+            load_setting = self.KJ_RC柱
         
         elif selected == "T_柱RC-角柱":
             load_setting = self.T_柱RC角柱
