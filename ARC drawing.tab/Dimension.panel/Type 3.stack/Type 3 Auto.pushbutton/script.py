@@ -14,6 +14,7 @@ from System.Collections.Generic import *
 import math
 import traceback
 import movetextdim
+from nances import allinone
 if module.AutodeskData():
 	uidoc = __revit__.ActiveUIDocument
 	doc = uidoc.Document
@@ -23,7 +24,7 @@ from Autodesk.Revit.UI.Selection import ObjectType, Selection
 try:
     import width_of_text_of_dim_config
     source_width_of_text_of_dim = width_of_text_of_dim_config.load_configs()
-    out_put = float(source_width_of_text_of_dim[0][0])
+    out_put = float(source_width_of_text_of_dim[0])
 except:
     # print (traceback.format_exc())
     out_put = 1.8
@@ -50,6 +51,7 @@ try:
         try:
             t = Transaction(doc,"Modify Text's Position of Dimension")
             t.Start() 
+            allinone.reset_text_position(element)
             # return_point = module.pick_point_with_nearest_snap(uidoc)
 
             dim_type = doc.GetElement(element.GetTypeId())
@@ -85,7 +87,7 @@ try:
 
             diem_trung_binh = movetextdim.get_average_point(all_segment_position)
 
-            return_point = module.move_point_along_vector(diem_trung_binh, vector_da_chuan_hoa, 0.1)
+            return_point = module.move_point_along_vector(diem_trung_binh, vector_da_chuan_hoa, 0.01)
 
 
 

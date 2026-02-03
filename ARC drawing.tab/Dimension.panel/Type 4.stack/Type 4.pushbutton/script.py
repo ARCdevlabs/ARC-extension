@@ -7,13 +7,14 @@ from Autodesk.Revit.UI.Selection import ObjectType
 import movetextdim
 import nances as module
 from nances import vectortransform
+from nances import allinone
 if module.AutodeskData():
 	uidoc = __revit__.ActiveUIDocument
 	doc = uidoc.Document
 try:
     import width_of_text_of_dim_config
     source_width_of_text_of_dim = width_of_text_of_dim_config.load_configs()
-    out_put = float(source_width_of_text_of_dim[0][0])
+    out_put = float(source_width_of_text_of_dim[0])
 except:
     # print (traceback.format_exc())
     out_put = 1.8
@@ -49,6 +50,8 @@ try:
     t = Transaction(doc,"Modify Text's Position of Dimension")
     t.Start() 
 
+    allinone.reset_text_position(element)
+    
     '''Dòng này dùng để bật hoặc tắt leader line
        Đối với cách move dim type 3 và 4 thì cần bật leader line'''
     

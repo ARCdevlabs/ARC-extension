@@ -14,7 +14,7 @@ import Autodesk.Revit.DB as DB
 from System.Collections.Generic import *
 import traceback
 import movetextdim
-from nances import vectortransform
+from nances import vectortransform,allinone
 if module.AutodeskData():
 	uidoc = __revit__.ActiveUIDocument
 	doc = uidoc.Document
@@ -23,7 +23,7 @@ from Autodesk.Revit.UI.Selection import ObjectType, Selection
 try:
     import width_of_text_of_dim_config
     source_width_of_text_of_dim = width_of_text_of_dim_config.load_configs()
-    out_put = float(source_width_of_text_of_dim[0][0])
+    out_put = float(source_width_of_text_of_dim[0])
 except:
     out_put = 1.8
 
@@ -48,6 +48,7 @@ try:
             t = Transaction(doc,"Modify Text's Position of Dimension Auto")
             t.Start() 
             # Tat leader line
+            allinone.reset_text_position(element)
             para_leader_line = module.get_builtin_parameter_by_name(element, DB.BuiltInParameter.DIM_LEADER)
             para_leader_line.Set(int(0))
 
@@ -70,7 +71,7 @@ try:
 
             diem_trung_binh = movetextdim.get_average_point(all_segment_position)
 
-            return_point = module.move_point_along_vector(diem_trung_binh, vector_da_chuan_hoa, 0.1)
+            return_point = module.move_point_along_vector(diem_trung_binh, vector_da_chuan_hoa, 0.01)
 
             # new_line = Line.CreateBound(return_point,new_point)
             # detail_line = doc.Create.NewDetailCurve(current_view,new_line)

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import Autodesk
 import Autodesk.Revit.DB as DB
+from System.Collections.Generic import List
 
 class BeamSelectionFilter(Autodesk.Revit.UI.Selection.ISelectionFilter):
     def AllowElement(self, element):
@@ -35,3 +36,19 @@ def pick_lines_by_rectangle(iuidoc):
         selection = iuidoc.Selection
         selected_elements = selection.PickElementsByRectangle(LineSelectionFilter(), "Select Lines")
     return selected_elements
+
+def select_sau_khi_chay_tool (list_elements, uidoc):
+    if len(list_elements) > 0:
+        select = uidoc.Selection
+        list_id = []
+        for tung_element in list_elements:
+            element_id = tung_element.Id
+            list_id.append(element_id)
+        Icollection = List[DB.ElementId](list_id)
+        select.SetElementIds(Icollection)
+    return
+
+def get_all_grid(doc, active_view):
+    collector = DB.FilteredElementCollector(doc, active_view.Id).OfClass(DB.Grid)
+    visible_grids = [grid for grid in collector if not grid.ViewSpecific]
+    return visible_grids

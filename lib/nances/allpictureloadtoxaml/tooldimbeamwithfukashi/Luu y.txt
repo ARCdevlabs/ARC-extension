@@ -1,0 +1,24 @@
+Nhung hinh anh huong dan duoc import truc tiep vao form xaml. 
+Khong the sua ten hinh, ten folder duoc. 
+=> Vi vay, khong duoc rename hinh anh, 
+neu muon sua hinh anh thi tao them 1 folder khac, sau do sua code de huong chi duong dan theo folder moi.
+Do la code nay:
+def get_link_image (ten_image):
+    import os
+
+    base_appdata = os.environ["APPDATA"]
+
+    image_link = os.path.join(
+        base_appdata,
+        "pyRevit",
+        "Extensions",
+        "ARC extension.extension",
+        "lib",
+        "nances",
+        "allpictureloadtoxaml",
+        "tooldimbeamwithfukashi",
+        "09012026picture",
+        str(ten_image)
+        )
+
+    return image_link

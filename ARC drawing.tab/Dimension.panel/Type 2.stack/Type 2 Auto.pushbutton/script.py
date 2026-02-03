@@ -13,6 +13,7 @@ import Autodesk.Revit.DB as DB
 from System.Collections.Generic import *
 import movetextdim
 import traceback
+from nances import allinone
 if module.AutodeskData():
 	uidoc = __revit__.ActiveUIDocument
 	doc = uidoc.Document
@@ -22,7 +23,7 @@ from Autodesk.Revit.UI.Selection import ObjectType, Selection
 try:
     import width_of_text_of_dim_config
     source_width_of_text_of_dim = width_of_text_of_dim_config.load_configs()
-    out_put = float(source_width_of_text_of_dim[0][0])
+    out_put = float(source_width_of_text_of_dim[0])
 except:
     out_put = 1.8
 
@@ -34,7 +35,7 @@ def move_dim_segment_ben_trong (list_sorted,segment, vector_cua_dim, kich_co_chu
 
     value_segment = segment.Value
     
-    vi_tri = segment.Origin
+    vi_tri = segment.TextPosition
 
     cong_thuc = total_value - (value_segment)/2 + (kich_co_chu/304.8)/2 + khoang_cach_dim_toi_text
     
@@ -51,7 +52,7 @@ def move_dim_segment_ben_ngoai (segment, kich_co_chu_1, vector_cua_dim, kich_co_
 
     value_segment = segment.Value
     
-    vi_tri = segment.Origin
+    vi_tri = segment.TextPosition
 
     cong_thuc = (value_segment)/2 + (kich_co_chu_0/304.8)/2 + 2* khoang_cach_dim_toi_text + kich_co_chu_1/304.8
     
@@ -86,6 +87,7 @@ try:
         try:
             t = Transaction(doc,"Modify Text's Position of Dimension")
             t.Start() 
+            allinone.reset_text_position(element)
             # Tat leader line
             para_leader_line = module.get_builtin_parameter_by_name(element, DB.BuiltInParameter.DIM_LEADER)
             para_leader_line.Set(int(0))
@@ -108,7 +110,7 @@ try:
 
             diem_trung_binh = movetextdim.get_average_point(all_segment_position)
 
-            return_point = module.move_point_along_vector(diem_trung_binh, vector_da_chuan_hoa, 0.1)
+            return_point = module.move_point_along_vector(diem_trung_binh, vector_da_chuan_hoa, 0.01)
 
 
 

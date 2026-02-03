@@ -1106,28 +1106,6 @@ def distance_between_parallel_planes(plane1, plane2):
     distance = (distance1 - distance2)
     return distance
 
-# def get_rotate_90_location_wall (wall):
-#     from Autodesk.Revit.DB import Line, BuiltInParameter
-#     wall_location = wall.Location
-#     wall_location_curve = wall_location.Curve
-#     start = wall_location_curve.GetEndPoint(0)
-#     end = wall_location_curve.GetEndPoint(1)
-#     flat_start = XYZ(start.X,start.Y, start.Z)
-#     flat_end =  XYZ(end.X,end.Y, start.Z)
-#     flat_line =  Line.CreateBound(flat_start,flat_end)
-#     mid_point = flat_line.Evaluate(0.5, True)
-#     Z_point = XYZ(mid_point.X, mid_point.Y, mid_point.Z + 10)
-#     Z_axis = Line.CreateBound(mid_point, Z_point)
-#     curve_of_location_curve = Line.CreateBound(flat_start,flat_end)
-#     detail_curve_of_location_curve = doc.Create.NewDetailCurve(Currentview,curve_of_location_curve)
-#     locate_detail_curve_of_location_curve = detail_curve_of_location_curve.Location
-#     rotate_locate_detail_curve_of_location_curve = locate_detail_curve_of_location_curve.Rotate(Z_axis, 2 * math.pi / 4)
-#     direction_of_wall = flat_line.Direction
-#     Scale = Currentview.Scale
-#     Snap_dim = 4.5 * 0.0032808 #1mm bang 0.0032808feet
-#     Vector_for_scale = Snap_dim * Scale *direction_of_wall
-#     move_detail_curve = locate_detail_curve_of_location_curve.Move(Vector_for_scale)
-#     return detail_curve_of_location_curve
 
 def get_wall_reference_by_magic(uid,index):
     format = "{0}:{1}:{2}"
@@ -1436,9 +1414,12 @@ def move_segment_xa_nhat (list_sorted, vector_cua_dim, kich_co_chu, khoang_cach_
 
     value_segment = seg_xa_nhat.Value
     
-    vi_tri = seg_xa_nhat.Origin
+    # vi_tri = seg_xa_nhat.Origin   #cần phải thêm 1 dòng nữa để có thể điều chỉnh lại offset của dim
+
+    vi_tri = seg_xa_nhat.TextPosition 
 
     cong_thuc = ((kich_co_chu/304.8)/2) + ((value_segment)/2) + khoang_cach_dim_toi_text
+    
     if huong_phai:
         move = move_point_along_vector(vi_tri, vector_cua_dim, cong_thuc) #move theo don vi feet
     else:

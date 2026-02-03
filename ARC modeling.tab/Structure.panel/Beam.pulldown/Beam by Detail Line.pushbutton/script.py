@@ -23,8 +23,6 @@ if nances.AutodeskData():
                 else:
                     list_ngang.append(line)
             except:
-                # import traceback
-                # print(traceback.format_exc())
                 pass
         return list_doc, list_ngang
 
@@ -199,7 +197,7 @@ if nances.AutodeskData():
             selected_elements = selection.PickElementsByRectangle(LineSelectionFilter(), "Chọn các line")
         return selected_elements       
 
-    def all_type_of_framing():
+    def all_type_of_framing_revit(doc):
         all_type_of_framing = FilteredElementCollector(doc).OfClass(FamilySymbol).OfCategory(BuiltInCategory.OST_StructuralFraming)
         return all_type_of_framing
     
@@ -362,13 +360,15 @@ if nances.AutodeskData():
     logger = script.get_logger()
     my_config = script.get_config("setting_type_beam_by_detail_line")
     import setting_config
-    all_type_beam = all_type_of_framing()
+    all_type_beam = all_type_of_framing_revit(doc)
     selected_type_beam = None
     try:
-        get_source = setting_config.load_configs()
-        source_beam_type = get_source[0][0]
-        source_phuong_dam = get_source[0][1]
-        extend_mm = float(get_source[0][2])
+     
+        source_beam_type = setting_config.load_configs_type_dam()
+        source_phuong_dam = setting_config.load_configs_phuong()
+        extend = setting_config.load_configs_extend()
+        extend_mm = float(extend)
+
         if source_phuong_dam == "Phương dọc":
             phuong_dam = 0
         if source_phuong_dam == "Phương ngang":
@@ -377,8 +377,10 @@ if nances.AutodeskData():
             phuong_dam = 2
         if source_beam_type:
             for tung_type in all_type_beam:
-                type_name = DB.Element.Name.GetValue(tung_type)
-                if type_name == source_beam_type:
+                family_name = nances.get_builtin_parameter_by_name(tung_type,BuiltInParameter.SYMBOL_FAMILY_NAME_PARAM).AsString()
+                type_name = nances.get_builtin_parameter_by_name(tung_type,BuiltInParameter.ALL_MODEL_TYPE_NAME).AsString()
+                family_name_type_name = family_name + ":" + type_name
+                if family_name_type_name == source_beam_type:
                     selected_type_beam = tung_type
                     break
             if  selected_type_beam == None:

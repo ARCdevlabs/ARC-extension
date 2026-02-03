@@ -18,6 +18,7 @@ import Autodesk.Revit.DB as DB
 from System.Collections.Generic import *
 import traceback
 import movetextdim
+from nances import allinone
 if module.AutodeskData():
 	uidoc = __revit__.ActiveUIDocument
 	doc = uidoc.Document
@@ -26,7 +27,7 @@ from Autodesk.Revit.UI.Selection import ObjectType, Selection
 try:
     import width_of_text_of_dim_config
     source_width_of_text_of_dim = width_of_text_of_dim_config.load_configs()
-    out_put = float(source_width_of_text_of_dim[0][0])
+    out_put = float(source_width_of_text_of_dim[0])
 except:
     out_put = 1.8
 
@@ -54,6 +55,9 @@ try:
     t = Transaction(doc,"Modify Text's Position of Dimension")
     t.Start() 
     # Tat leader line
+    
+    allinone.reset_text_position(element)
+
     para_leader_line = module.get_builtin_parameter_by_name(element, DB.BuiltInParameter.DIM_LEADER)
     para_leader_line.Set(int(0))
 

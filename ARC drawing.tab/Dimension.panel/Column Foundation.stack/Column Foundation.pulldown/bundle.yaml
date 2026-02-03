@@ -1,6 +1,6 @@
 title:   
-  en_us: Cột Móng
+  en_us: Cột・Móng
   ja: 柱・基礎
 layout:
-  - Center
-  - Center Total
+  - Dim Column With Fukashi
+  - Dim Column No Fukashi
