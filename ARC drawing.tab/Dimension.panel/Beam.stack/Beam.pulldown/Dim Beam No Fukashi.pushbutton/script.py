@@ -6,7 +6,7 @@ from nances import revit
 import Autodesk
 from Autodesk.Revit.DB import *
 import nances as module
-from nances import vectortransform,geometry,allinone
+from nances import vectortransform,geometry,allinone,selection
 from System.Collections.Generic import *
 import tim_reference_beam 
 import traceback
@@ -56,6 +56,7 @@ if module.AutodeskData():
         t = Transaction(doc,"Dimension beam (centered)")
         t.Start()
         dim_tong = True
+        list_new_dim = []
         for tung_beam in Ele:
             try:
                 geo = (geometry.get_geometry(tung_beam))
@@ -146,10 +147,12 @@ if module.AutodeskData():
                     pass
 
                 dim_chia_tam = doc.Create.NewDimension(Currentview, line_combo_2, tung_beam_reference)
+                list_new_dim.append(dim_chia_tam)
 
                 if dim_tong:
 
                     dim_tong = doc.Create.NewDimension(Currentview, line_combo_1, tung_beam_reference_dim_tong)
+                    list_new_dim.append(dim_tong)
 
                 allinone.move_text_dim (dim_chia_tam, Currentview, leader_dim = False)
 
@@ -158,6 +161,9 @@ if module.AutodeskData():
                 pass
         t.Commit()
 
-
+    try:
+        selection.select_sau_khi_chay_tool(list_new_dim,uidoc)
+    except:
+        pass
 
 

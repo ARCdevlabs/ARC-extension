@@ -62,9 +62,8 @@ if nances.AutodeskData():
 
     is_section_elevation = current_view.ViewType in [ViewType.Section, ViewType.Elevation]
 
-    list_new_dim_top = []
+    list_new_dim = []
     list_dim_need_modify_text_top = []
-    list_new_dim_right = []
     list_dim_need_modify_text_right = []
 
     list_error = []
@@ -410,7 +409,7 @@ if nances.AutodeskData():
                         if combo_ref_top_3.Size > 2:
 
                             dim_top_3 = doc.Create.NewDimension(current_view, line_ngang_3, combo_ref_top_3)
-                            list_new_dim_top.append(dim_top_3)
+                            list_new_dim.append(dim_top_3)
                             list_dim_need_modify_text_top.append(dim_top_3)
                         else:
 
@@ -419,7 +418,7 @@ if nances.AutodeskData():
                         if combo_ref_top_2.Size > 2:
                             try:
                                 dim_top_2 = doc.Create.NewDimension(current_view, line_ngang_2, combo_ref_top_2)
-                                list_new_dim_top.append(dim_top_2)
+                                list_new_dim.append(dim_top_2)
                                 list_dim_need_modify_text_top.append(dim_top_2)
                             except Exception as e:
                                 if str(e) == "Invalid number of references.":
@@ -433,7 +432,7 @@ if nances.AutodeskData():
                         if combo_ref_top_1.Size >= 2:
                             try:
                                 dim_top_1 = doc.Create.NewDimension(current_view, line_ngang_1, combo_ref_top_1)
-                                list_new_dim_top.append(dim_top_1)
+                                list_new_dim.append(dim_top_1)
                             except Exception as e:
                                 if str(e) == "Invalid number of references.":
                                     list_error.append(get_family_name(tung_column) + ": " +"Invalid number of references.")
@@ -474,7 +473,7 @@ if nances.AutodeskData():
                         if combo_ref_right_3.Size > 2:
 
                             dim_right_3 = doc.Create.NewDimension(current_view, line_doc_3, combo_ref_right_3)
-                            list_new_dim_right.append(dim_right_3)
+                            list_new_dim.append(dim_right_3)
                             list_dim_need_modify_text_right.append(dim_right_3)
 
                         else:
@@ -484,7 +483,7 @@ if nances.AutodeskData():
                         if combo_ref_right_2.Size > 2:
                             try:
                                 dim_right_2 = doc.Create.NewDimension(current_view, line_doc_2, combo_ref_right_2)
-                                list_new_dim_right.append(dim_right_2)
+                                list_new_dim.append(dim_right_2)
                                 list_dim_need_modify_text_right.append(dim_right_2)
                             except Exception as e:
                                 if str(e) == "Invalid number of references.":
@@ -498,7 +497,7 @@ if nances.AutodeskData():
                         if combo_ref_right_1.Size >= 2:
                             try:
                                 dim_right_1 = doc.Create.NewDimension(current_view, line_doc_1, combo_ref_right_1)
-                                list_new_dim_right.append(dim_right_2)
+                                list_new_dim.append(dim_right_1)
                             except Exception as e:
                                 if str(e) == "Invalid number of references.":
                                     list_error.append(get_family_name(tung_column) + ": " +"Invalid number of references.")
@@ -620,7 +619,11 @@ if nances.AutodeskData():
         logger.warning("Please hold Shift and click to the tool to setup input family.\nHãy giữ nút shift và bấm vào tool để setting lại input")
         for tung_loi in set_error:
             print (tung_loi)   
-
+    try:
+        selection.select_sau_khi_chay_tool(list_new_dim,uidoc)
+    except:
+        print(traceback.format_exc())
+        pass
     trans_group.Assimilate()
 
                     
