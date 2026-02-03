@@ -29,113 +29,34 @@ if nances.AutodeskData():
     option_bot_left = source_setting_position_of_dim[2]
     option_bot_right = source_setting_position_of_dim[3]
 
+    list_new_dim = []
+
+    trans_group = TransactionGroup(doc, 'Dim foundation/Column')
+    trans_group.Start()
+    
     Ele = nances.get_elements(uidoc,doc, "Select Foundation or Columns", noti = False)
     try:
         list_can_not_dim = []
         if Ele:
             with revit.Transaction("Prepair for Dim", swallow_errors=True):
-                for column in Ele:
-                    has_modified_geo = column.HasModifiedGeometry()
+                for tung_column in Ele:
+                    has_modified_geo = tung_column.HasModifiedGeometry()
                     if has_modified_geo == False:
-                        list_can_not_dim.append(column)
+                        list_can_not_dim.append(tung_column)
                         list_comprehension = [item for item in Ele if item not in list_can_not_dim]
                         first_item_list_comprehension=[]
                         first_item_list_comprehension.append(list_comprehension[0])
                         cut_geometry = nances.cut_geometry_all(doc, list_can_not_dim, first_item_list_comprehension)
     except:
         pass
-    if Ele:
-        with revit.Transaction("Dim total center", swallow_errors=True):
-
-            for column in Ele:                
-                try:
-                    
-                    chieu_rong = geometry.tinh_chieu_rong_cot(column, Y_vector)
-
-                    chieu_cao = geometry.tinh_chieu_rong_cot(column, X_vector)
-
-                    #Quy ước line top là line song song với vector X, line right là line song song với vector Y
-
-                    line_ngang_center = vectortransform.line_for_dim_X(column,current_view)
-
-                    tong_hop_line_bot = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_ngang_center,Y_vector,chieu_cao/2, current_view)
-
-                    line_bot_3 = tong_hop_line_bot[0]
-
-                    line_bot_2 = tong_hop_line_bot[1]
-
-                    line_bot_1 = tong_hop_line_bot[2]
-
-                    line_doc_center = vectortransform.line_for_dim_Y(column,current_view)
-
-                    tong_hop_line_right = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_doc_center,X_vector,chieu_rong/2, current_view)
-
-                    line_right_3 = tong_hop_line_right[0]
-
-                    line_right_2 = tong_hop_line_right[1]
-
-                    line_right_1 = tong_hop_line_right[2]
-                    
-                    tong_hop_line_top = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_ngang_center,-Y_vector,chieu_cao/2, current_view)
-
-                    line_top_3 = tong_hop_line_top[0]
-
-                    line_top_2 = tong_hop_line_top[1]
-
-                    line_top_1 = tong_hop_line_top[2]
-
-                    tong_hop_line_left = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_doc_center,-X_vector,chieu_rong/2, current_view)
-
-                    line_left_3 = tong_hop_line_left[0]
-
-                    line_left_2 = tong_hop_line_left[1]
-
-                    line_left_1 = tong_hop_line_left[2]
-
-                    if option_top_left:
-                        line_ngang_1 = line_top_1
-                        line_ngang_2 = line_top_2
-                        line_ngang_3 = line_top_3
-
-                        line_doc_1 = line_left_1
-                        line_doc_2 = line_left_2
-                        line_doc_3 = line_left_3
-
-                    elif option_top_right:
-                        line_ngang_1 = line_top_1
-                        line_ngang_2 = line_top_2
-                        line_ngang_3 = line_top_3
-
-                        line_doc_1 = line_right_1
-                        line_doc_2 = line_right_2
-                        line_doc_3 = line_right_3
-
-                    elif option_bot_left:
-                        line_ngang_1 = line_bot_1
-                        line_ngang_2 = line_bot_2
-                        line_ngang_3 = line_bot_3
-
-                        line_doc_1 = line_left_1
-                        line_doc_2 = line_left_2
-                        line_doc_3 = line_left_3
-
-                    elif option_bot_right:
-                        line_ngang_1 = line_bot_1
-                        line_ngang_2 = line_bot_2
-                        line_ngang_3 = line_bot_3
-
-                        line_doc_1 = line_right_1
-                        line_doc_2 = line_right_2
-                        line_doc_3 = line_right_3                           
-                except:
-                    # print(traceback.format_exc())
-                    pass
-                
+        
+    if Ele:    
+        for column in Ele:
+            with revit.Transaction("Dim total center", swallow_errors=True):            
+              
                 has_modified_geo = column.HasModifiedGeometry()
                 if has_modified_geo:
-
                     try:
-
                         point_location = column.Location.Point
 
                         geo = geometry.get_geometry(column)
@@ -153,6 +74,89 @@ if nances.AutodeskData():
                         Y_plane = Plane.CreateByNormalAndOrigin(X_vector, point_location)
 
                         X_plane = Plane.CreateByNormalAndOrigin(Y_vector, point_location)
+
+                        try:                   
+                            chieu_rong = geometry.tinh_chieu_rong_cot(column, Y_vector)
+
+                            chieu_cao = geometry.tinh_chieu_rong_cot(column, X_vector)
+
+                            #Quy ước line top là line song song với vector X, line right là line song song với vector Y
+
+                            line_ngang_center = vectortransform.line_for_dim_X(column,current_view)
+
+                            tong_hop_line_bot = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_ngang_center,Y_vector,chieu_cao/2, current_view)
+
+                            line_bot_3 = tong_hop_line_bot[0]
+
+                            line_bot_2 = tong_hop_line_bot[1]
+
+                            line_bot_1 = tong_hop_line_bot[2]
+
+                            line_doc_center = vectortransform.line_for_dim_Y(column,current_view)
+
+                            tong_hop_line_right = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_doc_center,X_vector,chieu_rong/2, current_view)
+
+                            line_right_3 = tong_hop_line_right[0]
+
+                            line_right_2 = tong_hop_line_right[1]
+
+                            line_right_1 = tong_hop_line_right[2]
+                            
+                            tong_hop_line_top = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_ngang_center,-Y_vector,chieu_cao/2, current_view)
+
+                            line_top_3 = tong_hop_line_top[0]
+
+                            line_top_2 = tong_hop_line_top[1]
+
+                            line_top_1 = tong_hop_line_top[2]
+
+                            tong_hop_line_left = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_doc_center,-X_vector,chieu_rong/2, current_view)
+
+                            line_left_3 = tong_hop_line_left[0]
+
+                            line_left_2 = tong_hop_line_left[1]
+
+                            line_left_1 = tong_hop_line_left[2]
+
+                            if option_top_left:
+                                line_ngang_1 = line_top_1
+                                line_ngang_2 = line_top_2
+                                line_ngang_3 = line_top_3
+
+                                line_doc_1 = line_left_1
+                                line_doc_2 = line_left_2
+                                line_doc_3 = line_left_3
+
+                            elif option_top_right:
+                                line_ngang_1 = line_top_1
+                                line_ngang_2 = line_top_2
+                                line_ngang_3 = line_top_3
+
+                                line_doc_1 = line_right_1
+                                line_doc_2 = line_right_2
+                                line_doc_3 = line_right_3
+
+                            elif option_bot_left:
+                                line_ngang_1 = line_bot_1
+                                line_ngang_2 = line_bot_2
+                                line_ngang_3 = line_bot_3
+
+                                line_doc_1 = line_left_1
+                                line_doc_2 = line_left_2
+                                line_doc_3 = line_left_3
+
+                            elif option_bot_right:
+                                line_ngang_1 = line_bot_1
+                                line_ngang_2 = line_bot_2
+                                line_ngang_3 = line_bot_3
+
+                                line_doc_1 = line_right_1
+                                line_doc_2 = line_right_2
+                                line_doc_3 = line_right_3        
+                    
+                        except:
+                            # print(traceback.format_exc())
+                            pass                        
 
                         list_distance_Y = []
 
@@ -335,22 +339,26 @@ if nances.AutodeskData():
                         if column_reference.Size > 2:
 
                             dim_center = doc.Create.NewDimension(current_view, line_doc_2, column_reference)
+                            list_new_dim.append(dim_center)
 
                         else:
 
                             dim_center = 0
 
                         dim_total = doc.Create.NewDimension(current_view, line_doc_1, column_reference_total)
+                        list_new_dim.append(dim_total)
 
                         if column_reference_center_X.Size > 2:
 
                             dim_center_X = doc.Create.NewDimension(current_view, line_ngang_2, column_reference_center_X)
+                            list_new_dim.append(dim_center_X)
 
                         else: 
 
                             dim_center_X = 0
 
-                        dim_total_X = doc.Create.NewDimension(current_view, line_ngang_1, column_reference_total_X)                        
+                        dim_total_X = doc.Create.NewDimension(current_view, line_ngang_1, column_reference_total_X)  
+                        list_new_dim.append(dim_total_X)                      
 
                         if dim_center != 0:
 
@@ -375,5 +383,8 @@ if nances.AutodeskData():
                     except:
                         # print(traceback.format_exc())
                         pass
-
-
+    try:
+        selection.select_sau_khi_chay_tool(list_new_dim,uidoc)
+    except:
+        pass
+    trans_group.Assimilate()
