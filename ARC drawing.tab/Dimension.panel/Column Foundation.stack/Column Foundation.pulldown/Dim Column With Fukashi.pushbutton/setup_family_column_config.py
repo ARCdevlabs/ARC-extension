@@ -33,8 +33,8 @@ def get_link_image (ten_image):
         "lib",
         "nances",
         "allpictureloadtoxaml",
-        "tooldimbeamwithfukashi",
-        "09012026picture",
+        "tooldimcolumnwithfukashi",
+        "03022026picture",
         str(ten_image)
         )
 
@@ -54,20 +54,11 @@ bitmap_guide_1.BeginInit()
 bitmap_guide_1.UriSource = Uri(image_path_guide_1, UriKind.Absolute)
 bitmap_guide_1.EndInit()
 
-image_path_guide_2 = get_link_image ("guide_2.png")
-bitmap_guide_2 = BitmapImage()
-bitmap_guide_2.BeginInit()
-bitmap_guide_2.UriSource = Uri(image_path_guide_2, UriKind.Absolute)
-bitmap_guide_2.EndInit()
-
-
 default_settup_family = ["背面","正面","左","左","D","B","C","A","フカシD","フカシB","フカシC","フカシA"]
 
 default_settup_dim_in_need_in_plan_view = [bool(True),bool(True),bool(True)]
 
-default_settup_dim_in_need_in_section_view = [bool(True),bool(True),bool(True),bool(True),bool(True)]
-
-default_settup_setup_position_of_dim = [bool(True),bool(False),bool(False),bool(False)]
+default_settup_setup_position_of_dim = [bool(False),bool(False),bool(False),bool(True)]
 
 def load_configs_setup_family():
     setup_beam = my_config.get_option("setup_family_beam", [])
@@ -83,18 +74,8 @@ def load_configs_setup_dim_in_need_in_plan_view():
     get_setup_dim_in_plan = [(x) for x in (setup_dim_in_plan or default_settup_dim_in_need_in_plan_view)]
     return get_setup_dim_in_plan
 
-
 def save_configs_setup_dim_in_need_in_plan_view(content):
     my_config.setup_dim_in_need_in_plan_view = content
-    script.save_config()
-
-def load_configs_setup_dim_in_need_in_section_view():
-    setup_dim_in_section = my_config.get_option("setup_dim_in_need_in_section_view", [])
-    get_setup_dim_in_section = [(x) for x in (setup_dim_in_section or default_settup_dim_in_need_in_section_view)]
-    return get_setup_dim_in_section
-
-def save_configs_setup_dim_in_need_in_section_view(content):
-    my_config.setup_dim_in_need_in_section_view = content
     script.save_config()
 
 def load_configs_setup_position_of_dim():
@@ -103,7 +84,7 @@ def load_configs_setup_position_of_dim():
     return get_setup_position_of_dim
 
 def save_configs_get_setup_position_of_dim(content):
-    my_config.get_setup_position_of_dim = content
+    my_config.setup_position_of_dim = content
     script.save_config()
 
 import re
@@ -115,7 +96,7 @@ class MyWindow(Windows.Window):
         wpf.LoadComponent(self, xamlfile)
 
         self.guide_image_1.Source = bitmap_guide_1
-        self.guide_image_2.Source = bitmap_guide_2
+        # self.guide_image_2.Source = bitmap_guide_2
         self.guide_image_0.Source = bitmap_guide_0
 
         self._updating = False
@@ -139,15 +120,11 @@ class MyWindow(Windows.Window):
 
         load_setting_dim_in_plan_view = load_configs_setup_dim_in_need_in_plan_view()
 
-        # load_setting_dim_in_section_view = load_configs_setup_dim_in_need_in_section_view()
-
-        # load_setting_type_dim_in_section_view = load_configs_setup_type_dim_in_section_view()
+        load_setting_position_of_dim= load_configs_setup_position_of_dim()
 
         self.apply_load_setting_dim_in_need_in_plan_view(load_setting_dim_in_plan_view)
 
-        # self.apply_load_setting_dim_in_need_in_section_view(load_setting_dim_in_section_view)
-
-        # self.apply_load_setting_type_dim_in_section_view(load_setting_type_dim_in_section_view)   
+        self.apply_load_setting_position_of_dim(load_setting_position_of_dim)   
 
         self.update_total_input()
 
@@ -270,17 +247,21 @@ class MyWindow(Windows.Window):
         # self.update_total_input()
 
 
-    # def radio_button_type_1_changed(self, sender, args):
-    #     if self.radio_button_type_1.IsChecked:
-    #         # self.combo_box_select_family.IsEnabled = True
-    #         self.set_guide_image("guide_3_type_1.png")
-    #         # print "type 1"
+    def radio_button_top_left_changed(self, sender, args):
+        if self.radio_button_top_left.IsChecked:
+            self.set_guide_image("top_left.png")
 
-    # def radio_button_type_2_changed(self, sender, args):
-    #     if self.radio_button_type_2.IsChecked:
-    #         # self.combo_box_select_family.IsEnabled = True
-    #         self.set_guide_image("guide_3_type_2.png")
-    #         # print "type 2"
+    def radio_button_top_right_changed(self, sender, args):
+        if self.radio_button_top_right.IsChecked:
+            self.set_guide_image("top_right.png")
+
+    def radio_button_bot_left_changed(self, sender, args):
+        if self.radio_button_bot_left.IsChecked:
+            self.set_guide_image("bot_left.png")
+
+    def radio_button_bot_right_changed(self, sender, args):
+        if self.radio_button_bot_right.IsChecked:
+            self.set_guide_image("bot_right.png")
 
     def set_guide_image(self, image_name):
         # image_path = script.get_bundle_file(image_name)
@@ -319,9 +300,11 @@ class MyWindow(Windows.Window):
     #     self.setup_dim_D = load_setting_dim_in_section_dim[3]
     #     self.setup_dim_E = load_setting_dim_in_section_dim[4]
 
-    # def apply_load_setting_type_dim_in_section_view(self, load_setting_type_dim_in_section):
-    #     self.setup_type_dim_1 = load_setting_type_dim_in_section[0]
-    #     self.setup_type_dim_2 = load_setting_type_dim_in_section[1]
+    def apply_load_setting_position_of_dim(self, load_setting_position_of_dim):
+        self.setup_top_left = load_setting_position_of_dim[0]
+        self.setup_top_right = load_setting_position_of_dim[1]
+        self.setup_bot_left = load_setting_position_of_dim[2]
+        self.setup_bot_right = load_setting_position_of_dim[3]
 
 
     @property
@@ -501,24 +484,40 @@ class MyWindow(Windows.Window):
     # def setup_dim_E(self,value):
     #     self.check_box_combo_E_section.IsChecked =  bool(value)
 
-    #Radio button
-    # @property
-    # def setup_type_dim_1(self):
-    #     return self.radio_button_type_1.IsChecked
+    # Radio button
+    @property
+    def setup_top_left(self):
+        return self.radio_button_top_left.IsChecked
     
-    # @setup_type_dim_1.setter
-    # def setup_type_dim_1(self,value):
-    #     self.radio_button_type_1.IsChecked =  bool(value)
+    @setup_top_left.setter
+    def setup_top_left(self,value):
+        self.radio_button_top_left.IsChecked =  bool(value)
 
-    # @property
-    # def setup_type_dim_2(self):
-    #     return self.radio_button_type_2.IsChecked
+    @property
+    def setup_top_right(self):
+        return self.radio_button_top_right.IsChecked
     
-    # @setup_type_dim_2.setter
-    # def setup_type_dim_2(self,value):
-    #     self.radio_button_type_2.IsChecked =  bool(value)
+    @setup_top_right.setter
+    def setup_top_right(self,value):
+        self.radio_button_top_right.IsChecked =  bool(value)
 
+    @property
+    def setup_bot_left(self):
+        return self.radio_button_bot_left.IsChecked
     
+    @setup_bot_left.setter
+    def setup_bot_left(self,value):
+        self.radio_button_bot_left.IsChecked =  bool(value)
+
+    @property
+    def setup_bot_right(self):
+        return self.radio_button_bot_right.IsChecked
+    
+    @setup_bot_right.setter
+    def setup_bot_right(self,value):
+        self.radio_button_bot_right.IsChecked =  bool(value)
+
+
     def save_setting_click(self, sender, args): #save_setting_click là tên của biến button và hành động click trong file xaml
         top_reference_name = self.setup_top_ref_name #"top_reference_name" là tên biến của textbox trong xaml, "setup_top_ref_name" là tên của biến trong python
         bottom_reference_name = self.setup_bot_ref_name
@@ -555,10 +554,12 @@ class MyWindow(Windows.Window):
 
         # total_setting_dim_in_need_in_section_view = [is_check_dim_A,is_check_dim_B,is_check_dim_C,is_check_dim_D,is_check_dim_E]
 
-        # is_check_dim_type_dim_1 = self.setup_type_dim_1
-        # is_check_dim_type_dim_2 = self.setup_type_dim_2
+        is_check_top_left = self.setup_top_left
+        is_check_top_right = self.setup_top_right
+        is_check_bot_left = self.setup_bot_left
+        is_check_bot_right = self.setup_bot_right
 
-        # total_setting_type_dim_in_section_view = [is_check_dim_type_dim_1,is_check_dim_type_dim_2]
+        total_setting_position_of_dim = [is_check_top_left,is_check_top_right,is_check_bot_left,is_check_bot_right]
 
         save_configs_setup_family(total_setting)
 
@@ -566,7 +567,7 @@ class MyWindow(Windows.Window):
 
         # save_configs_setup_dim_in_need_in_section_view(total_setting_dim_in_need_in_section_view)
 
-        # save_configs_get_setup_position_of_dim(total_setting_type_dim_in_section_view)
+        save_configs_get_setup_position_of_dim(total_setting_position_of_dim)
         
         self.Close()
 

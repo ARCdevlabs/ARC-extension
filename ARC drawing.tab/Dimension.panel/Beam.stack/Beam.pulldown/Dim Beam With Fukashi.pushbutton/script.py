@@ -11,6 +11,11 @@ import setup_family_beam_config #cần import dòng này, đây là tên của s
 import traceback
 import math
 
+def get_family_name (element):
+    param = nances.get_builtin_parameter_by_name(element, DB.BuiltInParameter.ELEM_FAMILY_PARAM)
+    value = param.AsValueString()
+    return value
+
 def loc_grid_nam_ben_trong_dam(grids):
     for grid in grids:
         list_grid_ref = []
@@ -212,28 +217,28 @@ if nances.AutodeskData():
                 try:
                     tc_top = nances.get_parameter_value_by_name(tung_beam, source_setting_family_beam[8])
                 except:
-                    list_error.append("Top fukashi parameter name not found")                
+                    list_error.append(get_family_name(tung_beam) + ": " +"Top fukashi parameter name not found")                
                     # print("Top fukashi parameter name not found")
                     pass
                 
                 try:
                     tc_bot = nances.get_parameter_value_by_name(tung_beam, source_setting_family_beam[9])
                 except:
-                    list_error.append("Bottom fukashi parameter name not found")             
+                    list_error.append(get_family_name(tung_beam) + ": " "Bottom fukashi parameter name not found")             
                     # print("Bottom fukashi parameter name not found")
                     pass
                 
                 try:
                     tc_trai = nances.get_parameter_value_by_name(tung_beam, source_setting_family_beam[10])
                 except: 
-                    list_error.append("Left fukashi parameter name not found")             
+                    list_error.append(get_family_name(tung_beam) + ": " "Left fukashi parameter name not found")             
                     # print("Left fukashi parameter name not found")
                     pass
                 
                 try:
                     tc_phai = nances.get_parameter_value_by_name(tung_beam, source_setting_family_beam[11])
                 except:
-                    list_error.append("Right fukashi parameter name not found")                     
+                    list_error.append(get_family_name(tung_beam) + ": " "Right fukashi parameter name not found")                     
                     # print("Right fukashi parameter name not found")
                     pass
                 
