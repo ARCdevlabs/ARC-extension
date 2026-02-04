@@ -82,7 +82,7 @@ if module.AutodeskData():
 
                 flat_location_line_direction = flat_location_line.Direction
 
-                chuan_hoa_vector_kieu_nguoc = vectortransform.chuan_hoa_vector_tu_trai_qua_phai_duoi_len_tren(flat_location_line_direction,Currentview)
+                chuan_hoa_vector_kieu_nguoc = vectortransform.chuan_hoa_vector_tu_trai_qua_phai_tren_xuong_duoi(flat_location_line_direction,Currentview)
 
                 #Thông thường parameter "Dimension Line Snap Distance" có giá trị là 5mm
                 snap_dim_mm = 5 #tính bằng mm

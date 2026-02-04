@@ -54,6 +54,8 @@ if nances.AutodeskData():
 
     source_setting_position_of_dim = setup_family_column_config.load_configs_setup_position_of_dim()
 
+    source_offset_of_dim = setup_family_column_config.load_configs_setup_offset_dim()
+
     Ele = nances.get_elements(uidoc,doc, "Select Columns", noti = False)
 
     all_grid = selection.get_all_grid(doc,current_view)
@@ -76,6 +78,8 @@ if nances.AutodeskData():
     option_top_right = source_setting_position_of_dim[1]
     option_bot_left = source_setting_position_of_dim[2]
     option_bot_right = source_setting_position_of_dim[3]
+
+    offset_of_dim = float(source_offset_of_dim[0])
 
     trans_group = TransactionGroup(doc, 'Dim column with fukashi')
     trans_group.Start()
@@ -107,9 +111,9 @@ if nances.AutodeskData():
 
                     Y_vector_chua_chuan_hoa = vectortransform.get_Y_vector(tung_column)
 
-                    X_vector = vectortransform.chuan_hoa_vector_tu_trai_qua_phai_duoi_len_tren(X_vector_chua_chuan_hoa,current_view)
+                    X_vector = vectortransform.chuan_hoa_vector_tu_trai_qua_phai_tren_xuong_duoi(X_vector_chua_chuan_hoa,current_view)
 
-                    Y_vector = vectortransform.chuan_hoa_vector_tu_trai_qua_phai_duoi_len_tren(Y_vector_chua_chuan_hoa,current_view)
+                    Y_vector = vectortransform.chuan_hoa_vector_tu_trai_qua_phai_tren_xuong_duoi(Y_vector_chua_chuan_hoa,current_view)
 
                     Y_plane = Plane.CreateByNormalAndOrigin(X_vector, point_location)
 
@@ -202,7 +206,7 @@ if nances.AutodeskData():
 
                             line_ngang_center = vectortransform.line_for_dim_X(tung_column,current_view)
 
-                            tong_hop_line_bot = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_ngang_center,Y_vector,chieu_cao/2, current_view)
+                            tong_hop_line_bot = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_ngang_center,Y_vector,chieu_cao/2, offset_of_dim, current_view)
 
                             line_bot_3 = tong_hop_line_bot[0]
 
@@ -212,7 +216,7 @@ if nances.AutodeskData():
 
                             line_doc_center = vectortransform.line_for_dim_Y(tung_column,current_view)
 
-                            tong_hop_line_right = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_doc_center,X_vector,chieu_rong/2, current_view)
+                            tong_hop_line_right = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_doc_center,X_vector,chieu_rong/2,offset_of_dim, current_view)
 
                             line_right_3 = tong_hop_line_right[0]
 
@@ -220,7 +224,7 @@ if nances.AutodeskData():
 
                             line_right_1 = tong_hop_line_right[2]
                             
-                            tong_hop_line_top = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_ngang_center,-Y_vector,chieu_cao/2, current_view)
+                            tong_hop_line_top = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_ngang_center,-Y_vector,chieu_cao/2, offset_of_dim,current_view)
 
                             line_top_3 = tong_hop_line_top[0]
 
@@ -228,7 +232,7 @@ if nances.AutodeskData():
 
                             line_top_1 = tong_hop_line_top[2]
 
-                            tong_hop_line_left = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_doc_center,-X_vector,chieu_rong/2, current_view)
+                            tong_hop_line_left = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_doc_center,-X_vector,chieu_rong/2, offset_of_dim, current_view)
 
                             line_left_3 = tong_hop_line_left[0]
 
@@ -404,42 +408,75 @@ if nances.AutodeskData():
                         if float(tc_trai) > 0:
                             combo_ref_top_3.Append(ref_trai)
                         if float(tc_phai) > 0:
-                            combo_ref_top_3.Append(ref_phai)                
-                    if option_dim_combo_3:
-                        if combo_ref_top_3.Size > 2:
+                            combo_ref_top_3.Append(ref_phai)     
 
-                            dim_top_3 = doc.Create.NewDimension(current_view, line_ngang_3, combo_ref_top_3)
-                            list_new_dim.append(dim_top_3)
-                            list_dim_need_modify_text_top.append(dim_top_3)
-                        else:
 
-                            dim_top_3 = 0
-                    if option_dim_combo_2:
-                        if combo_ref_top_2.Size > 2:
-                            try:
-                                dim_top_2 = doc.Create.NewDimension(current_view, line_ngang_2, combo_ref_top_2)
-                                list_new_dim.append(dim_top_2)
-                                list_dim_need_modify_text_top.append(dim_top_2)
-                            except Exception as e:
-                                if str(e) == "Invalid number of references.":
-                                    list_error.append(get_family_name(tung_column) + ": " +"Invalid number of references.")
-                                    pass
 
-                        else: 
+                    '''Chia ra trường hợp có tăng cường và trường hợp không có tăng cường
+                    Nếu có dim 3 thì line dim vẫn theo thứ tự.
+                    Nếu không dim dim 3 thì line dim sẽ thay đổi chút.               
+                    '''
+                    if option_dim_combo_3 and combo_ref_top_3.Size > 2:
+                        dim_top_3 = doc.Create.NewDimension(current_view, line_ngang_3, combo_ref_top_3)
+                        list_new_dim.append(dim_top_3)
+                        list_dim_need_modify_text_top.append(dim_top_3)
+                        if option_dim_combo_2:
+                            if combo_ref_top_2.Size > 2:
+                                try:
+                                    dim_top_2 = doc.Create.NewDimension(current_view, line_ngang_2, combo_ref_top_2)
+                                    list_new_dim.append(dim_top_2)
+                                    list_dim_need_modify_text_top.append(dim_top_2)
+                                except Exception as e:
+                                    if str(e) == "Invalid number of references.":
+                                        list_error.append(get_family_name(tung_column) + ": " +"Invalid number of references.")
+                                        pass
 
-                            dim_top_2 = 0
-                    if option_dim_combo_1:
-                        if combo_ref_top_1.Size >= 2:
-                            try:
-                                dim_top_1 = doc.Create.NewDimension(current_view, line_ngang_1, combo_ref_top_1)
-                                list_new_dim.append(dim_top_1)
-                            except Exception as e:
-                                if str(e) == "Invalid number of references.":
-                                    list_error.append(get_family_name(tung_column) + ": " +"Invalid number of references.")
-                                    pass
+                            else: 
+                                dim_top_2 = 0
+                        if option_dim_combo_1:
+                            if combo_ref_top_1.Size >= 2:
+                                try:
+                                    dim_top_1 = doc.Create.NewDimension(current_view, line_ngang_1, combo_ref_top_1)
+                                    list_new_dim.append(dim_top_1)
+                                except Exception as e:
+                                    if str(e) == "Invalid number of references.":
+                                        list_error.append(get_family_name(tung_column) + ": " +"Invalid number of references.")
+                                        pass
 
-                        else:
-                            dim_top_1 = 0
+                            else:
+                                dim_top_1 = 0
+                    else:
+                        dim_top_3 = 0
+                        if option_dim_combo_2:
+                            if combo_ref_top_2.Size > 2:
+                                try:
+                                    dim_top_2 = doc.Create.NewDimension(current_view, line_ngang_3, combo_ref_top_2)
+                                    list_new_dim.append(dim_top_2)
+                                    list_dim_need_modify_text_top.append(dim_top_2)
+                                except Exception as e:
+                                    if str(e) == "Invalid number of references.":
+                                        list_error.append(get_family_name(tung_column) + ": " +"Invalid number of references.")
+                                        pass
+
+                            else: 
+                                dim_top_2 = 0
+                        if option_dim_combo_1:
+                            if combo_ref_top_1.Size >= 2:
+                                try:
+                                    dim_top_1 = doc.Create.NewDimension(current_view, line_ngang_2, combo_ref_top_1)
+                                    list_new_dim.append(dim_top_1)
+                                except Exception as e:
+                                    if str(e) == "Invalid number of references.":
+                                        list_error.append(get_family_name(tung_column) + ": " +"Invalid number of references.")
+                                        pass
+
+                            else:
+                                dim_top_1 = 0
+
+
+
+
+
                     #Tính cho dim right
                     #Combo 1_dim tổng
                     combo_ref_right_1.Append(ref_fukashi_top)
@@ -468,42 +505,74 @@ if nances.AutodeskData():
                         combo_ref_right_3.Append(ref_top)
 
                     if float(tc_bot) > 0:
-                        combo_ref_right_3.Append(ref_bot)                
-                    if option_dim_combo_3:
-                        if combo_ref_right_3.Size > 2:
+                        combo_ref_right_3.Append(ref_bot)        
 
-                            dim_right_3 = doc.Create.NewDimension(current_view, line_doc_3, combo_ref_right_3)
-                            list_new_dim.append(dim_right_3)
-                            list_dim_need_modify_text_right.append(dim_right_3)
 
-                        else:
+                    '''Chia ra trường hợp có tăng cường và trường hợp không có tăng cường
+                    Nếu có dim 3 thì line dim vẫn theo thứ tự.
+                    Nếu không dim dim 3 thì line dim sẽ thay đổi chút.                
+                    '''        
+                    if option_dim_combo_3 and combo_ref_right_3.Size > 2:
+                        dim_right_3 = doc.Create.NewDimension(current_view, line_doc_3, combo_ref_right_3)
+                        list_new_dim.append(dim_right_3)
+                        list_dim_need_modify_text_right.append(dim_right_3)
+                        if option_dim_combo_2:
+                            if combo_ref_right_2.Size > 2:
+                                try:
+                                    dim_right_2 = doc.Create.NewDimension(current_view, line_doc_2, combo_ref_right_2)
+                                    list_new_dim.append(dim_right_2)
+                                    list_dim_need_modify_text_right.append(dim_right_2)
+                                except Exception as e:
+                                    if str(e) == "Invalid number of references.":
+                                        list_error.append(get_family_name(tung_column) + ": " +"Invalid number of references.")
+                                        pass
 
-                            dim_right_3 = 0
-                    if option_dim_combo_2:
-                        if combo_ref_right_2.Size > 2:
-                            try:
-                                dim_right_2 = doc.Create.NewDimension(current_view, line_doc_2, combo_ref_right_2)
-                                list_new_dim.append(dim_right_2)
-                                list_dim_need_modify_text_right.append(dim_right_2)
-                            except Exception as e:
-                                if str(e) == "Invalid number of references.":
-                                    list_error.append(get_family_name(tung_column) + ": " +"Invalid number of references.")
-                                    pass
+                            else: 
 
-                        else: 
+                                dim_right_2 = 0
+                        if option_dim_combo_1:
+                            if combo_ref_right_1.Size >= 2:
+                                try:
+                                    dim_right_1 = doc.Create.NewDimension(current_view, line_doc_1, combo_ref_right_1)
+                                    list_new_dim.append(dim_right_1)
+                                except Exception as e:
+                                    if str(e) == "Invalid number of references.":
+                                        list_error.append(get_family_name(tung_column) + ": " +"Invalid number of references.")
+                                        pass
+                            else:
+                                dim_right_1 = 0
 
-                            dim_right_2 = 0
-                    if option_dim_combo_1:
-                        if combo_ref_right_1.Size >= 2:
-                            try:
-                                dim_right_1 = doc.Create.NewDimension(current_view, line_doc_1, combo_ref_right_1)
-                                list_new_dim.append(dim_right_1)
-                            except Exception as e:
-                                if str(e) == "Invalid number of references.":
-                                    list_error.append(get_family_name(tung_column) + ": " +"Invalid number of references.")
-                                    pass
-                        else:
-                            dim_right_1 = 0
+
+                    else:
+                        dim_right_3 = 0
+                        if option_dim_combo_2:
+                            if combo_ref_right_2.Size > 2:
+                                try:
+                                    dim_right_2 = doc.Create.NewDimension(current_view, line_doc_3, combo_ref_right_2)
+                                    list_new_dim.append(dim_right_2)
+                                    list_dim_need_modify_text_right.append(dim_right_2)
+                                except Exception as e:
+                                    if str(e) == "Invalid number of references.":
+                                        list_error.append(get_family_name(tung_column) + ": " +"Invalid number of references.")
+                                        pass
+
+                            else: 
+
+                                dim_right_2 = 0
+                        if option_dim_combo_1:
+                            if combo_ref_right_1.Size >= 2:
+                                try:
+                                    dim_right_1 = doc.Create.NewDimension(current_view, line_doc_2, combo_ref_right_1)
+                                    list_new_dim.append(dim_right_1)
+                                except Exception as e:
+                                    if str(e) == "Invalid number of references.":
+                                        list_error.append(get_family_name(tung_column) + ": " +"Invalid number of references.")
+                                        pass
+                            else:
+                                dim_right_1 = 0
+
+
+
                 except Exception as e:
                     pass
                     if hasattr(tung_column,"Category"):

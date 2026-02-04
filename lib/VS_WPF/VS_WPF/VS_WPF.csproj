@@ -74,7 +74,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\..\..\..\ARC-dev.extension\ARC-dev.tab\Learning WPF.panel\WPF.stack\Test XAML_frompyrevit.pushbutton\ui_test.xaml">
+    <Page Include="..\..\..\..\ARCdev.extension\ARC-dev.tab_hủy\Learning WPF.panel\WPF.stack\Test XAML_frompyrevit.pushbutton\ui_test.xaml">
       <Link>Link WPF\ui_test.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

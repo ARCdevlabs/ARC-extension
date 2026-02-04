@@ -54,19 +54,30 @@ bitmap_guide_1.BeginInit()
 bitmap_guide_1.UriSource = Uri(image_path_guide_1, UriKind.Absolute)
 bitmap_guide_1.EndInit()
 
-default_settup_family = ["背面","正面","左","左","D","B","C","A","フカシD","フカシB","フカシC","フカシA"]
+default_settup_family = ["背面","正面","左","右","D","B","C","A","フカシD","フカシB","フカシC","フカシA"]
 
 default_settup_dim_in_need_in_plan_view = [bool(True),bool(True),bool(True)]
 
 default_settup_setup_position_of_dim = [bool(False),bool(False),bool(False),bool(True)]
 
+default_setup_dim = str(9)
+
 def load_configs_setup_family():
-    setup_beam = my_config.get_option("setup_family_beam", [])
-    get_setup_beam = [(x) for x in (setup_beam or default_settup_family)]
-    return filter(None, get_setup_beam)
+    setup_beam = my_config.get_option("setup_family_column", [])
+    get_setup_column = [(x) for x in (setup_beam or default_settup_family)]
+    return filter(None, get_setup_column)
 
 def save_configs_setup_family(content):
-    my_config.setup_family_beam = content
+    my_config.setup_family_column = content
+    script.save_config()
+
+def load_configs_setup_offset_dim():
+    setup_offset = my_config.get_option("setup_offset_dim", [])
+    get_setup_offset_dim = setup_offset or default_setup_dim
+    return filter(None, get_setup_offset_dim)
+
+def save_configs_setup_offset_dim(content):
+    my_config.setup_offset_dim = content
     script.save_config()
 
 def load_configs_setup_dim_in_need_in_plan_view():
@@ -124,11 +135,20 @@ class MyWindow(Windows.Window):
 
         load_setting_position_of_dim= load_configs_setup_position_of_dim()
 
+        load_configs_offset_dim = load_configs_setup_offset_dim()
+
         self.apply_load_setting_dim_in_need_in_plan_view(load_setting_dim_in_plan_view)
 
         self.apply_load_setting_position_of_dim(load_setting_position_of_dim)   
 
         self.update_total_input()
+
+        self.setup_offset_dim = load_configs_offset_dim[0]
+
+    def number_only(self, sender, args):
+        # Cho số + dấu chấm
+        if not re.match(r'^[0-9.]$', args.Text):
+            args.Handled = True
 
     def top_reference_name_changed(self, sender, args):
         self.update_total_input()
@@ -311,6 +331,13 @@ class MyWindow(Windows.Window):
         self.setup_bot_left = load_setting_position_of_dim[2]
         self.setup_bot_right = load_setting_position_of_dim[3]
 
+    @property
+    def setup_offset_dim(self):
+        return self.textbox_offset_dim.Text
+    
+    @setup_offset_dim.setter
+    def setup_offset_dim(self,value):
+        self.textbox_offset_dim.Text = value
 
     @property
     def setup_top_ref_name(self): #"setup_top_ref_name" là tên của biến trong python
@@ -551,12 +578,12 @@ class MyWindow(Windows.Window):
         total_setting_dim_in_need_in_plan_view = [is_check_dim_3,is_check_dim_2,is_check_dim_1]
 
 
-        # is_check_dim_A = self.setup_dim_A
+        offset_of_dim = self.setup_offset_dim
         # is_check_dim_B = self.setup_dim_B
         # is_check_dim_C = self.setup_dim_C
         # is_check_dim_D = self.setup_dim_D
         # is_check_dim_E = self.setup_dim_E
-
+        total_offset_dim = [offset_of_dim]
         # total_setting_dim_in_need_in_section_view = [is_check_dim_A,is_check_dim_B,is_check_dim_C,is_check_dim_D,is_check_dim_E]
 
         is_check_top_left = self.setup_top_left
@@ -570,11 +597,11 @@ class MyWindow(Windows.Window):
 
         save_configs_setup_dim_in_need_in_plan_view(total_setting_dim_in_need_in_plan_view)
 
-        # save_configs_setup_dim_in_need_in_section_view(total_setting_dim_in_need_in_section_view)
+        save_configs_setup_offset_dim(total_offset_dim)
 
         save_configs_get_setup_position_of_dim(total_setting_position_of_dim)
         
         self.Close()
 
-if __name__ == "__main__": #Cần phải có hàm này bởi vì nếu không có thì khi lần đầu mở revit và mở tool lên, form xaml sẽ hiện lên dù không nhấn shift
-    MyWindow().ShowDialog()
+# if __name__ == "__main__": #Cần phải có hàm này bởi vì nếu không có thì khi lần đầu mở revit và mở tool lên, form xaml sẽ hiện lên dù không nhấn shift
+MyWindow().ShowDialog()

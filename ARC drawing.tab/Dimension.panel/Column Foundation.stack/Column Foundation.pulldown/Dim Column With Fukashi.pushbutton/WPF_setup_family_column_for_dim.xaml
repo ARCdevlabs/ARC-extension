@@ -225,8 +225,39 @@
             <StackPanel 
                     Margin="0,0,0,0"
                     Orientation="Horizontal" 
-                    HorizontalAlignment ="Stretch" Width="487"
-                    />
+                    VerticalAlignment="Top"
+                    HorizontalAlignment ="Left"
+                Width="487"
+                    >
+                <Grid  Margin="0,5,5,5" Width="505">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label 
+                        Grid.Column="0" 
+						HorizontalAlignment="Left"
+						Content="Offset of Dim (mm in scale 1/1):"
+						Foreground="#FF0A0000"
+						Height="25"
+						VerticalAlignment="Center"
+						Margin="1,0,0,0" FontWeight="Bold" Width="201" />
+                    <TextBox
+                        Grid.Column="1"
+                        x:Name="textbox_offset_dim"   
+                        PreviewTextInput="number_only"
+				        Width="240"
+				        Height="25"
+				        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        TextAlignment= "Center"
+                        VerticalContentAlignment="Center"
+                        Foreground="Black" 
+                        Background="White" 
+                        Focusable="True" 
+                     />
+                </Grid>
+            </StackPanel>
 
             <StackPanel Orientation="Horizontal"
                     VerticalAlignment="Top" 
