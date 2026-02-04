@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-        mc:Ignorable="d" Height="160" Width="534"
+        mc:Ignorable="d" Height="205" Width="533"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Background="#FFEDEDED"
@@ -19,7 +19,7 @@
         <StackPanel Grid.Column="0"
                     Margin="10,10,10,0"
                     VerticalAlignment="Top"
-                    Height="94"
+                    Height="135"
                         >
             <StackPanel 
                     Margin="0,0,0,0"
@@ -68,6 +68,41 @@
                                  Grid.Column="4" 
                                  
                                  />
+                </Grid>
+            </StackPanel>
+            <StackPanel 
+                    Margin="0,0,0,0"
+                    Orientation="Horizontal" 
+                    VerticalAlignment="Top"
+                    HorizontalAlignment ="Left"
+                Width="487"
+                    >
+                <Grid  Margin="0,5,5,5" Width="490">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="218*"/>
+                        <ColumnDefinition Width="76*"/>
+                        <ColumnDefinition Width="197*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label 
+						HorizontalAlignment= "Left"
+						Content="Offset of Dim (mm in scale 1/1):"
+						Foreground="#FF0A0000"
+						Height="25"
+						VerticalAlignment="Center" FontWeight="Bold" Width="198" />
+                    <TextBox
+                        Grid.Column="1"
+                        x:Name="textbox_offset_dim"   
+                        PreviewTextInput="number_only"
+				        Width="250"
+				        Height="25"
+				        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        TextAlignment= "Center"
+                        VerticalContentAlignment="Center"
+                        Foreground="Black" 
+                        Background="White" 
+                        Focusable="True" Grid.ColumnSpan="2" 
+                     />
                 </Grid>
             </StackPanel>
             <Button x:Name="save_setting"

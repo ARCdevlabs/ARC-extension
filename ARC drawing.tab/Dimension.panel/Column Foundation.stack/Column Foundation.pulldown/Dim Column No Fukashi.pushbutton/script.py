@@ -29,6 +29,8 @@ if nances.AutodeskData():
     option_bot_left = source_setting_position_of_dim[2]
     option_bot_right = source_setting_position_of_dim[3]
 
+    offset_of_dim = 4
+
     list_new_dim = []
 
     trans_group = TransactionGroup(doc, 'Dim foundation/Column')
@@ -67,9 +69,9 @@ if nances.AutodeskData():
 
                         Y_vector_chua_chuan_hoa = vectortransform.get_Y_vector(column)
 
-                        X_vector = vectortransform.chuan_hoa_vector_tu_trai_qua_phai_duoi_len_tren(X_vector_chua_chuan_hoa,current_view)
+                        X_vector = vectortransform.chuan_hoa_vector_tu_trai_qua_phai_tren_xuong_duoi(X_vector_chua_chuan_hoa,current_view)
 
-                        Y_vector = vectortransform.chuan_hoa_vector_tu_trai_qua_phai_duoi_len_tren(Y_vector_chua_chuan_hoa,current_view)
+                        Y_vector = vectortransform.chuan_hoa_vector_tu_trai_qua_phai_tren_xuong_duoi(Y_vector_chua_chuan_hoa,current_view)
 
                         Y_plane = Plane.CreateByNormalAndOrigin(X_vector, point_location)
 
@@ -84,7 +86,7 @@ if nances.AutodeskData():
 
                             line_ngang_center = vectortransform.line_for_dim_X(column,current_view)
 
-                            tong_hop_line_bot = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_ngang_center,Y_vector,chieu_cao/2, current_view)
+                            tong_hop_line_bot = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_ngang_center,Y_vector,chieu_cao/2, offset_of_dim, current_view)
 
                             line_bot_3 = tong_hop_line_bot[0]
 
@@ -94,7 +96,7 @@ if nances.AutodeskData():
 
                             line_doc_center = vectortransform.line_for_dim_Y(column,current_view)
 
-                            tong_hop_line_right = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_doc_center,X_vector,chieu_rong/2, current_view)
+                            tong_hop_line_right = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_doc_center,X_vector,chieu_rong/2,offset_of_dim, current_view)
 
                             line_right_3 = tong_hop_line_right[0]
 
@@ -102,7 +104,7 @@ if nances.AutodeskData():
 
                             line_right_1 = tong_hop_line_right[2]
                             
-                            tong_hop_line_top = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_ngang_center,-Y_vector,chieu_cao/2, current_view)
+                            tong_hop_line_top = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_ngang_center,-Y_vector,chieu_cao/2,offset_of_dim, current_view)
 
                             line_top_3 = tong_hop_line_top[0]
 
@@ -110,7 +112,7 @@ if nances.AutodeskData():
 
                             line_top_1 = tong_hop_line_top[2]
 
-                            tong_hop_line_left = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_doc_center,-X_vector,chieu_rong/2, current_view)
+                            tong_hop_line_left = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_doc_center,-X_vector,chieu_rong/2,offset_of_dim, current_view)
 
                             line_left_3 = tong_hop_line_left[0]
 
@@ -185,7 +187,7 @@ if nances.AutodeskData():
                         try:
                             line_Y = vectortransform.line_for_dim_Y(column,current_view)
 
-                            tong_hop_line_Y = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_Y,X_vector,max_value_X, current_view)
+                            tong_hop_line_Y = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_Y,X_vector,max_value_X,offset_of_dim, current_view)
 
                             line_Y_2 = tong_hop_line_Y[1]
 
@@ -197,7 +199,7 @@ if nances.AutodeskData():
 
                             new_line_for_dim_total_Y = line_Y_1
 
-                            tong_hop_line_X = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_X,Y_vector,max_value_Y, current_view)
+                            tong_hop_line_X = vectortransform.tinh_toan_line_dim_cot_1_2_3 (line_X,Y_vector,max_value_Y,offset_of_dim, current_view)
 
                             line_X_2 = tong_hop_line_X[1]
 

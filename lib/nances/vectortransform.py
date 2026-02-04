@@ -101,7 +101,7 @@ def chuan_hoa_vector(vector, view): #vector tu trai qua phai, tu duoi len tren
     else:
         return -vector
     
-def chuan_hoa_vector_tu_trai_qua_phai_duoi_len_tren (vector, view): #vector tu trai qua phai, tu tren xuong duoi
+def chuan_hoa_vector_tu_trai_qua_phai_tren_xuong_duoi (vector, view): #vector tu trai qua phai, tu tren xuong duoi
     # view_direction = view.ViewDirection
     view_updirection = view.UpDirection
     view_rightdirection = view.RightDirection
@@ -603,7 +603,7 @@ def get_X_vector(column):
 def line_for_dim_Y (column,view):
     point = column.Location.Point
     Y_vector = get_Y_vector(column)
-    vector_chuan_hoa = chuan_hoa_vector_tu_trai_qua_phai_duoi_len_tren(Y_vector,view)
+    vector_chuan_hoa = chuan_hoa_vector_tu_trai_qua_phai_tren_xuong_duoi(Y_vector,view)
     point_Y_2 = move_point_along_vector(point,vector_chuan_hoa,1)
     line_Y = DB.Line.CreateBound(point,point_Y_2)
     return line_Y
@@ -611,16 +611,16 @@ def line_for_dim_Y (column,view):
 def line_for_dim_X (column,view):
     point = column.Location.Point
     X_vector =get_X_vector(column)
-    vector_chuan_hoa = chuan_hoa_vector_tu_trai_qua_phai_duoi_len_tren(X_vector,view)
+    vector_chuan_hoa = chuan_hoa_vector_tu_trai_qua_phai_tren_xuong_duoi(X_vector,view)
     point_X_2 = move_point_along_vector(point,vector_chuan_hoa,1)
     line_X = DB.Line.CreateBound(point,point_X_2)
     return line_X
 
-def tinh_toan_line_dim_cot_1_2_3 (line_ngay_tam_cot, vector ,nua_chieu_rong_cot, view):
+def tinh_toan_line_dim_cot_1_2_3 (line_ngay_tam_cot, vector ,nua_chieu_rong_cot, offset, view):
 
     view_scale = view.Scale
 
-    khoang_cach_dim_3 = (9 / 304.8)
+    khoang_cach_dim_3 = (offset / 304.8)
 
     snap_dim =  (5 / 304.8)
 

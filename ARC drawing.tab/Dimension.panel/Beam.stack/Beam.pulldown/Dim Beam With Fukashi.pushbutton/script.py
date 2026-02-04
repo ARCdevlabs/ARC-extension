@@ -189,7 +189,7 @@ if nances.AutodeskData():
 
                 flat_location_line_direction = flat_location_line.Direction
 
-                chuan_hoa_vector_kieu_nguoc = vectortransform.chuan_hoa_vector_tu_trai_qua_phai_duoi_len_tren(flat_location_line_direction,current_view)
+                chuan_hoa_vector_kieu_nguoc = vectortransform.chuan_hoa_vector_tu_trai_qua_phai_tren_xuong_duoi(flat_location_line_direction,current_view)
 
                 line_combo_2 = vectortransform.get_rotate_90_location_line(location_line,current_view)
                 
