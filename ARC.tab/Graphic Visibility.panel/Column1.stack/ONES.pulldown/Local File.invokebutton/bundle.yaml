@@ -1,0 +1,9 @@
+is_beta: true
+
+title:   
+  en_us: Local File
+assembly: ONES
+command_class: LocalFile
+
+
+
