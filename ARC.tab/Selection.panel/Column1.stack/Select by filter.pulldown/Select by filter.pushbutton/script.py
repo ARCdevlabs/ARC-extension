@@ -65,12 +65,10 @@ try:
                 for filter in all_view_filters:
                     if filter.Name == each_name:
                         list_filter.append(filter)
-            # filter = doc.GetElement(filter_id)
-            for filter in list_filter:
-            # Sử dụng hàm get_elements_by_view_filter để lấy tất cả các đối tượng thỏa mãn view filter và lưu vào danh sách selected_elements
-                selected_elements = get_elements_by_view_filter(doc, filter)
+            for tung_filter in list_filter:
+                selected_elements = get_elements_by_view_filter(doc, tung_filter)
                 list_selected_element.append(selected_elements)
-                # Bây giờ selected_elements chứa tất cả các đối tượng mà view filter đang áp dụng
+            # Bây giờ selected_elements chứa tất cả các đối tượng mà view filter đang áp dụng
             for tung_doi_tuong in list_selected_element:
                 for tung_doi_tuong_2 in tung_doi_tuong:
                     list_selected_element_thu_cap.append(tung_doi_tuong_2)

@@ -61,6 +61,10 @@ if nances.AutodeskData():
     '''Load configs để lấy giá trị đã lưu vào trong .ini'''
     gia_tri_load_configs_type_dam = load_configs_type_dam() #kết quả là 1G1 theo mặc định hoặc là các kết quả khác 
     list_type_dam = all_type_of_framing(doc)
+    if len(list_type_dam) == 0:
+        nances.message_box("Don't have type beam in the model")
+        import sys
+        sys.exit()
     try:
         index_load_configs_phuong = list_type_dam.index(gia_tri_load_configs_type_dam) #kết quả là 0 hoặc 1 hoặc 2
     except Exception as e:
