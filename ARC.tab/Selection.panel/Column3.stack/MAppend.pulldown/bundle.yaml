@@ -8,3 +8,13 @@ layout:
   - Next
   - Prev
   - Purge Memory Files
+  - -----
+  - MWrite 1
+  - MRead 1
+  - MAppend 1
+  - MDeduct 1
+  - -----
+  - MWrite 2
+  - MRead 2
+  - MAppend 2
+  - MDeduct 2
