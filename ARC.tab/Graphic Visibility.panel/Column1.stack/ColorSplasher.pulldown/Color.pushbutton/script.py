@@ -493,6 +493,7 @@ class ColorSplasherWindow(Window):
                 solid_pat_id = p.Id
                 break
         
+
         if not solid_pat_id:
             forms.alert("No Solid Fill Pattern found!")
             return
@@ -535,7 +536,8 @@ class ColorSplasherWindow(Window):
         finally:
             if t.HasStarted(): t.RollBack()
             t.Dispose()
-
+        self.Close()
+        
     def btnClear_Click(self, sender, args):
         view = doc.ActiveView
         t = Transaction(doc, "Clear Colors")
