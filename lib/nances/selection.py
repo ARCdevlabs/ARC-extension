@@ -14,6 +14,26 @@ def pick_beams_by_rectangle(iuidoc):
         selected_elements = selection.PickElementsByRectangle(BeamSelectionFilter(), "Select Beams")
     return selected_elements
 
+class MassSelectionFilter(Autodesk.Revit.UI.Selection.ISelectionFilter):
+    # standard API override function
+    def AllowElement(self, element):
+        if not element.ViewSpecific:
+            return True
+        else:
+            return False
+
+    # standard API override function
+    def AllowReference(self, refer, point):
+        return False
+
+def pick_model_by_rectangle(iuidoc):
+    from nances import forms
+    with forms.WarningBar(title='Drag to select element'):
+        selection = iuidoc.Selection
+        selected_elements = selection.PickElementsByRectangle(MassSelectionFilter(), "Select Elements")
+    return selected_elements
+
+    
 class DimensionSelectionFilter(Autodesk.Revit.UI.Selection.ISelectionFilter):
     def AllowElement(self, element):
         return element.Category.Name in "Dimensions , 寸法"
