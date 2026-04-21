@@ -47,13 +47,14 @@ while True:
         t.Start()
 
         for el in ele:
+            counter += 1
             p = el.LookupParameter(parameter)
             if p and not p.IsReadOnly:
                 p.Set(str(counter))
 
         t.Commit()
 
-        counter += 1
+        
 
     except OperationCanceledException:
         # Nhấn ESC

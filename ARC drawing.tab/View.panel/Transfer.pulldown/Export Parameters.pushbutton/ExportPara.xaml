@@ -1,0 +1,351 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Export Parameters to Text File" Height="650" Width="950" 
+        WindowStartupLocation="CenterScreen" 
+        ResizeMode="CanResize" MinWidth="800" MinHeight="550">
+    
+    <Window.Resources>
+        <Geometry x:Key="SearchIconGeometry">
+            M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z
+        </Geometry>
+
+        <Style x:Key="SearchIconStyle" TargetType="Path">
+            <Setter Property="Data" Value="{StaticResource SearchIconGeometry}"/>
+            <Setter Property="Fill" Value="#AA7B5C89"/>
+            <Setter Property="Stretch" Value="Uniform"/>
+            <Setter Property="Width" Value="16"/>
+            <Setter Property="Height" Value="16"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <VisualBrush x:Key="IconOnlyBrush" Stretch="None" AlignmentX="Left">
+            <VisualBrush.Visual>
+                <Path Style="{StaticResource SearchIconStyle}" Margin="5,0,0,0"/>
+            </VisualBrush.Visual>
+        </VisualBrush>
+
+        <VisualBrush x:Key="IconAndTextBrush_Name" Stretch="None" AlignmentX="Left">
+            <VisualBrush.Visual>
+                <StackPanel Orientation="Horizontal">
+                    <Path Style="{StaticResource SearchIconStyle}" Margin="5,0,5,0"/>
+                    <TextBlock Text="Search by Name..." Foreground="#AAA" FontStyle="Italic" VerticalAlignment="Center" FontWeight="Normal"/>
+                </StackPanel>
+            </VisualBrush.Visual>
+        </VisualBrush>
+        
+        <VisualBrush x:Key="IconAndTextBrush_Group" Stretch="None" AlignmentX="Left">
+            <VisualBrush.Visual>
+                <StackPanel Orientation="Horizontal">
+                    <Path Style="{StaticResource SearchIconStyle}" Margin="5,0,5,0"/>
+                    <TextBlock Text="Search by Group..." Foreground="#AAA" FontStyle="Italic" VerticalAlignment="Center" FontWeight="Normal"/>
+                </StackPanel>
+            </VisualBrush.Visual>
+        </VisualBrush>
+
+        <Style x:Key="SearchTextBoxStyle_Name" TargetType="TextBox">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="25,0,5,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="{StaticResource IconOnlyBrush}"/>
+            <Style.Triggers>
+                <Trigger Property="Text" Value="">
+                    <Setter Property="Background" Value="{StaticResource IconAndTextBrush_Name}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="SearchTextBoxStyle_Group" TargetType="TextBox">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="25,0,5,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="{StaticResource IconOnlyBrush}"/>
+            <Style.Triggers>
+                <Trigger Property="Text" Value="">
+                    <Setter Property="Background" Value="{StaticResource IconAndTextBrush_Group}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <SolidColorBrush x:Key="SelectionBackground" Color="#E1F5FE"/> 
+        <SolidColorBrush x:Key="SelectionText" Color="Black"/>           
+
+        <Style TargetType="DataGridRow">
+            <Setter Property="Background" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#F0F8FF"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{StaticResource SelectionBackground}"/>
+                    <Setter Property="Foreground" Value="{StaticResource SelectionText}"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="5,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{StaticResource SelectionBackground}"/>
+                    <Setter Property="Foreground" Value="{StaticResource SelectionText}"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style TargetType="GroupBox">
+            <Setter Property="BorderBrush" Value="#673AB7"/> 
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="Margin" Value="0,0,0,0"/> 
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#673AB7"/> 
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
+        <Style x:Key="PurpleBtn" TargetType="Button">
+            <Setter Property="Background" Value="#EDE7F6"/> 
+            <Setter Property="Foreground" Value="#673AB7"/>
+            <Setter Property="BorderBrush" Value="#D1C4E9"/> 
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="10,2"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3"> 
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="GreenBgPurpleTextBtn" TargetType="Button">
+            <Setter Property="Background" Value="#D3F2E0"/> 
+            <Setter Property="Foreground" Value="#673AB7"/> 
+            <Setter Property="BorderBrush" Value="#A5D6A7"/> 
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="10,2"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3"> 
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BlueBtn" TargetType="Button">
+            <Setter Property="Background" Value="#E1F5FE"/> 
+            <Setter Property="Foreground" Value="Black"/> 
+            <Setter Property="BorderBrush" Value="#29B6F6"/> 
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3"> 
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="OrangeBtn" TargetType="Button">
+            <Setter Property="Background" Value="#FFF3E0"/> 
+            <Setter Property="Foreground" Value="Black"/> 
+            <Setter Property="BorderBrush" Value="#FFA726"/> 
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="10"> 
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FFE0B2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <RowDefinition Height="*"/>    <RowDefinition Height="Auto"/> </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,20" HorizontalAlignment="Center">
+            <TextBlock Text="EXPORT PROJECT PARAMETERS"
+                       FontSize="20" FontWeight="Bold"
+                       HorizontalAlignment="Center" Foreground="#673AB7"/>
+            
+            <TextBlock Text="&lt;&lt;&lt; *Remember to check the .txt file before starting! &gt;&gt;&gt;"
+                       FontSize="14" FontWeight="Bold" FontStyle="Italic"
+                       Foreground="#D32F2F"
+                       HorizontalAlignment="Center" Margin="0,5,0,0"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>   <ColumnDefinition Width="20"/>   <ColumnDefinition Width="1.2*"/> </Grid.ColumnDefinitions>
+
+            <GroupBox Header="1. Parameter List" Grid.Column="0" VerticalAlignment="Stretch">
+                <DockPanel>
+                    <Border DockPanel.Dock="Top" BorderBrush="#CCC" BorderThickness="1" CornerRadius="3" Height="30" Margin="0,0,0,5" Background="White">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/> 
+                                <ColumnDefinition Width="1"/>  
+                                <ColumnDefinition Width="*"/>  
+                            </Grid.ColumnDefinitions>
+                            
+                            <TextBox x:Name="search_name_tb" Grid.Column="0" 
+                                     Style="{StaticResource SearchTextBoxStyle_Name}"
+                                     TextChanged="search_box_changed" FontWeight="Normal"/>
+
+                            <Border Grid.Column="1" Background="#EEE" Margin="0,5"/>
+
+                            <TextBox x:Name="search_group_tb" Grid.Column="2" 
+                                     Style="{StaticResource SearchTextBoxStyle_Group}"
+                                     TextChanged="search_box_changed" FontWeight="Normal"/>
+                        </Grid>
+                    </Border>
+
+                    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,0">
+                        <Button x:Name="btn_check_all" Content="Check All" Style="{StaticResource GreenBgPurpleTextBtn}" Click="check_all_click"/>
+                        <Button x:Name="btn_check_none" Content="None" Style="{StaticResource GreenBgPurpleTextBtn}" Click="check_none_click"/>
+                    </StackPanel>
+
+                    <DataGrid x:Name="param_dg" AutoGenerateColumns="False" 
+                              CanUserAddRows="False" IsReadOnly="False" 
+                              HeadersVisibility="Column" 
+                              BorderBrush="#EEE" BorderThickness="1" SelectionMode="Extended"
+                              FontWeight="Normal" 
+                              GridLinesVisibility="Horizontal" 
+                              RowBackground="White">
+                        
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background" Value="#F7F2F7"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                <Setter Property="Padding" Value="10,5"/>
+                                <Setter Property="BorderBrush" Value="#EEE"/>
+                                <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Width="30">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                  Click="checkbox_click"/> 
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTextColumn Header="Parameter Name" Binding="{Binding Name}" Width="2*" IsReadOnly="True" Foreground="Black"/>
+                            
+                            <DataGridTextColumn Header="Type" Binding="{Binding ParamType}" Width="0.8*" IsReadOnly="True" Foreground="Black"/>
+
+                            <DataGridTextColumn Header="Group" Binding="{Binding Group}" Width="*" IsReadOnly="True"
+                                                Foreground="Blue" FontWeight="Bold"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </GroupBox>
+
+
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>  <RowDefinition Height="20"/>    <RowDefinition Height="Auto"/>  <RowDefinition Height="30"/>    <RowDefinition Height="Auto"/>  </Grid.RowDefinitions>
+
+                <GroupBox Header="2. Export Group Settings" Grid.Row="0">
+                    <StackPanel Margin="5">
+                        <TextBlock Text="Select or Create Group:" Foreground="#D32F2F" Margin="0,0,0,5" FontWeight="SemiBold"/>
+                        
+                        <ComboBox x:Name="group_name_cb" Height="30" 
+                                  IsEditable="False"
+                                  VerticalContentAlignment="Center"
+                                  Padding="5,0"
+                                  BorderBrush="#BBB"
+                                  SelectionChanged="group_combo_selection_changed"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="3. Select Text File (.txt)" Grid.Row="2">
+                    <StackPanel Margin="5">
+                        <TextBlock Text="File Path:" Foreground="#D32F2F" Margin="0,0,0,5" FontWeight="SemiBold"/>
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="file_path_tb" Grid.Column="0" Height="30" 
+                                     VerticalContentAlignment="Center" FontWeight="Normal" 
+                                     Padding="5,0" BorderBrush="#BBB" IsReadOnly="True" Background="#F5F5F5"/>
+                            <Button x:Name="btn_browse" Content="..." Grid.Column="1" 
+                                    Style="{StaticResource BlueBtn}" Margin="5,0,0,0" 
+                                    Click="browse_file_click"/>
+                        </Grid>
+                        <TextBlock Text="Click '...' to select or create a file." FontSize="10" Foreground="Gray" Margin="0,2,0,0" FontStyle="Italic"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <Button x:Name="btn_export" Content="EXPORT" Grid.Row="4" 
+                        Height="35" Width="100"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource OrangeBtn}"
+                        Click="export_click"/>
+            </Grid>
+        </Grid>
+
+        <StatusBar Grid.Row="2" Margin="0,5,0,0">
+            <TextBlock x:Name="status_lb" Text="Ready." Foreground="Gray" FontStyle="Italic"/>
+        </StatusBar>
+    </Grid>
+</Window>
