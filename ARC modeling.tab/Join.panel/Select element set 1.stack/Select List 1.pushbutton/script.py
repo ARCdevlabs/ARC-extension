@@ -22,7 +22,10 @@ import Autodesk.Revit.DB as DB
 from System.Collections.Generic import List
 from Autodesk.Revit.UI.Selection import ObjectType
 import nances
+# create an instance of _ExecutorParams wrapping current runtime.
+
 if nances.AutodeskData():
+    
     def get_document_data_file(file_id, file_ext, add_cmd_name=False):
 
         proj_info = revit.query.get_project_info()
@@ -36,7 +39,6 @@ if nances.AutodeskData():
             script_file_id = '{}_{}'.format(file_id,
                                             proj_info.filename
                                             or proj_info.name)
-
         return appdata.get_data_file(script_file_id, file_ext)
 
 

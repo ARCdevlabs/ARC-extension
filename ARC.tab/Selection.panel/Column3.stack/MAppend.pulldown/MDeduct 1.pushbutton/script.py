@@ -6,7 +6,7 @@ from pyrevit import revit
 from pyrevit import script
 
 
-datafile = script.get_document_data_file("Memory_1", "txt")
+datafile = script.get_document_data_file("Memory1", "txt")
 
 selection = revit.get_selection()
 selected_ids = {str(elid.IntegerValue) for elid in selection.element_ids}
