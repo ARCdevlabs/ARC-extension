@@ -7,8 +7,7 @@ from pyrevit import revit, DB
 
 selection = revit.get_selection()
 
-datafile = script.get_document_data_file("Memory1", "txt") #Không được ghi là datafile = script.get_document_data_file("Memory_1", "txt")
-
+datafile = script.get_document_data_file("Memory1", "txt") 
 
 try:
     f = open(datafile, 'r')
