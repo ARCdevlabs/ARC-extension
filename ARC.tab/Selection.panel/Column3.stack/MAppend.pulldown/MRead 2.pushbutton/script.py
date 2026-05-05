@@ -7,7 +7,7 @@ from pyrevit import revit, DB
 
 selection = revit.get_selection()
 
-datafile = script.get_document_data_file("Memory_2", "txt")
+datafile = script.get_document_data_file("Memory2", "txt")
 
 
 try:

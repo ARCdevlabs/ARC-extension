@@ -495,7 +495,7 @@ class ColorSplasherWindow(Window):
         
 
         if not solid_pat_id:
-            forms.alert("No Solid Fill Pattern found!")
+            # forms.alert("No Solid Fill Pattern found!")
             return
         
         view = doc.ActiveView
@@ -526,13 +526,13 @@ class ColorSplasherWindow(Window):
                 uidoc.RefreshActiveView()
                 msg = "Áp dụng thành công cho {} đối tượng.".format(applied_count)
                 if failed: msg += "\n\nLỗi:\n" + "\n".join(failed[:5])
-                forms.alert(msg)
+                # forms.alert(msg)
             else:
                 t.RollBack()
-                forms.alert("Không đối tượng nào được tô màu.")
+                # forms.alert("Không đối tượng nào được tô màu.")
         except Exception as ex:
             if t.HasStarted(): t.RollBack()
-            forms.alert("Lỗi: " + str(ex))
+            # forms.alert("Lỗi: " + str(ex))
         finally:
             if t.HasStarted(): t.RollBack()
             t.Dispose()
@@ -559,10 +559,10 @@ class ColorSplasherWindow(Window):
                       except: pass
             t.Commit()
             uidoc.RefreshActiveView()
-            forms.alert("Đã xóa màu!")
+            # forms.alert("Đã xóa màu!")
         except Exception as ex:
             if t.HasStarted(): t.RollBack()
-            forms.alert("Lỗi: " + str(ex))
+            # forms.alert("Lỗi: " + str(ex))
         finally:
             if t.HasStarted(): t.RollBack()
             t.Dispose()
@@ -575,12 +575,12 @@ class ColorSplasherWindow(Window):
         if ids_to_select.Count > 0:
             uidoc.Selection.SetElementIds(ids_to_select)
             self.Close()
-        else:
-            forms.alert("Chưa chọn giá trị nào.")
+        # else:
+        #     forms.alert("Chưa chọn giá trị nào.")
 
 try:
     gc.collect()
     ColorSplasherWindow().ShowDialog()
 except Exception as e:
-    forms.alert("Fatal error: {}".format(e))
+    # forms.alert("Fatal error: {}".format(e))
     print(e)

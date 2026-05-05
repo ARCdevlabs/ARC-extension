@@ -4,7 +4,7 @@ from pyrevit import script
 from pyrevit import revit
 
 
-datafile = script.get_document_data_file("Memory_1", "txt")
+datafile = script.get_document_data_file("Memory1", "txt")
 
 
 selection = revit.get_selection()
