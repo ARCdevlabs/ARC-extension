@@ -536,7 +536,7 @@ class ColorSplasherWindow(Window):
         finally:
             if t.HasStarted(): t.RollBack()
             t.Dispose()
-        self.Close()
+        # self.Close()
         
     def btnClear_Click(self, sender, args):
         view = doc.ActiveView

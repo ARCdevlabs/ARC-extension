@@ -1,6 +1,6 @@
 layout:
-  - ColorSplasher
   - Color
+  - ColorSplasher
   - Color Filter
   - Select Filter
   - Local File
