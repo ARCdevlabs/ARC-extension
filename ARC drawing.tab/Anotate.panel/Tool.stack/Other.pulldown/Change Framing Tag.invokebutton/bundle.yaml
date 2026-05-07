@@ -1,0 +1,6 @@
+title:   
+  en_us: Change Framing Tag
+assembly: WpfControlLibrary202506
+command_class: ModelessCommand
+highlight: new
+author: Minh Quyết
