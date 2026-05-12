@@ -1,6 +1,6 @@
 is_beta: true
 title:   
-  en_us: Color Filter
+  en_us: Beta_Color Filter
 assembly: ONES
 command_class: ColorFilter
 

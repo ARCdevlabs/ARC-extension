@@ -1,6 +1,6 @@
 is_beta: true
 title:   
-  en_us: Super Select
+  en_us: Beta_Super Select
 assembly: ONES
 command_class: SelectFilter
 

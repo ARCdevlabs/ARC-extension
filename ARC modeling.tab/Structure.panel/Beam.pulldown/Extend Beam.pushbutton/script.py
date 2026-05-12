@@ -6,12 +6,25 @@ import Autodesk.Revit.DB as DB
 from System.Collections.Generic import List
 from Autodesk.Revit.UI.Selection import ObjectType
 from nances import revit,vectortransform
-
+from pyrevit import script
+import sys 
+logger = script.get_logger()
 if nances.AutodeskData():
     uidoc = __revit__.ActiveUIDocument
     doc = uidoc.Document
     active_view = nances.Active_view(doc)
    
+    my_config = script.get_config("setting_extend_dam")
+    def load_configs_setting_extend_dam():
+        so_mac_dinh = "1000"
+        get_setting_extend_dam = my_config.get_option("setting_extend_dam", [])
+        tra_ve_extend_dam = get_setting_extend_dam or so_mac_dinh
+        return tra_ve_extend_dam
+
+    def save_configs_setting_extend_dam(content):
+        my_config.setting_extend_dam = content
+        script.save_config()
+
     def get_all_grid_in_current_view(doc, view):
         collector = FilteredElementCollector(doc, view.Id) \
                     .OfClass(Grid) \
@@ -173,6 +186,32 @@ if nances.AutodeskData():
         Autodesk.Revit.DB.Structure.StructuralFramingUtils.AllowJoinAtEnd(element, 0)
         Autodesk.Revit.DB.Structure.StructuralFramingUtils.AllowJoinAtEnd(element, 1)
 
+    from rpw.ui.forms import (FlexForm, Label, ComboBox, TextBox,
+                                Separator, Button, CheckBox)
+    
+    source_ban_kinh_loc = load_configs_setting_extend_dam()
+
+    components = [
+                Label('Nhập Bán Kính Lọc'),
+                TextBox('textbox1', source_ban_kinh_loc),
+                Separator(),
+                Button('Ok')
+            ]
+    form = FlexForm('ARC', components)
+    form.show()
+    form.values    
+    try:
+        ban_kinh_loc = form.values["textbox1"]
+        save_configs_setting_extend_dam(ban_kinh_loc)
+    except:
+        sys.exit()
+
+    try:
+        number_ban_kinh_loc = int(ban_kinh_loc)
+    except:
+        nances.message_box("Số bắt đầu không hợp lệ, sẽ lấy số mặc định là 1000")
+        number_ban_kinh_loc = 1000
+
     try:  
         Ele = nances.get_elements(uidoc,doc, 'Select Beam', noti = False)
         beams = FilteredElementCollector(doc, active_view.Id) \
@@ -180,10 +219,8 @@ if nances.AutodeskData():
     .WhereElementIsNotElementType() \
     .ToElements()
         detail_line = []
-        # trans_group = TransactionGroup(doc, 'Extend Beams')
-        # trans_group.Start()
         from nances import revit
-        with revit.Transaction('nhập tên transaction', swallow_errors=True):
+        with revit.Transaction('Extend Beam', swallow_errors=True):
             try:
                 for tung_beam in Ele:
                         location_line = tung_beam.Location.Curve
@@ -196,7 +233,7 @@ if nances.AutodeskData():
                         new_end_point = XYZ(end_point.X,end_point.Y,level_of_beam.Elevation)
                         new_center_line_in_level = Autodesk.Revit.DB.Line.CreateBound(new_start_point, new_end_point)
                         grids = get_all_grid_in_current_view(doc,active_view)
-                        extend_mm = 700
+                        extend_mm = number_ban_kinh_loc
                         extend = extend_mm/304.8
                         new_line_lan_1 = extend_line_lan_1(new_center_line_in_level, beams, extend,grids,active_view,level_elevation)
                         new_line_lan_2 = extend_line_lan_2(new_line_lan_1, beams, extend,grids,active_view,level_elevation)

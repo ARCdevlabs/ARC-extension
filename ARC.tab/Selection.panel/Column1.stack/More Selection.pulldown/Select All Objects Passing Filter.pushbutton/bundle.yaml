@@ -1,5 +1,5 @@
 title:
-  en_us: Select All Objects Passing Filter
+  en_us: Beta_Select All Objects Passing Filter
   fr_fr: Sélectionner tous les objets correspondant au filtre
   ru: Выделить все объекты, проходящие через фильтр
   chinese_s: 选择所有通过过滤器的图元
@@ -20,4 +20,3 @@ tooltip:
     Wählt alle Elemente aus, die einem oder mehreren ausgewählten Filtern entsprechen und in der aktuellen Ansicht sichtbar sind. Praktisch für eine schnelle Filterung basierend auf vordefinierten Kriterien. Kann so konfiguriert werden, dass Elemente im gesamten Projekt ausgewählt werden, verschachtelte ausgeschlossen oder der Filter umgekehrt wird.
   pt_br: >-
     Seleciona todos os elementos que passam em um ou mais filtros selecionados e são visíveis na vista ativa. Útil para filtrar rapidamente elementos com base em condições predefinidas. Pode ser configurado para elementos no projeto em vez da vista, excluindo aninhados, inverter o filtro.
-is_beta: true

@@ -6,61 +6,75 @@ import Autodesk.Revit.UI.Selection
 import sys
 import os
 import nances
+from nances import selection
+from pyrevit import script
+logger = script.get_logger()
+
+
 if nances.AutodeskData():
     uidoc = __revit__.ActiveUIDocument
     doc = uidoc.Document
+
+    logger = script.get_logger()
+    my_config = script.get_config("setting_danh_so_coc")
+    def load_configs_so_bat_dau():
+        so_mac_dinh = "1"
+        get_so_bat_dau = my_config.get_option("so_bat_dau", [])
+        tra_ve_so_bat_dau = get_so_bat_dau or so_mac_dinh
+        return tra_ve_so_bat_dau
+
+    def save_configs_so_bat_dau(content):
+        my_config.so_bat_dau = content
+        script.save_config()
+
+    def load_configs_thu_tu_tang():
+        thu_tu_mac_dinh = "1. Phương X: Từ nhỏ đến lớn"
+        get_thu_tu_tang = my_config.get_option("thu_tu_tang", [])
+        tra_ve_thu_tu_tang = get_thu_tu_tang or thu_tu_mac_dinh
+        return tra_ve_thu_tu_tang
+
+    def save_configs_thu_tu_tang(content):
+        my_config.thu_tu_tang = content
+        script.save_config()
+
+    def load_configs_parameter_danh_so():
+        parameter_mac_dinh = "番号"
+        get_parameter_danh_so = my_config.get_option("parameter_danh_so", [])
+        tra_ve_parameter_danh_so = get_parameter_danh_so or parameter_mac_dinh
+        return tra_ve_parameter_danh_so
+
+    def save_configs_parameter_danh_so(content):
+        my_config.parameter_danh_so = content
+        script.save_config()
+
+    def xoay_list(lst, gia_tri):
+        if gia_tri not in lst:
+            return lst
+
+        index = lst.index(gia_tri)
+
+        return lst[index:] + lst[:index]
     
-
-    # from pyrevit import script
-    # logger = script.get_logger()
-    # my_config = script.get_config("parameter_pile_number")
-
-    # def load_configs():
-    #     parameter_input = my_config.get_option("parameter_input", [])
-    #     return parameter_input
-
-    # def save_configs(content):
-    #     my_config.parameter_input = content
-    #     script.save_config()
-
     from rpw.ui.forms import (FlexForm, Label, ComboBox, TextBox,
                                 Separator, Button, CheckBox)
-    # get_parameter = ''
-    # try:
-    #     get_configs = load_configs()
-    #     get_parameter = get_configs
-    # except:
-    #     pass
-    # if get_parameter != None:
-    #     config_parameter = get_parameter
-    # else:
-    #     config_parameter = ''
-
-    # components = [
-    #                 Label('Nhập số bắt đầu'),
-    #                 TextBox('textbox1', Text="1"),
-    #                 Label('Chọn cách lọc'),
-    #                 ComboBox('combobox1', ['1. Phương X: Từ nhỏ đến lớn',
-    #                                        '2. Phương X: Từ lớn đến nhỏ',
-    #                                        '3. Phương Y: Từ nhỏ đến lớn',
-    #                                        '4. Phương Y: Từ lớn đến nhỏ'
-    #                                        ]),
-    #                 Label('Parameter'),
-    #                 TextBox('textbox2', Text = config_parameter),
-    #                 Separator(),
-    #                 Button('Ok')
-    #             ]
-    components = [
-                Label('Nhập số bắt đầu'),
-                TextBox('textbox1', Text="1"),
-                Label('Chọn cách lọc'),
-                ComboBox('combobox1', ['1. Phương X: Từ nhỏ đến lớn',
+    
+    source_so_bat_dau = load_configs_so_bat_dau()
+    source_thu_tu_tang = load_configs_thu_tu_tang()
+    source_parameter = load_configs_parameter_danh_so()
+    list_dau_vao_combobox = ['1. Phương X: Từ nhỏ đến lớn',
                                         '2. Phương X: Từ lớn đến nhỏ',
                                         '3. Phương Y: Từ nhỏ đến lớn',
                                         '4. Phương Y: Từ lớn đến nhỏ'
-                                        ]),
+                                        ]
+    xoay_list_theo_dau_vao = xoay_list(list_dau_vao_combobox, source_thu_tu_tang)
+
+    components = [
+                Label('Nhập số bắt đầu'),
+                TextBox('textbox1', source_so_bat_dau),
+                Label('Chọn cách lọc'),
+                ComboBox('combobox1', xoay_list_theo_dau_vao,sort=False),
                 Label('Parameter'),
-                TextBox('textbox2','番号'),
+                TextBox('textbox2',source_parameter),
                 Separator(),
                 Button('Ok')
             ]
@@ -71,8 +85,10 @@ if nances.AutodeskData():
         start_number = form.values["textbox1"]
         method = form.values["combobox1"]
         parameter = form.values["textbox2"]
-        # save_configs(parameter)
-        # get_parameter = load_configs()
+        save_configs_so_bat_dau(start_number)
+        save_configs_thu_tu_tang(method)
+        save_configs_parameter_danh_so(parameter)
+
     except:
         sys.exit()
 
@@ -101,11 +117,13 @@ if nances.AutodeskData():
                         pass
                 # Ele  = nances.get_elements(uidoc,doc, 'Select Piles', noti = False)
                 try:
-                    pick_elements = nances.pick = uidoc.Selection.PickObjects(Autodesk.Revit.UI.Selection.ObjectType.Element)
+                    # pick_elements = nances.pick = uidoc.Selection.PickObjects(Autodesk.Revit.UI.Selection.ObjectType.Element)
                     Ele = []
-                    if pick_elements:
-                        for tung_ele in pick_elements:
-                            Ele.append(doc.GetElement(tung_ele.ElementId))
+                    Ele = selection.pick_model_by_rectangle(uidoc)
+                    if Ele:
+                        run = True
+                        # for tung_ele in pick_elements:
+                        #     Ele.append(doc.GetElement(tung_ele.ElementId))
                     else:
                         run = False
                 except:

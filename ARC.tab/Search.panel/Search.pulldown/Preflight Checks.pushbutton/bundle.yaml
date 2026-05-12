@@ -1,5 +1,4 @@
 is_beta: true
-
 tooltip:
   ru: Запустить встроенные или настраеваемые предварительные проверки вашей модели.
   fr_fr: Lance des validations preflight incluses ou personnalisées sur vos fichiers
@@ -11,7 +10,7 @@ title:
     
     проверки
   en_us: >-
-    Preflight
+    Beta_Preflight
   
     Checks
 authors:
