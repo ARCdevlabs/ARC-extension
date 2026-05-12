@@ -1,7 +1,7 @@
 is_beta: true
 
 title:   
-  en_us: Local File
+  en_us: Beta_Local File
 assembly: ONES
 command_class: LocalFile
 

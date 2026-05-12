@@ -15,4 +15,3 @@ tooltip:
   de_de: Die aktuell ausgewählten Elemente werden in einer Konsole aufgelistet. Zu jedem Element Namen wird die Element-ID als anklickbarer Link angezeigt
   pt_br: Lista os IDs dos elementos selecionados como links clicáveis. Esta é uma maneira rápida de percorrer uma série de elementos
 context: selection
-is_beta: true
