@@ -9,6 +9,7 @@ from Autodesk.Revit.DB import Line
 from Autodesk.Revit.Creation import ItemFactoryBase
 from System.Collections.Generic import *
 from Autodesk.Revit.DB import Reference
+import Autodesk.Revit.DB as DB
 import math
 #Get UIDocument
 uidoc = __revit__.ActiveUIDocument
@@ -42,23 +43,45 @@ try:
     if view_direction.Z == 1 and str(Currentview.ViewType) != "ThreeD":
         Curve = []
         Ele = module.get_elements(uidoc,doc, "Select Beams", noti = False)
-        t = Transaction (doc, "Hiển thị hướng của dầm")
+        t = Transaction (doc, "Hiển thị hướng từ cao đến thấp của ống nước")
         t.Start()
         for i in Ele:
                 try:
                     location_curve = i.Location.Curve
                     direction = location_curve.Direction
-                    start_point = location_curve.GetEndPoint(0)
-                    end_point = location_curve.GetEndPoint(1)
-                    mid_point = location_curve.Evaluate(0.7, True)
+
+                    start_point_3D = location_curve.GetEndPoint(0)
+
+                    start_point_3D_z = start_point_3D.Z
+
+                    end_point_3D = location_curve.GetEndPoint(1)
+
+                    end_point_3D_z = end_point_3D.Z
+
+                    if start_point_3D_z >= end_point_3D_z:
+
+                        start_point = DB.XYZ(start_point_3D.X,start_point_3D.Y,start_point_3D.Z)
+
+                        end_point = DB.XYZ(end_point_3D.X,end_point_3D.Y,end_point_3D.Z)
+                    
+                    else:
+                        start_point = DB.XYZ(end_point_3D.X,end_point_3D.Y,end_point_3D.Z)
+
+                        end_point =  DB.XYZ(start_point_3D.X,start_point_3D.Y,start_point_3D.Z)
+
+                    new_curve = Line.CreateBound(start_point, end_point)
+
+                    new_direction = new_curve.Direction
+
+                    mid_point = new_curve.Evaluate(0.7, True)
                     flat_mid_point = XYZ(mid_point.X, mid_point.Y, 0)
                     move_mid_point_z = XYZ(mid_point.X, mid_point.Y, mid_point.Z + 10)
-                    move_mid_point = move_point_along_vector(mid_point,direction, 5*view_scale/304.8)
+                    move_mid_point = move_point_along_vector(mid_point,new_direction, 5*view_scale/304.8)
                     flat_move_mid_point = XYZ(move_mid_point.X,move_mid_point.Y, 0)
                     z_axis = Line.CreateBound(mid_point, move_mid_point_z)
                     arrow = Line.CreateBound(flat_mid_point,flat_move_mid_point)
                     line_center = Line.CreateBound(XYZ(start_point.X,start_point.Y,0),XYZ(end_point.X,end_point.Y,0))
-                    detail_line_center = doc.Create.NewDetailCurve(Currentview,line_center)
+                    # detail_line_center = doc.Create.NewDetailCurve(Currentview,line_center)
                     detail_line_1 = doc.Create.NewDetailCurve(Currentview,arrow)
                     location_1 = detail_line_1.Location
 
@@ -69,6 +92,7 @@ try:
 
                     arrow_2 = location_2.Rotate(z_axis, -3.5 * math.pi / 4)
                 except:
+                    print(traceback.format_exc())
                     pass
         t.Commit()
     else:
