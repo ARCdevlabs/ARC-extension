@@ -106,7 +106,8 @@ try:
                 kiem_tra_co_bo_tri_sheet_duoc_khong = Autodesk.Revit.DB.Viewport.CanAddViewToSheet(doc,sheet_moi.Id, i.Id)
                 sheet_moi.Name = name
                 if kiem_tra_co_bo_tri_sheet_duoc_khong:
-                    dat_view_vao_sheet(doc,sheet_moi.Id,i.Id, XYZ(420.5/304.8,297/304.8,0))
+                    # dat_view_vao_sheet(doc,sheet_moi.Id,i.Id, XYZ(420.5/304.8,297/304.8,0))
+                    dat_view_vao_sheet(doc,sheet_moi.Id,i.Id, XYZ(192/304.8,148.5/304.8,0))
                     # khung_ban_ve_Id = lay_khung_ban_ve (sheet_moi)
                     # hung_ban_ve = doc.GetElement(khung_ban_ve_Id[0])
                     # width = module.get_parameter_value_by_name (hung_ban_ve, "Sheet Width")
