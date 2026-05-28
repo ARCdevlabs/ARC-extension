@@ -7,7 +7,7 @@ from Autodesk.Revit.UI.Selection import ObjectType
 import traceback
 
 import nances as module
-from nances import vectortransform,geometry
+from nances import vectortransform,geometry,selection
 import tim_reference_beam
 
 if module.AutodeskData():
@@ -89,7 +89,8 @@ if module.AutodeskData():
         rotate_locate_detail_curve_of_location_curve = locate_detail_curve_of_location_curve.Rotate(Z_axis, 2 * math.pi / 4)
         direction_of_wall = wall_location_curve.Direction
         Scale = Currentview.Scale
-        Snap_dim =(5*(5/3)) * (1/304.8)* Scale #1mm bang 0.003084
+        # Snap_dim =(5*(5/3)) * (1/304.8)* Scale #1mm bang 0.003084
+        Snap_dim =(-2.5*(5/3)) * (1/304.8)* Scale #1mm bang 0.003084
         Vector_for_scale = Snap_dim *direction_of_wall 
         locate_detail_curve_of_location_curve.Move(Vector_for_scale)
         return detail_curve_of_location_curve        
@@ -150,6 +151,7 @@ if module.AutodeskData():
         # t.Start()
         trans_group = TransactionGroup(doc, 'Dim Center of Wall')
         trans_group.Start()
+        list_new_dim = []
         for wall in Ele:
             try:
                 t = Transaction(doc, 'Dim Center of Wall')
@@ -207,6 +209,7 @@ if module.AutodeskData():
                     wall_reference.Append(ref_3)
                 try:
                     dim = doc.Create.NewDimension(Currentview, clone_curve, wall_reference)
+                    list_new_dim.append(dim)
                     curve_dim_direction = dim.Curve.Direction
                     seg_1_position = dim.Segments.Item[0].TextPosition 
                     seg_2_position = dim.Segments.Item[1].TextPosition
@@ -247,6 +250,10 @@ if module.AutodeskData():
             except:
                 pass            
         trans_group.Assimilate()
+        try:
+            selection.select_sau_khi_chay_tool(list_new_dim,uidoc)
+        except:
+            pass
 
 
 
