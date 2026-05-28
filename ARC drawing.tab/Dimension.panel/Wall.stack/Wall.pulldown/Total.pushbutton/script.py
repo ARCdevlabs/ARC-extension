@@ -8,7 +8,7 @@ import traceback
 import math
 
 import nances as module
-from nances import vectortransform,geometry
+from nances import vectortransform,geometry,selection
 import tim_reference_beam
 
 if module.AutodeskData():
@@ -87,7 +87,9 @@ if module.AutodeskData():
         return distance
     
     Ele = module.get_elements(uidoc,doc, "Select Walls", noti = False)
+
     if Ele:
+        list_new_dim = []
         t = Transaction(doc,"Dimension wall (face to face)")
         t.Start()
         for wall in Ele:
@@ -111,7 +113,14 @@ if module.AutodeskData():
                 wall_reference.Append(ref_face_min)
                 wall_reference.Append(ref_face_max)
                 dim = doc.Create.NewDimension(Currentview, line, wall_reference)
+                list_new_dim.append(dim)
                 delete_detail_curve = doc.Delete(detail_line.Id)
+
             except:
                 pass
         t.Commit()
+
+        try:
+            selection.select_sau_khi_chay_tool(list_new_dim,uidoc)
+        except:
+            pass
