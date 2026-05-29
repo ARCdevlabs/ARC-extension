@@ -87,12 +87,14 @@ if module.AutodeskData():
         return distance
     
     Ele = module.get_elements(uidoc,doc, "Select Walls", noti = False)
-
+    trans_group = TransactionGroup(doc, 'Dim Thickness of Wall')
+    trans_group.Start()
     if Ele:
         list_new_dim = []
-        t = Transaction(doc,"Dimension wall (face to face)")
-        t.Start()
+
         for wall in Ele:
+            t = Transaction(doc,"Dimension wall (face to face)")
+            t.Start()
             try:
                 geo = (get_geometry(wall))
                 faces = get_face(geo)
@@ -100,7 +102,6 @@ if module.AutodeskData():
                 center_plane_normal = center_plane.Normal
                 list_distance = []
                 list_outer_face = []
-
                 call_class_tim_reference = tim_reference_beam.ClassTimReference(faces,center_plane, vectortransform)                
                 result = call_class_tim_reference.tim_reference_beam()
                 ref_face_min = result.ref_face_min
@@ -115,12 +116,8 @@ if module.AutodeskData():
                 dim = doc.Create.NewDimension(Currentview, line, wall_reference)
                 list_new_dim.append(dim)
                 delete_detail_curve = doc.Delete(detail_line.Id)
-
+                t.Commit()
             except:
+                t.RollBack()
                 pass
-        t.Commit()
-
-        try:
-            selection.select_sau_khi_chay_tool(list_new_dim,uidoc)
-        except:
-            pass
+    trans_group.Assimilate()
