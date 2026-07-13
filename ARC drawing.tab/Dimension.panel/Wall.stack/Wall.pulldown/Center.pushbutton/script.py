@@ -89,8 +89,8 @@ if module.AutodeskData():
         rotate_locate_detail_curve_of_location_curve = locate_detail_curve_of_location_curve.Rotate(Z_axis, 2 * math.pi / 4)
         direction_of_wall = wall_location_curve.Direction
         Scale = Currentview.Scale
-        # Snap_dim =(5*(5/3)) * (1/304.8)* Scale #1mm bang 0.003084
-        Snap_dim =(-2.5*(5/3)) * (1/304.8)* Scale #1mm bang 0.003084
+        Snap_dim =(5*(5/3)) * (1/304.8)* Scale #1mm bang 0.003084 #đây là tỷ lệ 1/50
+        #Snap_dim =(-2.5*(5/3)) * (1/304.8)* Scale #1mm bang 0.003084 #đây là tỷ lệ 1/100
         Vector_for_scale = Snap_dim *direction_of_wall 
         locate_detail_curve_of_location_curve.Move(Vector_for_scale)
         return detail_curve_of_location_curve        
