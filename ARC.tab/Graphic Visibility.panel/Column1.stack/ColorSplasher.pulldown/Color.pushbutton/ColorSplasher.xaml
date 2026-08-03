@@ -1,17 +1,17 @@
 ﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Color Splasher 2026 - Code by Tung"
+        Title="Color Splasher - Code by Tung"
         Height="800" Width="1100"
         WindowStartupLocation="CenterScreen" ResizeMode="CanResize">
     <Window.Resources>
         <Style x:Key="SearchTextBoxStyle" TargetType="TextBox">
-             <Setter Property="Height" Value="24"/>
-             <Setter Property="VerticalContentAlignment" Value="Center"/>
-             <Setter Property="Padding" Value="24,0,5,0"/>
-             <Setter Property="BorderBrush" Value="#CE93D8"/>
-             <Setter Property="FontSize" Value="12"/>
-             <Setter Property="FontWeight" Value="Normal"/>
-             <Setter Property="Template">
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="24,0,5,0"/>
+            <Setter Property="BorderBrush" Value="#FF5A5D6D"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
                         <Border Background="White"
@@ -20,7 +20,7 @@
                                 CornerRadius="2">
                             <Grid>
                                 <Path Data="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
-                                      Fill="#AA7B5C89"
+                                      Fill="#AA2D0F3A"
                                       Stretch="Uniform"
                                       Width="12" Height="12"
                                       HorizontalAlignment="Left"
@@ -56,15 +56,15 @@
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="Background" Value="White"/>      
-            <Setter Property="BorderBrush" Value="#CE93D8"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#FF323033"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" 
                                 BorderBrush="{TemplateBinding BorderBrush}" 
                                 BorderThickness="1.5"
-                                CornerRadius="12"> 
+                                CornerRadius="12">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
@@ -91,9 +91,9 @@
             <Setter Property="Margin" Value="0"/>
             <Setter Property="Padding" Value="0"/>
         </Style>
-        
+
         <Style TargetType="GroupBox">
-            <Setter Property="BorderBrush" Value="#CE93D8"/>
+            <Setter Property="BorderBrush" Value="#FF323033"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Margin" Value="0,0,0,5"/>
             <Setter Property="HeaderTemplate">
@@ -102,14 +102,13 @@
                         <TextBlock Text="{Binding}"
                                    FontSize="14"
                                    FontWeight="Bold"
-                                   Foreground="#FF7B5C89"
-                                   Margin="5,0,0,5"/>
+                                   Margin="5,0,0,5" Foreground="#FF000004"/>
                     </DataTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
     </Window.Resources>
-    
+
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="260"/>
@@ -122,21 +121,21 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
+
         <GroupBox Header="1. Select Category" Grid.Row="0" Grid.Column="0">
             <ListBox x:Name="lbCategories"
                      SelectionMode="Extended"
                      DisplayMemberPath="Name"
                      SelectionChanged="lbCategories_SelectionChanged"/>
         </GroupBox>
-        
+
         <GroupBox Header="2. Select Parameter" Grid.Row="2" Grid.Column="0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                
+
                 <TextBox x:Name="txtSearchParam"
                          Grid.Row="0"
                          Tag="Search Parameter..."
@@ -160,12 +159,14 @@
                 </ListBox>
             </Grid>
         </GroupBox>
-        
+
         <GroupBox Header="3. Values &amp; Select" Grid.Row="0" Grid.RowSpan="3" Grid.Column="2">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/> <RowDefinition Height="*"/>    </Grid.RowDefinitions>
-                
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
                 <DockPanel Grid.Row="0" Margin="0,0,0,5" LastChildFill="False">
                     <Button x:Name="btnCheckAll" 
                             Content="Check All" 
@@ -174,7 +175,7 @@
                             Width="57" Height="22" 
                             Margin="0,0,5,0" 
                             Click="btnCheckAll_Click"/>
-                    
+
                     <Button x:Name="btnCheckNone" 
                             Content="None" 
                             Style="{StaticResource AssignBtnStyle}" 
@@ -194,7 +195,7 @@
                                 <GridViewColumn.HeaderContainerStyle>
                                     <Style TargetType="GridViewColumnHeader">
                                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                        <Setter Property="Padding" Value="4,2"/> 
+                                        <Setter Property="Padding" Value="4,2"/>
                                     </Style>
                                 </GridViewColumn.HeaderContainerStyle>
 
@@ -211,31 +212,35 @@
                                                      Tag="Search Value..."
                                                      Style="{StaticResource SearchTextBoxStyle}"
                                                      TextChanged="txtSearchValue_TextChanged"
-                                                     HorizontalAlignment="Stretch"/> 
+                                                     HorizontalAlignment="Stretch"/>
                                         </Grid>
                                     </DataTemplate>
                                 </GridViewColumn.HeaderTemplate>
-                                
+
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Border Background="{Binding BackgroundBrush}" Padding="6,2" Margin="-6,0">
                                             <DockPanel LastChildFill="True">
-                                                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" 
+                        
+                                                          Margin="0,0,10,0" 
+                                                          VerticalAlignment="Center"
+                                                          />
                                                 <TextBlock Text="{Binding Name}" FontSize="13" VerticalAlignment="Center" Foreground="Black" TextTrimming="CharacterEllipsis"/>
                                             </DockPanel>
                                         </Border>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            
+
                             <GridViewColumn Width="70">
                                 <GridViewColumn.HeaderContainerStyle>
                                     <Style TargetType="GridViewColumnHeader">
                                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                        <Setter Property="Padding" Value="4,2"/> 
+                                        <Setter Property="Padding" Value="4,2"/>
                                     </Style>
                                 </GridViewColumn.HeaderContainerStyle>
-                                
+
                                 <GridViewColumn.HeaderTemplate>
                                     <DataTemplate>
                                         <Grid Margin="0,2">
@@ -251,12 +256,12 @@
                                                      HorizontalAlignment="Stretch"
                                                      HorizontalContentAlignment="Center"
                                                      VerticalContentAlignment="Center"
-                                                     BorderBrush="#CE93D8"
+                                                     BorderBrush="#FF323033"
                                                      BorderThickness="1"
                                                      Height="24"
                                                      Background="#F5F5F5"
                                                      FontWeight="Bold"
-                                                     Foreground="#FF7B5C89"
+                                                     Foreground="#FF000004"
                                                      Loaded="txtTotalCount_Loaded"/>
                                         </Grid>
                                     </DataTemplate>
@@ -275,7 +280,7 @@
                 </ListView>
             </Grid>
         </GroupBox>
-        
+
         <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
             <Button x:Name="btnRainbow" Style="{StaticResource AssignBtnStyle}" Content="Rainbow" Width="100" Height="30" Margin="5" Click="btnRainbow_Click"/>
             <Button x:Name="btnRefresh" Style="{StaticResource AssignBtnStyle}" Content="Refresh" Width="100" Height="30" Margin="5" Click="btnRefresh_Click"/>

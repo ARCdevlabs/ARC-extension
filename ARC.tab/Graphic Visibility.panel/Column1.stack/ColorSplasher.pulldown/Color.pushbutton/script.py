@@ -152,7 +152,8 @@ class ColorSplasherWindow(Window):
         try:
             self.load_categories()
         except Exception as e:
-            print("Init Error: " + str(e))
+            self.Close()
+            # print("Init Error: " + str(e))
             
         self.lvValues.ItemContainerGenerator.StatusChanged += self.OnItemContainerGeneratorStatusChanged
         self.Closing += self.OnWindowClosing
@@ -209,30 +210,45 @@ class ColorSplasherWindow(Window):
 
     def load_categories(self):
         collector = None
+        chon_elements = None
         try:
             view = doc.ActiveView
-            if not view.IsValidObject: return 
-            from Autodesk.Revit.DB import FilteredElementCollector
+            # if not view.IsValidObject: return 
+            # from Autodesk.Revit.DB import FilteredElementCollector
             
-            collector = FilteredElementCollector(doc, view.Id).WhereElementIsNotElementType()
+            # collector = FilteredElementCollector(doc, view.Id).WhereElementIsNotElementType()
+            # if not view.IsValidObject:
+            #     return
+
+            # Lấy selection hiện tại
+            selected_ids = uidoc.Selection.GetElementIds()
+            if selected_ids:
+                chon_elements = [
+                    doc.GetElement(element_id)
+                    for element_id in selected_ids
+                ]
+            else:
+                collector = (FilteredElementCollector(doc, view.Id).WhereElementIsNotElementType())
+                chon_elements = collector.ToElements()
             cat_dict = {}
             self.all_elements_in_view = []
-            
+
+
             excluded_cats = set([
                 "Cameras", "Project Information", "Sketch Lines", "Views",
                 "Sheets", "Project Base Point", "Survey Point", "Guide Grids",
                 "Analysis Display Style", "Center Line"
             ])
             
-            elements = collector.ToElements()
-            for el in elements:
+            # elements = collector.ToElements()
+            for tung_element in chon_elements:
                 # Optimized validation
                 try:
-                    cat = el.Category
+                    cat = tung_element.Category
                     if cat and get_id_val(cat.Id) != -1:
                         if cat.Name in excluded_cats: continue
                         
-                        self.all_elements_in_view.append(el)
+                        self.all_elements_in_view.append(tung_element)
                         if cat.Name not in cat_dict:
                             cat_dict[cat.Name] = cat.Id
                 except: continue
@@ -240,7 +256,8 @@ class ColorSplasherWindow(Window):
             sorted_cats = sorted(cat_dict.keys())
             self.lbCategories.ItemsSource = [CategoryItem(name, cat_dict[name]) for name in sorted_cats]
         except Exception as e:
-            forms.alert("Error loading categories: {}".format(e))
+            self.Close()
+            # forms.alert("Error loading categories: {}".format(e))
         finally:
             if collector: collector.Dispose()
 
@@ -332,9 +349,9 @@ class ColorSplasherWindow(Window):
             self.all_param_items = []
             return
         
-        selected_cat_ids = set([cat.Id for cat in selected_categories])
-        example_elements = [el for el in self.all_elements_in_view if el.Category.Id in selected_cat_ids]
-        
+        selected_category_ids = set([category.Id for category in selected_categories])
+        example_elements = [el for el in self.all_elements_in_view if el.Category.Id in selected_category_ids]
+
         if not example_elements:
             self.lbParameters.ItemsSource = None
             self.all_param_items = []
@@ -378,25 +395,33 @@ class ColorSplasherWindow(Window):
         
         values_map = {}
         collector = None
+        chon_element_id = []
         try:
-            for cat_item in selected_categories:
-                # Optimized Collector
-                collector = FilteredElementCollector(doc, doc.ActiveView.Id).OfCategoryId(cat_item.Id).WhereElementIsNotElementType()
-                # ToElementIds is faster than ToElements for just getting IDs to loop
-                all_ids = collector.ToElementIds()
+            for category_item in selected_categories:
                 
-                for eid in all_ids:
+                selected_ids = uidoc.Selection.GetElementIds()
+                if selected_ids:
+                    for tung_element_id in selected_ids:
+                        tung_element = doc.GetElement(tung_element_id)
+                        if tung_element.Category.Id == category_item.Id:
+                            tung_element_id = tung_element.Id
+                            chon_element_id.append(tung_element_id)
+                else:
+                    collector = FilteredElementCollector(doc, doc.ActiveView.Id).OfCategoryId(category_item.Id).WhereElementIsNotElementType()
+                    list_element = collector.ToElements()
+                    for tung_element in list_element:
+                        tung_element_id = tung_element.Id
+                        chon_element_id.append(tung_element_id)
+                                     
+                for tung_element_id in chon_element_id:
                     try:
-                        el = doc.GetElement(eid)
+                        el = doc.GetElement(tung_element_id)
                         if not el: continue # Light check
                         val = self.get_parameter_value(el, selected_param.Name, selected_param.IsInstance)
                         if val not in values_map: values_map[val] = []
-                        values_map[val].append(eid)
+                        values_map[val].append(tung_element_id)
                     except: continue
                 
-                collector.Dispose()
-                collector = None
-
             self.master_value_items = []
             import random
             for val_str in sorted(values_map.keys()):
@@ -413,6 +438,7 @@ class ColorSplasherWindow(Window):
             # REMOVED GC.COLLECT HERE FOR SPEED
 
         except Exception as ex:
+            self.Close()
             forms.alert("Error loading values: {}".format(ex))
         finally:
             if collector: collector.Dispose()
@@ -578,9 +604,13 @@ class ColorSplasherWindow(Window):
         # else:
         #     forms.alert("Chưa chọn giá trị nào.")
 
-try:
-    gc.collect()
+# try:
+#     gc.collect()
+#     ColorSplasherWindow().ShowDialog()
+if __name__ == "__main__":
+    # gc.collect()
     ColorSplasherWindow().ShowDialog()
-except Exception as e:
-    # forms.alert("Fatal error: {}".format(e))
-    print(e)
+
+# except Exception as e:
+#     # forms.alert("Fatal error: {}".format(e))
+#     print(e)

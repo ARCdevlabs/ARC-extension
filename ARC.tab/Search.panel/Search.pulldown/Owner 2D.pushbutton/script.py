@@ -1,44 +1,56 @@
 # -*- coding: utf-8 -*-
-__doc__ = 'python for revit api'
-__author__ = 'NguyenThanhSon' "Email: nguyenthanhson1712@gmail.com"
-import string
-import codecs
-import importlib
-ARC = string.ascii_lowercase
-begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
-module = importlib.import_module(str(begin))
-if module.AutodeskData():
-    try:
-        import Autodesk
-        from Autodesk.Revit.DB import *
-        from System.Collections.Generic import *
-        from pyrevit import forms, script
-        if module.AutodeskData():
-            uidoc = __revit__.ActiveUIDocument
-            doc = uidoc.Document
-            Ele = module.get_selected_elements(uidoc,doc)
-            if not Ele:
-                import sys
-                sys.exit()
-            t = Transaction (doc, "View chứa đối tượng 2D đang được chọn")
-            t.Start()
-            view_name = []
-            list_view_id =[]
-            for i in Ele:
-                owner_view = i.OwnerViewId
-                list_view_id.append(owner_view)
-            new_list_view_id = list(set(list_view_id))
-            for tung_view in new_list_view_id:
-                view = doc.GetElement((tung_view))
-                view_name.append(Autodesk.Revit.DB.Element.Name.GetValue(view)) 
-            for i, j in zip (view_name, new_list_view_id):
-                # view = doc.GetElement(i)
-                # view_name = Autodesk.Revit.DB.Element.Name.GetValue(view)
-                output = script.get_output()
-                print (output.linkify(j) + "                   " +  "View Name: " + str(i) )
-                print ("______________________________________________________________________")
-            t.Commit()
-    except:
-        pass
+from pyrevit import script
+import Autodesk
+import nances
+import traceback
+from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as DB
+from System.Collections.Generic import List
+from Autodesk.Revit.UI.Selection import ObjectType
+if nances.AutodeskData():
+    def tim_view_chua_doi_tuong_2D (idoc, element):
+        output = script.get_output()
+        data = []  
+
+        list_element_id_link = []
+        list_element_name = []
+        list_view_id_link = []
+        list_view_name = []
+        for tung_element in element:
+
+            owner_view = tung_element.OwnerViewId
+            
+            view = doc.GetElement((owner_view))
+
+            element_link = output.linkify(tung_element.Id)
+
+            get_type_name = nances.get_builtin_parameter_by_name(tung_element,BuiltInParameter.ELEM_TYPE_PARAM).AsValueString()
+
+            view_link = output.linkify(view.Id)
+
+            owner_view_name = view.Name
+
+            list_element_id_link.append(element_link)
+            list_element_name.append(get_type_name)
+            list_view_id_link.append(view_link)
+            list_view_name.append(owner_view_name)
+
+        data_goc = zip(list_element_id_link,list_element_name,list_view_id_link,list_view_name)            
+        data = sorted(data_goc, key=lambda x: x[3])
+
+        output.print_table(table_data=data,
+                        title="List View Chứa 2D Elements",
+                        columns=["Element Id", "Type Name", "Owner View Id", "View Name"],
+                        formats=['', '','',''])
+        return
+    
+    uidoc = __revit__.ActiveUIDocument
+    doc = uidoc.Document
+    Ele = nances.get_selected_elements(uidoc,doc)
+    if not Ele:
+        import sys
+        sys.exit()
+
+    tim_view_chua_doi_tuong_2D (doc, Ele)
 
 

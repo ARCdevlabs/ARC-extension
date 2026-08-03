@@ -15,7 +15,7 @@
 
         <TextBlock Text="Select a color for the item:" 
                    FontSize="14" FontWeight="Bold" Margin="0,0,0,10"
-                   Foreground="#FF7B5C89"/>
+                   Foreground="#FF0C0012"/>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <WrapPanel x:Name="wpColors" ItemWidth="25" ItemHeight="25" Orientation="Horizontal"/>
