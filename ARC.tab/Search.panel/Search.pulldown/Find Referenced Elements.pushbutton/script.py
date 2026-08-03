@@ -33,6 +33,7 @@ if module.AutodeskData():
         return elements
 
     def get_dependent (idoc, element):
+        output = script.get_output()
         get_dependent_element = element.GetDependentElements(None)
         data = []  
         for tung_nhom_doi_tuong in get_dependent_element:
@@ -63,8 +64,7 @@ if module.AutodeskData():
                         formats=['', '','',''])
         return
 
-    output = script.get_output()
-
+    
     element = []
 
     selected_element = get_selected_elements(uidoc,doc)

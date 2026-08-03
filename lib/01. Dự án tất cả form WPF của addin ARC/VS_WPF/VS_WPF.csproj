@@ -99,9 +99,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ColorSplasher.xaml">
+    <Page Include="..\..\..\ARC.tab\Graphic Visibility.panel\Column1.stack\ColorSplasher.pulldown\Color.pushbutton\ColorPicker.xaml">
+      <Link>Link WPF\ColorPicker.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="..\..\..\ARC.tab\Graphic Visibility.panel\Column1.stack\ColorSplasher.pulldown\Color.pushbutton\ColorSplasher.xaml">
+      <Link>Link WPF\ColorSplasher.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
