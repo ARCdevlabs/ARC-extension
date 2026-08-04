@@ -89,6 +89,7 @@ if nances.AutodeskData():
     set_work_plane(uidoc)
     t1.Commit()
 
+
     if Ele:
         with revit.Transaction("Dim column with fukashi", swallow_errors=True):
 
@@ -137,13 +138,13 @@ if nances.AutodeskData():
                     snap_dim_mm = 5 #tính bằng mm
                     
                     snap_dim_feet = snap_dim_mm  / 304.8  #tính bằng feet
-
+                   
                     for grid_Y in all_grid:
 
                         list_grid_ref_top_2 = []
 
                         geo_all_grid = geometry.get_all_geometry_of_grids(grid_Y,current_view, DatumExtentType = DatumExtentType.ViewSpecific)
-
+                    
                         for one_grid_curve in geo_all_grid:
 
                             for two_grid_curve in one_grid_curve:
