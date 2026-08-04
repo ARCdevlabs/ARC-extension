@@ -204,6 +204,45 @@ def get_all_geometry_of_grids(grid, current_view, DatumExtentType = DatumExtentT
         pass
     return all_geometry
 
+
+def filter_intersect_list_with_list_by_boundingbox(idoc,lis1, list2):
+    list_intersect_with_list_1 = []
+    for tung_element_1 in lis1:
+        boundingbox = tung_element_1.get_BoundingBox(None)
+        out_line_of_boundingbox = (Outline(boundingbox.Min, boundingbox.Max))
+        # Tim tat ca doi tuong intersect voi boundingbox
+        for intersected in DB.FilteredElementCollector(idoc).WherePasses(DB.BoundingBoxIntersectsFilter(out_line_of_boundingbox)):
+        # Check xem list filter
+            for tung_element_2 in list2:
+                if tung_element_2.Id == intersected.Id:
+                    list_intersect_with_list_1.append(tung_element_2)
+    return list_intersect_with_list_1
+
+def filter_intersect_1_element_with_list_by_boundingbox(idoc,element1, list2):
+    list_intersect_with_list_1 = []
+    boundingbox = element1.get_BoundingBox(None)
+    out_line_of_boundingbox = (Outline(boundingbox.Min, boundingbox.Max))
+    # Tim tat ca doi tuong intersect voi boundingbox
+    for intersected in DB.FilteredElementCollector(idoc).WherePasses(DB.BoundingBoxIntersectsFilter(out_line_of_boundingbox)):
+    # Check xem list filter
+        for tung_element_2 in list2:
+            if tung_element_2.Id == intersected.Id:
+                
+                list_intersect_with_list_1.append(tung_element_2)
+    return list_intersect_with_list_1
+
+def filter_intersect_list_with_1_element_by_boundingbox(idoc,list2, element1, view):
+    list_intersect_with_list_2 = []
+    for tung_element in list2:
+        boundingbox = tung_element.get_BoundingBox(view)
+        out_line_of_boundingbox = (Outline(boundingbox.Min, boundingbox.Max))
+        # Tim tat ca doi tuong intersect voi boundingbox
+        for intersected in DB.FilteredElementCollector(idoc).WherePasses(DB.BoundingBoxIntersectsFilter(out_line_of_boundingbox)):
+        # Check xem list filter
+            if intersected.Id == element1.Id:    
+                list_intersect_with_list_2.append(intersected)
+    return list_intersect_with_list_2
+    
 def tinh_chieu_rong_cot(cot, vector):
     #Lấy vector trục dầm
 

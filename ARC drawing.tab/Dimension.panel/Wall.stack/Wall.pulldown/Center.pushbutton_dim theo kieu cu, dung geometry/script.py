@@ -169,30 +169,10 @@ if module.AutodeskData():
                 ref_face_max = result.ref_face_max
                 max_value = result.max_value
 
-                # detail_line = get_rotate_90_location_wall_center (wall)
-                # line = detail_line.Location.Curve
-                # clone_curve = line.Clone()
-                # delete_detail_curve = doc.Delete(detail_line.Id)
-
-                location_line = wall.Location.Curve
-
-                flat_location_line = vectortransform.project_line_to_plane (location_line, Currentview) 
-
-                flat_location_line_direction = flat_location_line.Direction
-
-                chuan_hoa_vector_kieu_nguoc = vectortransform.chuan_hoa_vector_tu_trai_qua_phai_tren_xuong_duoi(flat_location_line_direction,Currentview)
-
-                #Thông thường parameter "Dimension Line Snap Distance" có giá trị là 5mm
-                snap_dim_mm = 5 #tính bằng mm
-                
-                snap_dim_feet = snap_dim_mm  / 304.8  #tính bằng feet
-
-                line_combo_2 = vectortransform.get_rotate_90_location_line(location_line,Currentview)
-                
-                line_combo_1 = vectortransform.move_line_theo_vector_theo_ty_le_view(chuan_hoa_vector_kieu_nguoc, line_combo_2, snap_dim_feet, Currentview)
-
-                line_combo_3 = vectortransform.move_line_theo_vector_theo_ty_le_view(chuan_hoa_vector_kieu_nguoc, line_combo_2, -snap_dim_feet, Currentview)
-
+                detail_line = get_rotate_90_location_wall_center (wall)
+                line = detail_line.Location.Curve
+                clone_curve = line.Clone()
+                delete_detail_curve = doc.Delete(detail_line.Id)
                 # Cai nay de dim 
                 wall_reference = ReferenceArray()
                 string_face_3 = get_wall_reference_by_magic(unique_id,4) #Co ve -9999 va id 4 luon luon la tam tuong
@@ -227,7 +207,39 @@ if module.AutodeskData():
                 if len(check_grid_and_wall) == 0:
                     wall_reference.Append(ref_3)
                 try:
-                    dim = doc.Create.NewDimension(Currentview, line_combo_2, wall_reference)
+                    dim = doc.Create.NewDimension(Currentview, clone_curve, wall_reference)
+                #     curve_dim_direction = dim.Curve.Direction
+                #     seg_1_position = dim.Segments.Item[0].TextPosition 
+                #     seg_2_position = dim.Segments.Item[1].TextPosition
+                #     seg_1_value = float(dim.Segments.Item[0].Value * 304.8)
+                #     seg_2_value = float(dim.Segments.Item[1].Value * 304.8)
+                #     round_format_value_1 = round(seg_1_value,2)
+                #     round_format_value_2 = round(seg_2_value,2)
+                #     formatted_value_1 = str(round_format_value_1).rstrip('0').rstrip('.')
+                #     formatted_value_2 = str(round_format_value_2).rstrip('0').rstrip('.')
+                #     len_formatted_value_1 = len(formatted_value_1)
+                #     len_formatted_value_2 = len(formatted_value_2)
+                #     one_unit_width = 2 #Chieu rong 1 don vi text
+                #     width_text_1 = float(len_formatted_value_1 * one_unit_width * (Currentview.Scale))
+                #     width_text_2 = float(len_formatted_value_2 * one_unit_width * (Currentview.Scale))
+                #     total_value = seg_1_value + seg_2_value
+                #     ti_le_1 = seg_1_value / (total_value)
+                #     ti_le_2 = seg_2_value / (total_value)
+                #     width_1 = float(width(wall))
+                #     if (width_1)/2 < width_text_1: 
+                #         width_offset_text_1 = (width_1/2 + width_text_1/2)
+                #     else:
+                #         width_offset_text_1 = 0
+                #     move_seg_1 = move_point_along_vector(seg_1_position,curve_dim_direction, -(width_offset_text_1/304.8))
+                #     if (width_1)/2 < width_text_2: 
+                #         width_offset_text_2 = (width_1/2 + width_text_2/2)
+                #     else:
+                #         width_offset_text_2 = 0            
+                #     move_seg_2 = move_point_along_vector(seg_2_position,curve_dim_direction, (width_offset_text_2/304.8))
+                #     dim.Segments.Item[0].TextPosition = move_seg_1
+                #     dim.Segments.Item[1].TextPosition = move_seg_2
+                #     leader_dim = dim.get_Parameter(BuiltInParameter.DIM_LEADER)
+                #     leader_dim.Set(False)
                 except:
                     continue
                 t.Commit()

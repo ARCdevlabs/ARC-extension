@@ -108,14 +108,30 @@ if module.AutodeskData():
                 ref_face_max = result.ref_face_max
                 max_value = result.max_value
 
-                detail_line = get_rotate_90_location_wall_center (wall)
-                line = detail_line.Location.Curve
+                location_line = wall.Location.Curve
+
+                flat_location_line = vectortransform.project_line_to_plane (location_line, Currentview) 
+
+                flat_location_line_direction = flat_location_line.Direction
+
+                chuan_hoa_vector_kieu_nguoc = vectortransform.chuan_hoa_vector_tu_trai_qua_phai_tren_xuong_duoi(flat_location_line_direction,Currentview)
+
+                #Thông thường parameter "Dimension Line Snap Distance" có giá trị là 5mm
+                snap_dim_mm = 5 #tính bằng mm
+                
+                snap_dim_feet = snap_dim_mm  / 304.8  #tính bằng feet
+
+                line_combo_2 = vectortransform.get_rotate_90_location_line(location_line,Currentview)
+                
+                line_combo_1 = vectortransform.move_line_theo_vector_theo_ty_le_view(chuan_hoa_vector_kieu_nguoc, line_combo_2, snap_dim_feet, Currentview)
+
+                line_combo_3 = vectortransform.move_line_theo_vector_theo_ty_le_view(chuan_hoa_vector_kieu_nguoc, line_combo_2, -snap_dim_feet, Currentview)
+
                 wall_reference = ReferenceArray()
                 wall_reference.Append(ref_face_min)
                 wall_reference.Append(ref_face_max)
-                dim = doc.Create.NewDimension(Currentview, line, wall_reference)
-                list_new_dim.append(dim)
-                delete_detail_curve = doc.Delete(detail_line.Id)
+                dim = doc.Create.NewDimension(Currentview, line_combo_3, wall_reference)
+
                 t.Commit()
             except:
                 t.RollBack()
