@@ -1,0 +1,12 @@
+title:
+  en_us: Modify
+  ja: 修正
+layout:
+  - Add W=
+  - Align dim
+  - Swap dim
+  - Check Odd
+  # - -----
+  # - Move Text Dim_LOGI
+  # - Mashiuchi Column_LOGI
+author: "Nguyễn Thanh Sơn"

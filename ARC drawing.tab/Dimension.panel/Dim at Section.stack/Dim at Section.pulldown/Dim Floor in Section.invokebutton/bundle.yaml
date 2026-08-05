@@ -6,9 +6,5 @@ command_class: DimFloorInSectionViewCommand
 tooltip:
   en_us:
     Chọn Floor rồi dim.
-
-  ja: 
-    
-    
 highlight: new
 author: Mau Cuong 
