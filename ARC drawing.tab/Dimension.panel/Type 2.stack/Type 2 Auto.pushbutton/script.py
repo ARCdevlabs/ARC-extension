@@ -13,6 +13,7 @@ import Autodesk.Revit.DB as DB
 from System.Collections.Generic import *
 import movetextdim
 import traceback
+import nances
 from nances import allinone
 if module.AutodeskData():
 	uidoc = __revit__.ActiveUIDocument
@@ -187,6 +188,10 @@ try:
         except:
             t.RollBack()
             pass
+    try:
+        module.selection.select_sau_khi_chay_tool(elements, uidoc)
+    except:
+        pass
     trans_group.Assimilate()
 except:
     pass

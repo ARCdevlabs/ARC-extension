@@ -166,6 +166,12 @@ try:
         except:
             t.RollBack()
             pass    
+
+        
+    try:            
+        module.selection.select_sau_khi_chay_tool(elements, uidoc)
+    except:
+        pass
     trans_group.Assimilate()
 except:
     # print(traceback.format_exc())
