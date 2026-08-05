@@ -1,0 +1,7 @@
+title:
+  en_us: Higashi_Dim with Fukashi (New Version)
+tooltip:
+  en_us: Tool này sẽ chạy dựa vào tên reference plane có trong family cột. Giữ nút SHIFT + click vào tool để mở bảng cài đặt. Có thể cần thêm reference plane vào family để tool này hoạt động.
+highlight: new
+author: "Nguyễn Thanh Sơn"
+

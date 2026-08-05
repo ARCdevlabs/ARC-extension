@@ -79,23 +79,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\..\ARC drawing.tab\Dimension.panel\Beam.stack\Beam.pulldown\Dim Beam With Fukashi.pushbutton\WPF_setup_family_beam_for_dim.xaml">
-      <Link>Link WPF\WPF_setup_family_beam_for_dim.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="..\..\..\ARC drawing.tab\Dimension.panel\Beam.stack\Beam.pulldown\Modify Dim With Fukashi.pushbutton\WPF_setup_family_beam.xaml">
-      <Link>Link WPF\WPF_setup_family_beam.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="..\..\..\ARC drawing.tab\Dimension.panel\Column Foundation.stack\Column Foundation.pulldown\Dim Column No Fukashi.pushbutton\WPF_setup_position_of_dim_foundation_column.xaml">
-      <Link>Link WPF\WPF_setup_position_of_dim_foundation_column.xaml</Link>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="..\..\..\ARC drawing.tab\Dimension.panel\Column Foundation.stack\Column Foundation.pulldown\Dim Column With Fukashi.pushbutton\WPF_setup_family_column_for_dim.xaml">
-      <Link>Link WPF\WPF_setup_family_column_for_dim.xaml</Link>
+    <Page Include="..\..\..\ARC dimension.tab\Create Dimension.panel\Wall.stack\Wall RC.pushbutton\WPF_setup_dim_wall_RC.xaml">
+      <Link>Link WPF\WPF_setup_dim_wall_RC.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -106,6 +91,10 @@
     </Page>
     <Page Include="..\..\..\ARC.tab\Graphic Visibility.panel\Column1.stack\ColorSplasher.pulldown\Color.pushbutton\ColorSplasher.xaml">
       <Link>Link WPF\ColorSplasher.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WPF_setup_family_column_for_dim.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

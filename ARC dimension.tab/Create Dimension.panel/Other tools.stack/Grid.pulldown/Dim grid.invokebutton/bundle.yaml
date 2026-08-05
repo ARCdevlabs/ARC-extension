@@ -1,0 +1,14 @@
+title:   
+  en_us: Auto dim Grids
+  ja: グリッドを自動配置
+assembly: SOAPanel
+command_class: DimGridinView
+tooltip:
+  en_us:
+    Bấm và chạy
+
+  ja: 
+    
+    
+highlight: new
+author: Mau Cuong 

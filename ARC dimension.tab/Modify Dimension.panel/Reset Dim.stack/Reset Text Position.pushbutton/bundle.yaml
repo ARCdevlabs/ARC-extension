@@ -1,0 +1,10 @@
+title:   
+  en_us: Reset Text Position
+  ja: 文字位置をリセット
+tooltip:
+  en_us:
+    Reset tất cả vị trí text của dim về vị trí mặc định
+  ja:
+    すべての寸法文字の位置をデフォルトにリセットします。
+author: 
+  - "Nguyễn Thanh Sơn"
