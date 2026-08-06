@@ -127,5 +127,5 @@ class MyWindow(Windows.Window):
         
         self.Close()
 
-# if __name__ == "__main__": #Cần phải có hàm này bởi vì nếu không có thì khi lần đầu mở revit và mở tool lên, form xaml sẽ hiện lên dù không nhấn shift
-MyWindow().ShowDialog()
+if __name__ == "__main__": #Cần phải có hàm này bởi vì nếu không có thì khi lần đầu mở revit và mở tool lên, form xaml sẽ hiện lên dù không nhấn shift
+    MyWindow().ShowDialog()
