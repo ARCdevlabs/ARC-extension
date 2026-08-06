@@ -7,9 +7,10 @@ from Autodesk.Revit.UI.Selection import ObjectType
 import traceback
 import math
 import nances
-from nances import vectortransform,geometry,selection, revit, visible
+from nances import vectortransform,geometry,selection, revit, visible,allinone
 from pyrevit import script
 import setup_dim_wall_RC_config
+import movetextdim
 
 logger = script.get_logger()
 
@@ -22,6 +23,7 @@ source_setting_dim_in_need = setup_dim_wall_RC_config.load_configs_setup_dim_wal
 option_1 = source_setting_dim_in_need[0]
 option_2 = source_setting_dim_in_need[1]
 option_3 = source_setting_dim_in_need[2]
+option_3a = source_setting_dim_in_need[3]
 
 
 offset_of_dim = float(source_offset_of_dim[0])
@@ -95,7 +97,7 @@ if nances.AutodeskData():
                         check_pararel_beam_with_grid = vectortransform.are_planes_parallel(center_plane_normal,grid_plane.Normal)
                         if check_pararel_beam_with_grid:
                             distance_grid_with_beam =  abs(vectortransform.distance_between_parallel_planes(grid_plane, center_plane))
-                            if distance_grid_with_beam < (chieu_rong/2):                        
+                            if distance_grid_with_beam < ((chieu_rong-0.001)/2):  #Trừ 0.001 bởi vì có trường hợp dim = 0 vào grid, do gần nhau nhưng làm trong các kiểu nên tính toán sai chút                      
                                 ref_grid = Reference(grid)
                                 all_ref_grid.Append(ref_grid)
                                 list_grid_ref.append(ref_grid)
@@ -240,6 +242,64 @@ if nances.AutodeskData():
                 idoc.Delete(tung_dim_kha_di.Id)    
         return dim
 
+
+    def tao_dim_core_tuong (idoc, view, list_combo_reference, line_combo, wall_width):
+              
+        core_width = wall_width[0]
+
+        list_all_dim = []
+
+        list_valid_dim = []
+    
+        count_dim_core = 0
+
+        
+        for tung_cap_ref in list_combo_reference: 
+            with revit.Transaction('Tạo hàng loạt dim', swallow_errors=True):
+                wall_reference = ReferenceArray()
+                wall_reference.Append(tung_cap_ref[0])
+                wall_reference.Append(tung_cap_ref[1])
+
+                dim = idoc.Create.NewDimension(view, line_combo, wall_reference)
+
+                list_all_dim.append(dim)
+
+                get_value_of_dim = dim.Value
+
+                if count_dim_core == 0:
+                    if round(core_width,3) == round(get_value_of_dim,3) and round(get_value_of_dim,3) > 0:                                
+                        count_dim_core += 1
+                        list_valid_dim.append(dim)
+                        continue
+                                             
+        new_list_valid_dim = []
+
+        with revit.Transaction('Xoá dim không khả dụng', swallow_errors=True):                            
+            for tung_dim in list_all_dim:
+                if tung_dim not in list_valid_dim:
+                    idoc.Delete(tung_dim.Id)
+                else:
+                    new_list_valid_dim.append(tung_dim)
+        for new_tung_dim in new_list_valid_dim:
+            with revit.Transaction('Thêm prefix, suffix', swallow_errors=True): 
+                add_prefix_to_dimension(new_tung_dim, "(")
+                add_suffix_to_dimension(new_tung_dim, ")")
+        return new_tung_dim
+
+    def add_prefix_to_dimension(dimension, prefix_value):
+        try:
+            dimension.Prefix = prefix_value
+        except:
+            print(traceback.format_exc())
+            pass
+
+    def add_suffix_to_dimension(dimension, suffix_value):
+        try:
+            dimension.Suffix = suffix_value
+        except:
+            print(traceback.format_exc())
+            pass    
+
     def check_goc_cua_dam_so_voi_view_direction(dam,view):
         view_direction = view.ViewDirection
         location_curve = dam.Location.Curve
@@ -253,6 +313,53 @@ if nances.AutodeskData():
             return True
         else: 
             return False
+
+    def move_text_dim_1_segment(input_dim,view):   
+
+        from nances import revit
+        with revit.Transaction('Move text dim 1 segment', swallow_errors=True):
+
+            allinone.reset_text_position(input_dim)
+
+            para_leader_line = nances.get_builtin_parameter_by_name(input_dim, DB.BuiltInParameter.DIM_LEADER)
+            para_leader_line.Set(int(0))
+
+            none_segment = []
+
+            view_direction = view.ViewDirection
+            dim_line = input_dim.Curve
+            vector_of_dim = dim_line.Direction
+
+            vector_da_chuan_hoa = movetextdim.chuan_hoa_vector(vector_of_dim, view)
+
+            kich_thuoc_moi_chu = 2.5
+
+            kick_thuoc_tu_dim_toi_text = 1
+
+            quy_doi_theo_ty_le = (kick_thuoc_tu_dim_toi_text * view.Scale) /304.8
+
+            number_of_segments =  input_dim.NumberOfSegments
+
+            diem_trung_binh = input_dim.Origin
+
+            return_point = nances.move_point_along_vector(diem_trung_binh, vector_da_chuan_hoa, -0.01)
+
+            if number_of_segments == 0:
+                seg = input_dim
+                none_segment.append(seg)
+                text_ori = seg.Origin
+                value = (seg.Value) * 304.8 #Don vi dang la mm
+                kich_co = nances.xac_dinh_kich_co_chu(view, value, kich_thuoc_moi_chu)
+                xoay_vector_90_do = movetextdim.rotate_vector_around_axis(vector_da_chuan_hoa, view_direction, 90)
+                phia = movetextdim.xac_dinh_phia(text_ori, return_point, xoay_vector_90_do,view_direction)
+                if phia == "Bên trái":
+                    nances.move_segment_xa_nhat(none_segment, vector_da_chuan_hoa, kich_co,quy_doi_theo_ty_le, huong_phai = True)
+                else:
+                    nances.move_segment_xa_nhat(none_segment, vector_da_chuan_hoa,kich_co,quy_doi_theo_ty_le, huong_phai = False)
+
+        return
+
+
 
     Ele = nances.get_elements(uidoc,doc, "Select Walls", noti = False)
 
@@ -334,6 +441,7 @@ if nances.AutodeskData():
                     line_combo_1 = vectortransform.move_line_theo_vector_theo_ty_le_view(chuan_hoa_vector_kieu_nguoc, line_combo_2, snap_dim_feet, current_view)
 
                     line_combo_3 = vectortransform.move_line_theo_vector_theo_ty_le_view(chuan_hoa_vector_kieu_nguoc, line_combo_2, -snap_dim_feet, current_view)
+
                     if option_3:
                         if exterior_width !=0 or interior_width != 0:
 
@@ -348,6 +456,12 @@ if nances.AutodeskData():
                         dim_tong_tren_mat_bang = tao_dim_tong_tuong (doc, current_view, line_combo_3)
 
                         list_new_dim.append(dim_tong_tren_mat_bang)
+
+                    if option_3a:
+
+                        dim_core_tren_mat_bang = tao_dim_core_tuong (doc, current_view, list_combo_reference, line_combo_1, wall_width)
+
+                        move_text_dim_1_segment(dim_core_tren_mat_bang,current_view)
 
                 if is_section_elevation:
 
@@ -404,6 +518,12 @@ if nances.AutodeskData():
                             dim_tong_tren_mat_cat = tao_dim_tong_tuong (doc, current_view, line_combo_C)
 
                             list_new_dim.append(dim_tong_tren_mat_cat)    
+
+                        if option_3a:
+
+                            dim_core_tren_mat_cat = tao_dim_core_tuong (doc, current_view, list_combo_reference, line_combo_A, wall_width)
+
+                            move_text_dim_1_segment(dim_core_tren_mat_cat,current_view)
 
                         # with revit.Transaction('nhập tên transaction', swallow_errors=True):
                         #     detail_curve_of_location_curve = doc.Create.NewDetailCurve(current_view,line_ngang_ngay_tam)            

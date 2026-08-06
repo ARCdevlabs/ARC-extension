@@ -3,10 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\lib\\01. D\u1EF1 \u00E1n t\u1EA5t c\u1EA3 form WPF c\u1EE7a addin ARC\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{233D9364-71B7-473F-879F-ADF9A66DB8C4}|VS_WPF\\VS_WPF.csproj|c:\\users\\admin\\appdata\\roaming\\pyrevit\\extensions\\arc extension.extension\\arc dimension.tab\\create dimension.panel\\wall.stack\\wall rc.pushbutton\\wpf_setup_dim_wall_rc.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{233D9364-71B7-473F-879F-ADF9A66DB8C4}|VS_WPF\\VS_WPF.csproj|c:\\users\\admin\\appdata\\roaming\\pyrevit\\extensions\\arc extension.extension\\arc dimension.tab\\create dimension.panel\\wall.stack\\wall.pushbutton\\wpf_setup_dim_wall_rc.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{233D9364-71B7-473F-879F-ADF9A66DB8C4}|VS_WPF\\VS_WPF.csproj|c:\\users\\admin\\appdata\\roaming\\pyrevit\\extensions\\arc extension.extension\\lib\\01. d\u1EF1 \u00E1n t\u1EA5t c\u1EA3 form wpf c\u1EE7a addin arc\\vs_wpf\\wpf_setup_family_column_for_dim.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "AbsoluteMoniker": "D:0:0:{233D9364-71B7-473F-879F-ADF9A66DB8C4}|VS_WPF\\VS_WPF.csproj|C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\lib\\01. D\u1EF1 \u00E1n t\u1EA5t c\u1EA3 form WPF c\u1EE7a addin ARC\\vs_wpf\\wpf_setup_family_column_for_dim.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{233D9364-71B7-473F-879F-ADF9A66DB8C4}|VS_WPF\\VS_WPF.csproj|solutionrelative:vs_wpf\\wpf_setup_family_column_for_dim.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
@@ -23,8 +23,20 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "WPF_setup_dim_wall_RC.xaml",
+              "DocumentMoniker": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARC dimension.tab\\Create Dimension.panel\\Wall.stack\\Wall.pushbutton\\WPF_setup_dim_wall_RC.xaml",
+              "RelativeDocumentMoniker": "..\\..\\ARC dimension.tab\\Create Dimension.panel\\Wall.stack\\Wall.pushbutton\\WPF_setup_dim_wall_RC.xaml",
+              "ToolTip": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARC dimension.tab\\Create Dimension.panel\\Wall.stack\\Wall.pushbutton\\WPF_setup_dim_wall_RC.xaml",
+              "RelativeToolTip": "..\\..\\ARC dimension.tab\\Create Dimension.panel\\Wall.stack\\Wall.pushbutton\\WPF_setup_dim_wall_RC.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-08-06T04:07:48.28Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 1,
@@ -39,18 +51,6 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "WPF_setup_dim_wall_RC.xaml",
-              "DocumentMoniker": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARC dimension.tab\\Create Dimension.panel\\Wall.stack\\Wall RC.pushbutton\\WPF_setup_dim_wall_RC.xaml",
-              "RelativeDocumentMoniker": "..\\..\\ARC dimension.tab\\Create Dimension.panel\\Wall.stack\\Wall RC.pushbutton\\WPF_setup_dim_wall_RC.xaml",
-              "ToolTip": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARC dimension.tab\\Create Dimension.panel\\Wall.stack\\Wall RC.pushbutton\\WPF_setup_dim_wall_RC.xaml",
-              "RelativeToolTip": "..\\..\\ARC dimension.tab\\Create Dimension.panel\\Wall.stack\\Wall RC.pushbutton\\WPF_setup_dim_wall_RC.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-08-05T08:42:07.937Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 3,
               "Title": "ColorPicker.xaml",
               "DocumentMoniker": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARC.tab\\Graphic Visibility.panel\\Column1.stack\\ColorSplasher.pulldown\\Color.pushbutton\\ColorPicker.xaml",
@@ -58,8 +58,7 @@
               "ToolTip": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARC.tab\\Graphic Visibility.panel\\Column1.stack\\ColorSplasher.pulldown\\Color.pushbutton\\ColorPicker.xaml",
               "RelativeToolTip": "..\\..\\ARC.tab\\Graphic Visibility.panel\\Column1.stack\\ColorSplasher.pulldown\\Color.pushbutton\\ColorPicker.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-08-03T03:51:48.944Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-03T03:51:48.944Z"
             },
             {
               "$type": "Document",
@@ -70,8 +69,7 @@
               "ToolTip": "C:\\Users\\Admin\\AppData\\Roaming\\pyRevit\\Extensions\\ARC extension.extension\\ARC.tab\\Graphic Visibility.panel\\Column1.stack\\ColorSplasher.pulldown\\Color.pushbutton\\ColorSplasher.xaml",
               "RelativeToolTip": "..\\..\\ARC.tab\\Graphic Visibility.panel\\Column1.stack\\ColorSplasher.pulldown\\Color.pushbutton\\ColorSplasher.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-08-03T03:51:21.921Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-03T03:51:21.921Z"
             }
           ]
         }
