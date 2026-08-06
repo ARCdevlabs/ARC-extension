@@ -79,8 +79,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="..\..\..\ARC dimension.tab\Create Dimension.panel\Wall.stack\Wall RC.pushbutton\WPF_setup_dim_wall_RC.xaml">
-      <Link>Link WPF\WPF_setup_dim_wall_RC.xaml</Link>
+    <Page Include="..\..\..\ARC dimension.tab\Create Dimension.panel\Wall.stack\Wall.pushbutton\WPF_setup_dim_wall_RC.xaml">
+      <Link>WPF_setup_dim_wall_RC.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

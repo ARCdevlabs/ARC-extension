@@ -28,13 +28,13 @@
                         Height="200" BorderBrush="Black"
                         >
                 <Grid  Margin="1"  Height="166">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="3*"/>
-                        </Grid.ColumnDefinitions>
-                        <Image x:Name="guide_image_1"
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image x:Name="guide_image_1"
                            Stretch="Uniform"
                            Grid.Column="0"/>
-                    </Grid>
+                </Grid>
 
             </GroupBox>
         </StackPanel>
@@ -53,10 +53,11 @@
                     >
                 <Grid  Margin="0,5,5,5" Width="485">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1.8*"/>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1.5*"/>
 
                     </Grid.ColumnDefinitions>
                     <Label 
@@ -104,7 +105,8 @@
                     <Grid Grid.Column="3">
                         <CheckBox       
                         x:Name="check_box_combo_3"
-                         
+                         Checked="check_box_combo_3_changed"
+                           Unchecked="check_box_combo_3_changed"
                         VerticalAlignment="Center"
                         Margin="10,10,10,10"
                         />
@@ -114,9 +116,24 @@
 						    Content="③"
 						    Foreground="#FF0A0000"
 						    VerticalAlignment="Center"
-						    Margin="25,10,10,10" Width="87" FontSize="20" />
+						    Margin="25,10,10,10" Width="87" FontSize="20"
+                            />
                     </Grid>
-
+                    <Grid Grid.Column="4">
+                        <CheckBox       
+                        x:Name="check_box_combo_3a"
+                         Checked="check_box_combo_3a_changed"
+                         Unchecked="check_box_combo_3a_changed"
+                        VerticalAlignment="Center"
+                        Margin="10,10,10,10"
+                        />
+                        <Label 
+						    HorizontalAlignment="Left"
+						    Content="Core Only"
+						    Foreground="#FF0A0000"
+						    VerticalAlignment="Center"
+						    Margin="25,0,0,0" Width="80" FontSize="15" />
+                    </Grid>
                 </Grid>
             </StackPanel>
             <StackPanel 

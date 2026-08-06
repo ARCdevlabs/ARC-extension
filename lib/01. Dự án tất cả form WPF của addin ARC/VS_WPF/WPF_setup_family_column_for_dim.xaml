@@ -10,8 +10,9 @@
         >
     <Grid x:Name="stackpanel" Margin="10,10,10,10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="6*"/>
-            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="731*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="485*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -62,7 +63,7 @@
         </StackPanel>
 
         <StackPanel Margin="721,20,10,41"
-                    Orientation="Vertical" Grid.ColumnSpan="2"
+                    Orientation="Vertical" Grid.ColumnSpan="3"
                     >
             <StackPanel Orientation="Horizontal"
                     VerticalAlignment="Top" 
