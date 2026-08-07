@@ -72,3 +72,33 @@ def get_all_grid(doc, active_view):
     collector = DB.FilteredElementCollector(doc, active_view.Id).OfClass(DB.Grid)
     visible_grids = [grid for grid in collector if not grid.ViewSpecific]
     return visible_grids
+
+def get_all_elements_by_category_in_model(idoc,ost_builtin_category):
+    collector = DB.FilteredElementCollector(idoc).OfCategory(ost_builtin_category).WhereElementIsNotElementType()
+    return list(collector)
+
+
+def get_all_elements_by_category_in_view(idoc, view, ost_builtin_category):
+    from Autodesk.Revit.DB import FilteredElementCollector
+    collector = (FilteredElementCollector(idoc, view.Id).OfCategory(ost_builtin_category).WhereElementIsNotElementType())
+    return list(collector)
+
+
+
+
+from Autodesk.Revit.DB import DetailLine, Grid
+
+class DetailLineAndGridSelectionFilter(Autodesk.Revit.UI.Selection.ISelectionFilter):
+
+    def AllowElement(self, element):
+        return isinstance(element, DetailLine) or isinstance(element, Grid)
+
+    def AllowReference(self, reference, point):
+        return False
+
+def pick_lines_and_grid_by_rectangle(iuidoc, string_title):
+    from nances import forms
+    with forms.WarningBar(title= string_title):
+        selection = iuidoc.Selection
+        selected_elements = selection.PickElementsByRectangle(DetailLineAndGridSelectionFilter(), string_title)
+    return selected_elements

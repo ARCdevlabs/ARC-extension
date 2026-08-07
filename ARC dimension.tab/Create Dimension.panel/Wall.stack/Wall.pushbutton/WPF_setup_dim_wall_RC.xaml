@@ -2,13 +2,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-        mc:Ignorable="d" Height="450" Width="529"
+        mc:Ignorable="d" Height="508" Width="529"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Background="#FFEDEDED"
 	    Foreground="#FF0F0202"
         >
-    <Grid x:Name="stackpanel" Margin="10,10,10,10">
+    <Grid x:Name="stackpanel" Margin="10,10,10,7">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="6*"/>
         </Grid.ColumnDefinitions>
@@ -40,9 +40,7 @@
         </StackPanel>
         <StackPanel Grid.Column="0"
                     Grid.Row="1"
-                    Margin="10,0,10,0"
-                    VerticalAlignment="Center"
-                    Height="168"
+                    Margin="10,0,10,-34"
                         >
             <StackPanel 
                     Margin="0,0,0,0"
@@ -136,6 +134,63 @@
                     </Grid>
                 </Grid>
             </StackPanel>
+
+
+
+
+
+            <StackPanel 
+                    Margin="0,0,0,0"
+                    Orientation="Horizontal" 
+                    VerticalAlignment="Top"
+                    HorizontalAlignment ="Left"
+                Width="487"
+                    >
+                <Grid  Margin="0,5,5,5" Width="490">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label 
+						HorizontalAlignment= "Left"
+						Content="Reverse Dim Position?"
+						Foreground="#FF0A0000"
+						Height="25"
+						VerticalAlignment="Center" FontWeight="Bold" Width="153" />
+                    <Grid Grid.Column="2">
+                        <CheckBox       
+                        x:Name="check_box_reverse_dim_position"
+                        
+                        VerticalAlignment="Center"
+                        Margin="10,10,10,10"
+                        />
+                        <Label 
+                            Grid.Column="2" 
+						    HorizontalAlignment="Left"
+						    Content=""
+						    Foreground="#FF0A0000"
+						    VerticalAlignment="Center"
+						    Margin="25,10,10,10" Width="87" FontSize="20" />
+                    </Grid>
+                </Grid>
+            </StackPanel>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <StackPanel 
                     Margin="0,0,0,0"
                     Orientation="Horizontal" 
@@ -171,6 +226,7 @@
                      />
                 </Grid>
             </StackPanel>
+
             <Button x:Name="save_setting"
                     Margin="10,10,30,30"
                     Content= "Save Setting"

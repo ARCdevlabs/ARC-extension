@@ -46,17 +46,17 @@ from pyrevit import script
 logger = script.get_logger()
 my_config = script.get_config("configs_setup_dim_wall_RC_in_need")
 
-default_settup_setup_dim_in_need = [bool(True),bool(True),bool(True),bool(False)]
+default_settup_setup_dim_in_need = [bool(True),bool(True),bool(True),bool(False),bool(False)]
 
 default_setup_dim = str(5)
 
 def load_configs_setup_dim_wall_RC_in_need():
-    dim_in_need = my_config.get_option("setup_dim_in_need", [])
+    dim_in_need = my_config.get_option("setup_dim_in_need_new", [])
     get_dim_in_need = [(x) for x in (dim_in_need or default_settup_setup_dim_in_need)]
     return get_dim_in_need
 
 def save_configs_setup_dim_wall_RC_in_need(content):
-    my_config.setup_dim_in_need = content
+    my_config.setup_dim_in_need_new = content
     script.save_config()
 
 def load_configs_setup_offset_dim():
@@ -99,6 +99,7 @@ class MyWindow(Windows.Window):
         self.setup_dim_2 = load_setting_dim_in_need[1]
         self.setup_dim_3 = load_setting_dim_in_need[2]
         self.setup_dim_3a = load_setting_dim_in_need[3]
+        self.setup_reverse_dim = load_setting_dim_in_need[4]
 
     @property
     def setup_offset_dim(self):
@@ -149,14 +150,24 @@ class MyWindow(Windows.Window):
     def check_box_combo_3a_changed(self, sender, args):
         if self.check_box_combo_3a.IsChecked:
             self.check_box_combo_3.IsChecked = False
+
+    @property
+    def setup_reverse_dim(self):
+        return self.check_box_reverse_dim_position.IsChecked
+    
+    @setup_reverse_dim.setter
+    def setup_reverse_dim(self,value):
+        self.check_box_reverse_dim_position.IsChecked =  bool(value)
+
     def save_setting_click(self, sender, args): #save_setting_click là tên của biến button và hành động click trong file xaml
 
         is_check_dim_1 = self.setup_dim_1
         is_check_dim_2 = self.setup_dim_2
         is_check_dim_3 = self.setup_dim_3
         is_check_dim_3a = self.setup_dim_3a
+        is_check_reverse_dim = self.setup_reverse_dim
 
-        total_setting_dim_in_need = [is_check_dim_1,is_check_dim_2,is_check_dim_3,is_check_dim_3a]
+        total_setting_dim_in_need = [is_check_dim_1,is_check_dim_2,is_check_dim_3,is_check_dim_3a,is_check_reverse_dim]
 
         offset_of_dim = self.setup_offset_dim
         total_offset_dim = [offset_of_dim]
