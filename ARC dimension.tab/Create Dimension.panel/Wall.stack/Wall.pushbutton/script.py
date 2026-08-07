@@ -24,6 +24,7 @@ option_1 = source_setting_dim_in_need[0]
 option_2 = source_setting_dim_in_need[1]
 option_3 = source_setting_dim_in_need[2]
 option_3a = source_setting_dim_in_need[3]
+reverse_dim = source_setting_dim_in_need[4]
 
 
 offset_of_dim = float(source_offset_of_dim[0])
@@ -437,29 +438,51 @@ if nances.AutodeskData():
                     chuan_hoa_vector_kieu_nguoc = vectortransform.chuan_hoa_vector_tu_trai_qua_phai_tren_xuong_duoi(flat_location_line_direction,current_view)          
 
                     line_combo_2 = vectortransform.get_rotate_90_location_line(location_line,current_view)
-                    
-                    line_combo_1 = vectortransform.move_line_theo_vector_theo_ty_le_view(chuan_hoa_vector_kieu_nguoc, line_combo_2, snap_dim_feet, current_view)
 
-                    line_combo_3 = vectortransform.move_line_theo_vector_theo_ty_le_view(chuan_hoa_vector_kieu_nguoc, line_combo_2, -snap_dim_feet, current_view)
+                    line_combo_1 = vectortransform.move_line_theo_vector_theo_ty_le_view(chuan_hoa_vector_kieu_nguoc, line_combo_2, -snap_dim_feet, current_view)
+
+                    line_combo_3 = vectortransform.move_line_theo_vector_theo_ty_le_view(chuan_hoa_vector_kieu_nguoc, line_combo_2, snap_dim_feet, current_view)
 
                     if option_3:
                         if exterior_width !=0 or interior_width != 0:
 
-                            dim_layer_tren_mat_bang = tao_dim_layer_tuong (doc, current_view, list_combo_reference, line_combo_1, wall_width)
+                            if reverse_dim:
+
+                                dim_layer_tren_mat_bang = tao_dim_layer_tuong (doc, current_view, list_combo_reference, line_combo_1, wall_width)
+
+                            else:
+
+                                dim_layer_tren_mat_bang = tao_dim_layer_tuong (doc, current_view, list_combo_reference, line_combo_3, wall_width)
 
                             list_new_dim.append(dim_layer_tren_mat_bang)
+                            
                     if option_2:
+
                         dim_center_tren_mat_bang = tao_dim_chia_tam_tuong (doc,current_view,line_combo_2,ref_core)
 
                         list_new_dim.append(dim_center_tren_mat_bang)
+
                     if option_1:
-                        dim_tong_tren_mat_bang = tao_dim_tong_tuong (doc, current_view, line_combo_3)
+
+                        if reverse_dim:
+
+                            dim_tong_tren_mat_bang = tao_dim_tong_tuong (doc, current_view, line_combo_3)
+
+                        else:
+                             
+                            dim_tong_tren_mat_bang = tao_dim_tong_tuong (doc, current_view, line_combo_1)
 
                         list_new_dim.append(dim_tong_tren_mat_bang)
 
                     if option_3a:
 
-                        dim_core_tren_mat_bang = tao_dim_core_tuong (doc, current_view, list_combo_reference, line_combo_1, wall_width)
+                        if reverse_dim:
+
+                            dim_core_tren_mat_bang = tao_dim_core_tuong (doc, current_view, list_combo_reference, line_combo_1, wall_width)
+
+                        else:
+
+                            dim_core_tren_mat_bang = tao_dim_core_tuong (doc, current_view, list_combo_reference, line_combo_3, wall_width)
 
                         move_text_dim_1_segment(dim_core_tren_mat_bang,current_view)
 
@@ -495,38 +518,49 @@ if nances.AutodeskData():
 
                         line_combo_C =  vectortransform.move_line_theo_vector_theo_ty_le_view(-up_direction , line_ngang_ngay_tam, tinh_toan_offset_tinh_tu_mat_dam_phuong_chieu_cao, current_view)
                         
-                        line_combo_B =  vectortransform.move_line_theo_vector_theo_ty_le_view(-up_direction, line_combo_C, snap_dim_feet, current_view)
+                        line_combo_B =  vectortransform.move_line_theo_vector_theo_ty_le_view(-up_direction, line_combo_C, -snap_dim_feet, current_view)
 
-                        line_combo_A =  vectortransform.move_line_theo_vector_theo_ty_le_view(-up_direction, line_combo_B, snap_dim_feet, current_view)
+                        line_combo_A =  vectortransform.move_line_theo_vector_theo_ty_le_view(-up_direction, line_combo_B, -snap_dim_feet, current_view)
 
-                        if option_3:
+                        if option_3: 
 
                             if exterior_width !=0 or interior_width != 0:
 
-                                dim_layer_tren_mat_cat = tao_dim_layer_tuong (doc, current_view, list_combo_reference, line_combo_A, wall_width)
+                                if reverse_dim:
+
+                                    dim_layer_tren_mat_cat = tao_dim_layer_tuong (doc, current_view, list_combo_reference, line_combo_A, wall_width)
+
+                                else:
+
+                                    dim_layer_tren_mat_cat = tao_dim_layer_tuong (doc, current_view, list_combo_reference, line_combo_C, wall_width)
 
                                 list_new_dim.append(dim_layer_tren_mat_cat)
 
                         if option_2:
+
 
                             dim_center_tren_mat_cat = tao_dim_chia_tam_tuong (doc,current_view,line_combo_B,ref_core)
 
                             list_new_dim.append(dim_center_tren_mat_cat)
                             
                         if option_1:
+                            if reverse_dim:
 
-                            dim_tong_tren_mat_cat = tao_dim_tong_tuong (doc, current_view, line_combo_C)
+                                dim_tong_tren_mat_cat = tao_dim_tong_tuong (doc, current_view, line_combo_C)
+                            else:
+                                dim_tong_tren_mat_cat = tao_dim_tong_tuong (doc, current_view, line_combo_A)
 
                             list_new_dim.append(dim_tong_tren_mat_cat)    
 
                         if option_3a:
+                            if reverse_dim:
+                                dim_core_tren_mat_cat = tao_dim_core_tuong (doc, current_view, list_combo_reference, line_combo_A, wall_width)
+                            else:
 
-                            dim_core_tren_mat_cat = tao_dim_core_tuong (doc, current_view, list_combo_reference, line_combo_A, wall_width)
+                                dim_core_tren_mat_cat = tao_dim_core_tuong (doc, current_view, list_combo_reference, line_combo_C, wall_width)
 
                             move_text_dim_1_segment(dim_core_tren_mat_cat,current_view)
-
-                        # with revit.Transaction('nhập tên transaction', swallow_errors=True):
-                        #     detail_curve_of_location_curve = doc.Create.NewDetailCurve(current_view,line_ngang_ngay_tam)            
+ 
             except:
                 # print(traceback.format_exc())
                 pass
