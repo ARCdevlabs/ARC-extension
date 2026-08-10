@@ -10,6 +10,21 @@ from Autodesk.Revit.UI.Selection import ObjectType
 import sys
 if nances.AutodeskData():
     try:
+        def set_work_plane_for_view(view):
+            current_work_plane = view.SketchPlane
+            if current_work_plane is None:
+                try:
+                    if view.ViewType in [ViewType.FloorPlan, ViewType.EngineeringPlan, ViewType.CeilingPlan]:
+                        plane = Plane.CreateByNormalAndOrigin(XYZ.BasisZ, XYZ.Zero)
+                    elif view.ViewType == ViewType.Section:
+                        plane = Plane.CreateByNormalAndOrigin(view.ViewDirection, view.Origin)
+                    sketch_plane = Autodesk.Revit.DB.SketchPlane.Create(view.Document, plane)
+                    view.SketchPlane = sketch_plane
+                except:
+                    return False
+            return True
+
+                                 
         def create_dim(view, line, ref):
             dim = doc.Create.NewDimension(view, line, ref)
             return dim
@@ -21,6 +36,7 @@ if nances.AutodeskData():
         def pick_point_with_nearest_snap():    
             snap_settings = UI.Selection.ObjectSnapTypes.Nearest
             prompt = "Bấm vào vị trí mà cần bố trí dim"
+            click_point = None
             try:
                 from nances import forms
                 with forms.WarningBar(title='Click 1 điểm bất kì để bố trí dim'):
@@ -35,20 +51,6 @@ if nances.AutodeskData():
             cross_product = vector_1.CrossProduct(vector_2)
             return cross_product.GetLength() < tolerance
 
-
-
-        class DimensionSelectionFilter(Autodesk.Revit.UI.Selection.ISelectionFilter):
-            def AllowElement(self, element):
-                return isinstance(element, FamilyInstance) and element.Category.Name == "Structural Framing"
-
-            def AllowReference(self, reference, point):
-                # Không sử dụng AllowReference trong trường hợp này
-                return False
-        # Hàm chọn một Dimension từ danh sách sử dụng ISelectionFilter
-        def pick_filter_elements():
-            selected_dimension = uidoc.Selection.PickObjects(Autodesk.Revit.UI.Selection.ObjectType.Element, DimensionSelectionFilter(), "Chọn Framing")
-            return selected_dimension if selected_dimension else None
-            
 
         from Autodesk.Revit.DB import BuiltInCategory
 
@@ -151,6 +153,7 @@ if nances.AutodeskData():
             return distance < TOL
 
         def remove_duplicate_lines(doi_tuong_line, lines):
+            #Danh sách đưa vào cần phải sorted trước cho tất cả grid đứng đầu danh sách, rồi mới line sẽ nằm sau. Khi đó, sẽ ưu tiên lấy các grid trước và loại bỏ các line trùng với grid
 
             ket_qua_line_tinh_toan = []
 
@@ -173,6 +176,16 @@ if nances.AutodeskData():
                     ket_qua_line_revit.append(tung_doi_tuong_line)
 
             return ket_qua_line_revit, ket_qua_line_tinh_toan
+        
+
+        def get_direction_of_line_or_grid(element):
+            category_name_lan = element.Category.Name
+            if category_name_lan in "Lines, 線分":
+                direction = get_direction_of_beam(element)
+            else:
+                direction = element.Curve.Direction
+            return direction
+        
               
         uidoc = __revit__.ActiveUIDocument
         doc = uidoc.Document
@@ -182,174 +195,158 @@ if nances.AutodeskData():
 
         line_elements_list = get_all_elements_by_category_in_view(doc, current_view, BuiltInCategory.OST_Lines)
 
-        list_line = []
-        list_grid = []
-        
-        if line_elements_list:
+        # list_line = []
+        # list_grid = []
 
-            selected_lines = pick_lines_and_grid_by_rectangle()
-            
+        trans_group = TransactionGroup(doc, 'Dim position of detail line')
+        trans_group.Start()
 
-            for moi_element in selected_lines:
-       
-                category_name = moi_element.Category.Name
+        t = Transaction(doc, 'Set work plane')
+        t.Start()
+        set_work_plane = set_work_plane_for_view(current_view)
+        t.Commit()
 
-                if category_name in "Lines, 線分":        
+        if set_work_plane:
 
-                    ref_cua_element = Reference(moi_element)   
+            if line_elements_list:
 
-                    list_ref_element_da_chon.append(ref_cua_element)  
-
-                    list_line.append(ref_cua_element)    
-
-                else:
-
-                    ref_cua_element = Reference(moi_element)    
-
-                    list_ref_element_da_chon.append(ref_cua_element)   
-
-                    list_grid.append(ref_cua_element)    
-
-        picks = list_ref_element_da_chon
-
-        ref_array = ReferenceArray()
-
-        covert_reference_to_element = []
-
-        for i in picks:
-
-            element_id = i.ElementId
-
-            covert_reference_to_element.append(doc.GetElement(element_id))
-
-        '''Dùng thuật toán bucket sorting để tìm ra group có số lượng dầm song song nhiều nhất'''
-
-        parallel_groups = []
-
-        for tung_beam in covert_reference_to_element:
-
-            found_group = False
-
-            category_name_lan_2 = tung_beam.Category.Name
-
-            if category_name_lan_2 in "Lines, 線分":
-
-                direction = get_direction_of_beam(tung_beam)
-
-            else:
-
-                direction = tung_beam.Curve.Direction
-
-            for group in parallel_groups:            
-                # Kiểm tra xem vector của dầm có song song với dầm trong nhóm không
-                if are_vector_parallel(group[0], direction):
-                    group.append(tung_beam)
-                    found_group = True
-                    break
-            # Nếu không tìm thấy nhóm nào, tạo nhóm mới
-            if not found_group:
-                parallel_groups.append([direction, tung_beam])
-        try:
-            largest_group = max(parallel_groups, key=lambda g: len(g))
-        except:
-            sys.exit()
-        
-        # print("Nhóm có số dầm song song nhiều nhất: ")
-        # for beam in largest_group[1:]: # Bỏ qua vector đầu tiên
-        #     print("Dầm ID: {}".format(beam.Id))
-        
-        for tung_element in largest_group[1:]: # Bỏ qua giá trị đầu tiên vì giá trị đầu tiên là vector, không phải dầm.
-            
-            category_name_lan_3 = tung_element.Category.Name
-
-            if category_name_lan_3 in "Lines, 線分":
+                selected_lines_grids = pick_lines_and_grid_by_rectangle()
                 
-                vector_beam = get_direction_of_beam(tung_element) 
-
-                break 
-            
-        vector_beam_lam_chuan_Z0 = XYZ(vector_beam.X, vector_beam.Y,0)
+                for moi_element in selected_lines_grids:
         
-        list_dam_song_song = []
-        list_doi_tuong_song_song = []
-        list_vector_song_song = []
-        list_grid_song_song = []
-        list_line_revit_song_song = []
-        for beam, ref_beam in zip(covert_reference_to_element,picks):
+                    category_name = moi_element.Category.Name
+
+                    if category_name in "Lines, 線分":        
+
+                        ref_cua_element = Reference(moi_element)   
+
+                        list_ref_element_da_chon.append(ref_cua_element)  
+
+                        # list_line.append(ref_cua_element)    
+
+                    else:
+
+                        ref_cua_element = Reference(moi_element)    
+
+                        list_ref_element_da_chon.append(ref_cua_element)   
+
+                        # list_grid.append(ref_cua_element)    
+
+            list_ref_cua_doi_tuong = list_ref_element_da_chon
+
+            ref_array = ReferenceArray()
+
+            covert_reference_to_element = []
+
+            for i in list_ref_cua_doi_tuong:
+
+                element_id = i.ElementId
+
+                covert_reference_to_element.append(doc.GetElement(element_id))
+
+            '''Dùng thuật toán bucket sorting để tìm ra group có số lượng dầm song song nhiều nhất'''
+
+            parallel_groups = []
+
+            for tung_doi_tuong in covert_reference_to_element:
+
+                found_group = False
+
+                direction = get_direction_of_line_or_grid(tung_doi_tuong)
+
+                for group in parallel_groups:  
+
+                    # Kiểm tra xem vector của dầm có song song với dầm trong nhóm không
+                    if are_vector_parallel(group[0], direction):
+                        group.append(tung_doi_tuong)
+                        found_group = True
+                        break
+                # Nếu không tìm thấy nhóm nào, tạo nhóm mới
+                if not found_group:
+                    parallel_groups.append([direction, tung_doi_tuong])
+            try:
+                largest_group = max(parallel_groups, key=lambda g: len(g))
+            except:
+                sys.exit()
+            
+            # print("Nhóm có số dầm song song nhiều nhất: ")
+            # for beam in largest_group[1:]: # Bỏ qua vector đầu tiên
+            #     print("Dầm ID: {}".format(beam.Id))
+            
+            for tung_element in largest_group[1:]: # Bỏ qua giá trị đầu tiên vì giá trị đầu tiên là vector, không phải dầm.
+                
+                category_name = tung_element.Category.Name
+
+                if category_name in "Lines, 線分":
+                    
+                    vector_beam = get_direction_of_beam(tung_element) 
+
+                    break 
+                
+            vector_beam_lam_chuan_Z0 = XYZ(vector_beam.X, vector_beam.Y,0)
+            
+            list_dam_song_song = []
+            list_doi_tuong_song_song = []
+            list_vector_song_song = []
+            for tung_element in covert_reference_to_element:
+                try:
+                    category_name = tung_element.Category.Name
+
+                    direction = get_direction_of_line_or_grid(tung_element)
+
+                    direction_Z0 = XYZ(direction.X, direction.Y,0)
+
+                    if direction:
+
+                        check_song_song = are_vector_parallel (vector_beam_lam_chuan_Z0, direction_Z0)
+
+                        if check_song_song:
+
+                            list_doi_tuong_song_song.append(tung_element)
+                         
+                except:
+                    pass
+            list_line_tinh_toan_se_dim = []
+
+            from Autodesk.Revit.DB import Grid, DetailLine
+
+            list_doi_tuong_song_song_sorted = sorted(list_doi_tuong_song_song,key=lambda x: 0 if isinstance(x, Grid) else 1)      #Sort để cho grid là số 0, sẽ sắp xếp toàn bộ grid ở trước danh sách, còn line là số 1 sẽ đứng sau.
+
+            for grid_va_line_se_dim in list_doi_tuong_song_song_sorted:
+
+                location_line_Z0 = get_location_curve_of_line_and_grid(grid_va_line_se_dim)
+
+                list_line_tinh_toan_se_dim.append(location_line_Z0)
+
+            ket_qua_loc = remove_duplicate_lines(list_doi_tuong_song_song_sorted,list_line_tinh_toan_se_dim)
+
+            for tung_doi_tuong_line_grid in ket_qua_loc[0]:
+
+                ref_doi_tuong = Reference(tung_doi_tuong_line_grid)
+
+                ref_array.Append(ref_doi_tuong) 
+
+            pick = pick_point_with_nearest_snap()
+
+            xoay_vector_90_do = XYZ(-vector_beam_lam_chuan_Z0.Y, vector_beam_lam_chuan_Z0.X, vector_beam.Z)
+
+            new_point = move_point_along_vector(pick,xoay_vector_90_do, 1)
+
+            line = Line.CreateBound(pick,new_point)
+    
+            t = Transaction(doc,"Dim position of beam")
+
+            t.Start()
+
             try:
 
-                category_name_lan_4 = beam.Category.Name
+                dim = create_dim(current_view,line,ref_array)
 
-                if category_name_lan_4 in "Lines, 線分":
-
-                    direction = get_direction_of_beam(beam)
-
-                else:
-
-                    direction = beam.Curve.Direction
-
-                direction_Z0 = XYZ(direction.X, direction.Y,0)
-
-                if direction:
-
-                    check_song_song = are_vector_parallel (vector_beam_lam_chuan_Z0, direction_Z0)
-
-                    if check_song_song:
-
-                        list_doi_tuong_song_song.append(beam)
-
-                        if category_name_lan_4 in "Lines, 線分":
-
-                            list_line_revit_song_song.append(beam)
-                        else:
-                            list_grid_song_song.append(beam)
-                        
+                t.Commit()
             except:
-
                 # print(traceback.format_exc())
-
-                pass
-        list_line_tinh_toan_se_dim = []
-
-        from Autodesk.Revit.DB import Grid, DetailLine
-
-        list_doi_tuong_song_song_sorted = sorted(list_doi_tuong_song_song,key=lambda x: 0 if isinstance(x, Grid) else 1)      
-        for grid_va_line_se_dim in list_doi_tuong_song_song_sorted:
-
-            location_line_Z0 = get_location_curve_of_line_and_grid(grid_va_line_se_dim)
-
-            list_line_tinh_toan_se_dim.append(location_line_Z0)
-
-        ket_qua_loc = remove_duplicate_lines(list_doi_tuong_song_song_sorted,list_line_tinh_toan_se_dim)
-
-        # ket_qua_loc = remove_duplicate_lines_uu_tien_grid(list_grid_song_song, list_line_revit_song_song)
-
-        for tung_doi_tuong_line_grid in ket_qua_loc[0]:
-
-            ref_doi_tuong = Reference(tung_doi_tuong_line_grid)
-
-            ref_array.Append(ref_doi_tuong) 
-
-        pick = pick_point_with_nearest_snap()
-
-        xoay_vector_90_do = XYZ(-vector_beam_lam_chuan_Z0.Y, vector_beam_lam_chuan_Z0.X, vector_beam.Z)
-
-        new_point = move_point_along_vector(pick,xoay_vector_90_do, 1)
-
-        line = Line.CreateBound(pick,new_point)
-  
-        t = Transaction(doc,"Dim position of beam")
-
-        t.Start()
-
-        try:
-
-            dim = create_dim(current_view,line,ref_array)
-
-            t.Commit()
-        except:
-            # print(traceback.format_exc())
-            t.RollBack()
+                t.RollBack()
     except:
-        print(traceback.format_exc())
+        # print(traceback.format_exc())
         pass
+    trans_group.Assimilate()
