@@ -225,7 +225,7 @@ if nances.AutodeskData():
             references = tung_dim_kha_di.References
 
             for tung_ref in references:
-                ref_string = tung_ref.ConvertToStableRepresentation(doc)
+                ref_string = tung_ref.ConvertToStableRepresentation(idoc)
 
                 if ref_string not in list_ref_string:
                     list_ref.append(tung_ref)
@@ -233,8 +233,108 @@ if nances.AutodeskData():
 
         new_wall_reference = ReferenceArray()
 
-        for tung_ref_lan_2 in list_ref:
-            new_wall_reference.Append(tung_ref_lan_2)
+    def lay_doi_tuong_bi_trung_lap (my_list):
+        result = []
+        for x in my_list:
+            if my_list.count(x) > 1 and x not in result:
+                result.append(x)
+        return result
+    def tao_dim_chia_tam_tuong_version_2 (idoc, view, list_combo_reference, line_combo, wall_width):
+              
+        core_width = wall_width[0]
+
+        interior_width = wall_width[1]
+
+        exterior_width = wall_width[2]
+
+        tong_ben_trai = core_width/2 + interior_width
+
+        tong_ben_phai = core_width/2 + exterior_width
+
+        list_all_dim = []
+
+        list_valid_dim = []
+    
+        count_dim_core = 0
+
+        count_dim_ben_trai = 0
+
+        count_dim_ben_phai = 0
+        
+        for tung_cap_ref in list_combo_reference: 
+            with revit.Transaction('Tạo hàng loạt dim', swallow_errors=True):
+                wall_reference = ReferenceArray()
+                wall_reference.Append(tung_cap_ref[0])
+                wall_reference.Append(tung_cap_ref[1])
+
+                dim = idoc.Create.NewDimension(view, line_combo, wall_reference)
+
+                list_all_dim.append(dim)
+
+                get_value_of_dim = dim.Value
+                text_position = dim.Origin        
+                # if count_dim_core == 0:
+                #     if round(tong_ben_trai,3) == round(get_value_of_dim,3) and round(get_value_of_dim,3) > 0:                                
+                #         count_dim_core += 1
+                #         list_valid_dim.append(dim)
+                #         continue
+                if count_dim_ben_trai == 0:
+                    if round(tong_ben_trai,3) == round(get_value_of_dim,3) and round(get_value_of_dim,3) > 0:    
+                        # print get_value_of_dim*304.8                          
+                        count_dim_ben_trai += 1
+                        list_valid_dim.append(dim)
+                        continue                                                  
+
+                if count_dim_ben_phai == 0:
+                    if round(tong_ben_phai,3) == round(get_value_of_dim,3) and round(get_value_of_dim,3) > 0:  
+                        # print get_value_of_dim*304.8                               
+                        count_dim_ben_phai += 1
+                        list_valid_dim.append(dim)
+                        continue      
+                            
+        new_list_valid_dim = []
+
+        with revit.Transaction('Xoá dim không khả dụng', swallow_errors=True):                            
+            for tung_dim in list_all_dim:
+                if tung_dim not in list_valid_dim:
+                    idoc.Delete(tung_dim.Id)
+                else:
+                    new_list_valid_dim.append(tung_dim)
+
+        list_ref = []
+        list_ref_string = []
+        
+        for tung_dim_kha_di in new_list_valid_dim:
+            references = tung_dim_kha_di.References
+            for tung_ref in references:
+                ref_string = tung_ref.ConvertToStableRepresentation(idoc)
+                list_ref.append(tung_ref)
+                list_ref_string.append(ref_string)
+                # if ref_string not in list_ref_string:
+                #     list_ref.append(tung_ref)
+                #     list_ref_string.append(ref_string)
+
+        list_ref_string_trung = []
+        list_ref_trung = []
+
+        for ref, ref_string in zip(list_ref,list_ref_string):
+            if list_ref_string.count(ref_string) > 1:
+                if ref_string not in list_ref_string_trung:
+                    list_ref_string_trung.append(ref_string)
+                    list_ref_trung.append(ref)
+
+        center_ref = list_ref_trung[0]
+
+        new_wall_reference = ReferenceArray()
+
+        get_wall_reference_exterior = get_side_wall_reference(doc, wall, ShellLayerType.Exterior)                
+        get_wall_reference_interior = get_side_wall_reference(doc, wall, ShellLayerType.Interior)
+
+        new_wall_reference.Append(center_ref)
+        new_wall_reference.Append(get_wall_reference_exterior)
+        new_wall_reference.Append(get_wall_reference_interior)
+
+
         with revit.Transaction('Tạo lại dim gộp những dim lẻ khả dụng', swallow_errors=True):  
             dim = idoc.Create.NewDimension(current_view, line_combo, new_wall_reference) 
 
@@ -458,7 +558,9 @@ if nances.AutodeskData():
                             
                     if option_2:
 
-                        dim_center_tren_mat_bang = tao_dim_chia_tam_tuong (doc,current_view,line_combo_2,ref_core)
+                        # dim_center_tren_mat_bang = tao_dim_chia_tam_tuong (doc,current_view,line_combo_2,ref_core)
+
+                        dim_center_tren_mat_bang = tao_dim_chia_tam_tuong_version_2 (doc, current_view, list_combo_reference, line_combo_2, wall_width)
 
                         list_new_dim.append(dim_center_tren_mat_bang)
 
