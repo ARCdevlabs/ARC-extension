@@ -72,18 +72,12 @@ try:
         from pyrevit import revit, DB
 
 
-        def get_document_data_file(file_id, file_ext, add_cmd_name=False):
+        def get_document_data_file(file_id, file_ext):
             proj_info = revit.query.get_project_info()
 
-            if add_cmd_name:
-                script_file_id = '{}_{}_{}'.format(EXEC_PARAMS.command_name,
-                                                file_id,
-                                                proj_info.filename
-                                                or proj_info.name)
-            else:
-                script_file_id = '{}_{}'.format(file_id,
-                                                proj_info.filename
-                                                or proj_info.name)
+            script_file_id = '{}_{}'.format(file_id,
+                                            proj_info.filename
+                                            or proj_info.name)
 
             return appdata.get_data_file(script_file_id, file_ext)
         datafile1 = get_document_data_file("List1", "txt")
@@ -94,7 +88,7 @@ try:
             f.close()
             element_ids = []
             for elid in current_selection:
-                Input1.append(doc.GetElement(ElementId(int(elid))))
+                Input1.append(doc.GetElement(ElementId(long(elid))))
         except Exception:
             pass
 
@@ -107,7 +101,7 @@ try:
             f.close()
             element_ids = []
             for elid in current_selection:
-                Input2.append(doc.GetElement(ElementId(int(elid))))
+                Input2.append(doc.GetElement(ElementId(long(elid))))
         except Exception:
             pass
 

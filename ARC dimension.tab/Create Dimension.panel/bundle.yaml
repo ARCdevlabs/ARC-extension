@@ -2,12 +2,12 @@ layout:
   - Old tool
   - -----
   - Dim at Section
-  - Only Higashi Osaka
-  - Column Foundation
-  - Beam
-  - Wall
+  - Higashi_Dim Column version 2
+  - Dim Column With Fukashi
+  - Dim Beam With Fukashi
+  - Dim Wall
   - Position Line
-  - Slab
-  - Other tools
+  - Spot Elevation
+  - Dim Grid
 
 

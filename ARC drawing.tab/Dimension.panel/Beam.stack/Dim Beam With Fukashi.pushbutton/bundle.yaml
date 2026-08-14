@@ -1,7 +1,0 @@
-title:
-  en_us: Beam
-tooltip:
-  en_us: Tool này sẽ chạy dựa vào tên reference plane có trong family dầm. Giữ nút SHIFT + click vào tool để mở bảng cài đặt. Có thể cần thêm reference plane vào family để tool này hoạt động.
-# highlight as new
-highlight: new
-author: "Nguyễn Thanh Sơn"

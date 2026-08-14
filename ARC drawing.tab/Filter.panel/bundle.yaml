@@ -1,5 +1,5 @@
 layout:
-  - Column1
-  - Column2
-  - Column3
+  - CreateViewFilter
+  - Quick Filter
+  - Apply Filter
   - Filter Color
