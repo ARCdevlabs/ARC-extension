@@ -1,0 +1,13 @@
+title:
+  ja: 削除
+  en_us: Wipe
+layout:
+  - Wipe Model Components
+  - Wipe Attached Constraints
+  - Find Constraints
+  - Wipe Selected Families
+  - Wipe SubCategories
+  - Wipe Unused Filters
+  - Wipe Unused View Templates
+  - Wipe Empty Elevation Tags
+  - Wipe Empty Tags

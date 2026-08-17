@@ -3,7 +3,7 @@ import Autodesk
 from Autodesk.Revit.DB import *
 import Autodesk.Revit.DB as DB
 from Autodesk.Revit.UI.Selection import ObjectType
-from nances import revit
+from pyrevit import revit
 import nances as module
 if module.AutodeskData():
     uidoc = __revit__.ActiveUIDocument

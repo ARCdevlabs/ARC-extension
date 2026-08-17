@@ -5,8 +5,8 @@ from Autodesk.Revit.DB import *
 import Autodesk.Revit.DB as DB
 from System.Collections.Generic import List
 from Autodesk.Revit.UI.Selection import ObjectType
-from nances import revit,vectortransform
-from pyrevit import script
+from nances import vectortransform
+from pyrevit import script,revit
 import sys 
 logger = script.get_logger()
 if nances.AutodeskData():

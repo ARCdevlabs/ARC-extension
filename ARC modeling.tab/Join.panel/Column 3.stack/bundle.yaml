@@ -1,6 +1,0 @@
-layout:
-  - JoinGeometry
-  - CutGeometry
-  - Column 3
-  - CutGeometry
-  - Unjoin

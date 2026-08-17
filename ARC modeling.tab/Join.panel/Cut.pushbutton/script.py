@@ -6,6 +6,7 @@ import importlib
 ARC = string.ascii_lowercase
 begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
 module = importlib.import_module(str(begin))
+from nances import getelementid
 try:
     if module.AutodeskData():
         import Autodesk
@@ -62,18 +63,12 @@ try:
         from pyrevit import revit, DB
 
 
-        def get_document_data_file(file_id, file_ext, add_cmd_name=False):
+        def get_document_data_file(file_id, file_ext):
             proj_info = revit.query.get_project_info()
 
-            if add_cmd_name:
-                script_file_id = '{}_{}_{}'.format(EXEC_PARAMS.command_name,
-                                                file_id,
-                                                proj_info.filename
-                                                or proj_info.name)
-            else:
-                script_file_id = '{}_{}'.format(file_id,
-                                                proj_info.filename
-                                                or proj_info.name)
+            script_file_id = '{}_{}'.format(file_id,
+                                            proj_info.filename
+                                            or proj_info.name)
 
             return appdata.get_data_file(script_file_id, file_ext)
         datafile1 = get_document_data_file("List1", "txt")
@@ -83,8 +78,9 @@ try:
             current_selection = pickle.load(f)
             f.close()
             element_ids = []
+            get_func_1 = getelementid.get_elementid_from_value_func()
             for elid in current_selection:
-                Input1.append(doc.GetElement(ElementId(int(elid))))
+                Input1.append(doc.GetElement(get_func_1(elid)))
         except Exception:
             pass
 
@@ -96,8 +92,10 @@ try:
             current_selection = pickle.load(f)
             f.close()
             element_ids = []
+            get_func_2 = getelementid.get_elementid_from_value_func()
             for elid in current_selection:
-                Input2.append(doc.GetElement(ElementId(int(elid))))
+                
+                Input2.append(doc.GetElement(get_func_2(elid)))
         except Exception:
             pass
 
