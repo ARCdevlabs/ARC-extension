@@ -584,7 +584,7 @@ if nances.AutodeskData():
         if len(list_dim_need_modify_text_top) > 0 :
             for tung_dim in list_dim_need_modify_text_top:
                 try:
-                    from nances import revit
+                    from pyrevit import revit
                     with revit.Transaction('Move text dim auto', swallow_errors=True):
 
                         view_direction = current_view.ViewDirection
@@ -634,7 +634,7 @@ if nances.AutodeskData():
         if len(list_dim_need_modify_text_right) > 0 :
             for tung_dim in list_dim_need_modify_text_right:
                 try:
-                    from nances import revit
+                    from pyrevit import revit
                     with revit.Transaction('Move text dim auto', swallow_errors=True):
 
                         view_direction = current_view.ViewDirection

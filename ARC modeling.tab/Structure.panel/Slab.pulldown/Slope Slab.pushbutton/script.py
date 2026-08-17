@@ -10,7 +10,8 @@ from Autodesk.Revit.DB import CurveLoop, XYZ,TransactionGroup,Transaction
 import Autodesk.Revit.DB as DB
 from System.Collections.Generic import List
 from Autodesk.Revit.UI.Selection import ObjectType
-from nances import revit, forms
+from nances import forms
+from pyrevit import revit
 import traceback
 if module.AutodeskData():
     uidoc = __revit__.ActiveUIDocument

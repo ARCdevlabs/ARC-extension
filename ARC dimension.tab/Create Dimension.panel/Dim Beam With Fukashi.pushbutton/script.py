@@ -511,7 +511,7 @@ if nances.AutodeskData():
         # run_move_text_type_1 = uiapp.PostCommand(RevitCommandId.LookupCommandId("CustomCtrl_%CustomCtrl_%ARC drawing%Dimension%Type 1 Auto"))
         for tung_dim in list_dim_need_modify_text:
             try:
-                from nances import revit
+                from pyrevit import revit
                 with revit.Transaction('Move text dim auto', swallow_errors=True):
 
                     view_direction = current_view.ViewDirection

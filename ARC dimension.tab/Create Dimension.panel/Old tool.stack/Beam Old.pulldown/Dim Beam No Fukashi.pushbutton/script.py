@@ -2,7 +2,7 @@
 from Autodesk.Revit.DB import Reference
 import Autodesk.Revit.DB as DB
 import math
-from nances import revit
+from pyrevit import revit
 import Autodesk
 from Autodesk.Revit.DB import *
 import nances as module

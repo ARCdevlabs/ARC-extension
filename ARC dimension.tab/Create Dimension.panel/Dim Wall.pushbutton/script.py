@@ -7,8 +7,8 @@ from Autodesk.Revit.UI.Selection import ObjectType
 import traceback
 import math
 import nances
-from nances import vectortransform,geometry,selection, revit, visible,allinone
-from pyrevit import script
+from nances import vectortransform,geometry,selection,visible,allinone
+from pyrevit import script,revit
 import setup_dim_wall_RC_config
 import movetextdim
 

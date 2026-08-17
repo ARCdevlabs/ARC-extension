@@ -220,7 +220,7 @@ if module.AutodeskData:
     split_solids = SolidSplit(solid, knife)
     new_floors = []
 
-    from nances import revit
+    from pyrevit import revit
     trans_group = TransactionGroup(doc, "Split Slab")
     trans_group.Start()
     with revit.Transaction('Split Slab', swallow_errors=True):
