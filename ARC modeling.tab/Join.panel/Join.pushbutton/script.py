@@ -3,6 +3,8 @@ __doc__ = 'python for revit api'
 __author__ = 'NguyenThanhSon' "Email: nguyenthanhson1712@gmail.com"
 import string
 import importlib
+from nances import getelementid
+
 try:
     ARC = string.ascii_lowercase
     begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
@@ -87,8 +89,9 @@ try:
             current_selection = pickle.load(f)
             f.close()
             element_ids = []
+            get_func_1 = getelementid.get_elementid_from_value_func()
             for elid in current_selection:
-                Input1.append(doc.GetElement(ElementId(long(elid))))
+                Input1.append(doc.GetElement(get_func_1(elid)))
         except Exception:
             pass
 
@@ -100,8 +103,11 @@ try:
             current_selection = pickle.load(f)
             f.close()
             element_ids = []
+
+            get_func_2 = getelementid.get_elementid_from_value_func()
+
             for elid in current_selection:
-                Input2.append(doc.GetElement(ElementId(long(elid))))
+                Input2.append(doc.GetElement(get_func_2(elid)))
         except Exception:
             pass
 

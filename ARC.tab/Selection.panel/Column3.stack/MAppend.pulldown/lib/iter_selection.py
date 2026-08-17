@@ -1,40 +1,38 @@
 # -*- coding: utf-8 -*-
-#pylint: disable=import-error,invalid-name,broad-except,superfluous-parens
 import os.path as op
 import pickle
 
-from pyrevit import revit, DB
+from pyrevit import revit
 from pyrevit import script
+from nances import getelementid
 
 
 logger = script.get_logger()
 
+get_elementid_from_value = getelementid.get_elementid_from_value_func()
+
+
 def iterate(mode, step_size=1):
     """Iterate over elements in memorized selection"""
-    index_datafile = \
-        script.get_document_data_file("SelListPrevNextIndex", "pym")
-    datafile = \
-        script.get_document_data_file("SelList", "pym")
+    index_datafile = script.get_document_data_file("SelListPrevNextIndex", "pym")
+    datafile = script.get_document_data_file("SelList", "pym")
 
     selection = revit.get_selection()
 
     if op.exists(index_datafile):
-        with open(index_datafile, 'r') as f:
+        with open(index_datafile, "rb") as f:
             idx = pickle.load(f)
 
-        if mode == '-':
+        if mode == "-":
             idx = idx - step_size
         else:
             idx = idx + step_size
-            
     else:
         idx = 0
 
-    # print idx
-
     if op.exists(datafile):
         try:
-            with open(datafile, 'r') as df:
+            with open(datafile, "rb") as df:
                 cursel = pickle.load(df)
 
             if cursel:
@@ -42,12 +40,9 @@ def iterate(mode, step_size=1):
                     idx = abs(idx / len(cursel)) * len(cursel) + idx
                 elif idx >= len(cursel):
                     idx = idx - abs(idx / len(cursel)) * len(cursel)
+                selection.set_to(get_elementid_from_value(list(cursel)[idx]))
 
-                selection.set_to([DB.ElementId(int(list(cursel)[idx]))])
-
-                with open(index_datafile, 'w') as f:
+                with open(index_datafile, "wb") as f:
                     pickle.dump(idx, f)
         except Exception as io_err:
-            logger.error(
-                'Error read/write to: %s | %s', datafile, io_err
-                )
+            logger.error("Error read/write to: %s | %s", datafile, io_err)

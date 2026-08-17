@@ -6,6 +6,7 @@ import importlib
 ARC = string.ascii_lowercase
 begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
 module = importlib.import_module(str(begin))
+from nances import getelementid
 try:
     if module.AutodeskData():
         import Autodesk
@@ -77,8 +78,9 @@ try:
             current_selection = pickle.load(f)
             f.close()
             element_ids = []
+            get_func_1 = getelementid.get_elementid_from_value_func()
             for elid in current_selection:
-                Input1.append(doc.GetElement(ElementId(long(elid))))
+                Input1.append(doc.GetElement(get_func_1(elid)))
         except Exception:
             pass
 
@@ -90,8 +92,10 @@ try:
             current_selection = pickle.load(f)
             f.close()
             element_ids = []
+            get_func_2 = getelementid.get_elementid_from_value_func()
             for elid in current_selection:
-                Input2.append(doc.GetElement(ElementId(long(elid))))
+                
+                Input2.append(doc.GetElement(get_func_2(elid)))
         except Exception:
             pass
 

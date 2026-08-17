@@ -26,8 +26,11 @@ if nances.AutodeskData():
         list_id.append(tung_element.Id)
 
     get_elementid_value = getelementid.get_elementid_value_func()
+
     selected_ids = {str(get_elementid_value(elid)) for elid in list_id}
 
     f = open(datafile, 'w')
+
     pickle.dump(selected_ids, f)
+    
     f.close()

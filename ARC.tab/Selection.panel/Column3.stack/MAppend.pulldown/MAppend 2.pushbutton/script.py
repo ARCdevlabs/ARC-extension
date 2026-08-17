@@ -2,22 +2,24 @@ import pickle
 
 from pyrevit import script
 from pyrevit import revit
+from nances import getelementid
 
 
-datafile = script.get_document_data_file("Memory2", "txt")
+datafile = script.get_document_data_file("Memory2", "pym")
 
 
 selection = revit.get_selection()
-selected_ids = {str(elid.IntegerValue) for elid in selection.element_ids}
+get_elementid_value = getelementid.get_elementid_value_func()
+selected_ids = {str(get_elementid_value(elid)) for elid in selection.element_ids}
 
 try:
-    f = open(datafile, 'r')
+    f = open(datafile, 'rb')
     prevsel = pickle.load(f)
     new_selection = prevsel.union(selected_ids)
     f.close()
 except Exception:
     new_selection = selected_ids
 
-f = open(datafile, 'w')
+f = open(datafile, 'wb')
 pickle.dump(new_selection, f)
 f.close()
