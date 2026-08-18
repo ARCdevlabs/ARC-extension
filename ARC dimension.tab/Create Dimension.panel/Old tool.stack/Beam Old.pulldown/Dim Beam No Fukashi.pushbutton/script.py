@@ -50,7 +50,7 @@ if module.AutodeskData():
                         first_item_list_comprehension.append(list_comprehension[0])
                         cut_geometry = module.cut_geometry_all(doc, list_can_not_dim, first_item_list_comprehension)
         except:
-            print(traceback.format_exc())
+            # print(traceback.format_exc())
             pass
 
         t = Transaction(doc,"Dimension beam (centered)")
@@ -110,13 +110,14 @@ if module.AutodeskData():
                     get_hide_isolate = check_hide_isolate(Currentview, grid)
                     get_hidden_element = check_hidden(grid,Currentview)
                     if get_hide_isolate and get_hidden_element:
-                        geo_all_grid = geometry.get_all_geometry_of_grids(grid, DatumExtentType)
+                        # geo_all_grid = geometry.get_all_geometry_of_grids(grid, DatumExtentType)
+                        geo_all_grid = geometry.get_all_geometry_of_grids(grid,Currentview, DatumExtentType = DatumExtentType.ViewSpecific)
                         for one_grid_curve in geo_all_grid:
                             for two_grid_curve in one_grid_curve:
                                 grid_plane = vectortransform.create_plane_follow_line(two_grid_curve)
                                 check_pararel_beam_with_grid = vectortransform.are_planes_parallel(center_plane_normal,grid_plane.Normal)
                                 if check_pararel_beam_with_grid:
-                                    distance_grid_with_beam =  abs(vectortransform.distance_between_parallel_planes(grid_plane, center_plane))
+                                    distance_grid_with_beam =  abs(vectortransform.distance_between_parallel_planes(grid_plane, center_plane))                                    
                                     if distance_grid_with_beam < max_value:
                                         ref_grid = Reference(grid)
                                         tung_beam_reference.Append(ref_grid)
@@ -142,6 +143,7 @@ if module.AutodeskData():
                         tung_beam_reference.Append(ref_beam_chinh_giua)
                         list_tung_beam_reference.append(ref_beam_chinh_giua)
                 except:
+                    print(traceback.format_exc())
                     tung_beam_reference.Append(ref_beam_chinh_giua)
                     list_tung_beam_reference.append(ref_beam_chinh_giua)
                     pass
