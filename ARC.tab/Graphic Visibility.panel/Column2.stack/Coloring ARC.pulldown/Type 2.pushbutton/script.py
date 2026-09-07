@@ -15,9 +15,13 @@ import importlib
 ARC = string.ascii_lowercase
 begin = "".join(ARC[i] for i in [13, 0, 13, 2, 4, 18])
 module = importlib.import_module(str(begin))
-
+from pyrevit.coreutils import applocales
+current_applocale = applocales.get_current_applocale()
 def override_graphics_in_view(view, list_element_id, color, color_cut):
-    name_pattern = "<Solid fill> , <塗り潰し>"
+    if str(current_applocale) == '日本語 / Japanese (ja)':
+        name_pattern = "<塗り潰し>"
+    else:
+        name_pattern = "<Solid fill>"
     patterns = FilteredElementCollector(doc).OfClass(FillPatternElement)
     for pattern in patterns:
         if pattern.Name in name_pattern:
