@@ -1,3 +1,5 @@
 layout:
   - Select SectionBox
   - Remember SectionBox
+  - Active View
+  - Remember Active View
