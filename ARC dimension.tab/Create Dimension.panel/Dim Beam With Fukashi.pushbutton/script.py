@@ -159,7 +159,7 @@ if nances.AutodeskData():
             location_line = tung_beam.Location.Curve
 
             #Thông thường parameter "Dimension Line Snap Distance" có giá trị là 5mm
-            snap_dim_mm = 5 #tính bằng mm
+            snap_dim_mm = 3.85 #tính bằng mm
             
             snap_dim_feet = snap_dim_mm  / 304.8  #tính bằng feet
 

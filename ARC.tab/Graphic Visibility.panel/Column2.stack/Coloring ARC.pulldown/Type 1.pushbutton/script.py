@@ -16,6 +16,10 @@ import clr
 import os.path as op
 import sys
 from pyrevit.coreutils import applocales
+from nances import getelementid
+
+get_elementid_from_value = getelementid.get_elementid_from_value_func()
+
 current_applocale = applocales.get_current_applocale()
 
 def override_graphics_in_view(view, list_element_id, color, color_cut):
@@ -76,35 +80,35 @@ OverrideFraming.SetSurfaceForegroundPatternId(GetFillPattern.Id)
 OverrideFraming.SetCutForegroundPatternColor(ColorFramingCut)
 OverrideFraming.SetCutForegroundPatternId(GetFillPattern.Id)
 # Set override for Structure framing
-SetColorFrame = AcView.SetCategoryOverrides(ElementId(-2001320),OverrideFraming)
+SetColorFrame = AcView.SetCategoryOverrides(get_elementid_from_value(-2001320),OverrideFraming)
 """ Floor """
 OverrideFloor = Autodesk.Revit.DB.OverrideGraphicSettings()
 OverrideFloor.SetSurfaceForegroundPatternColor(ColorFloor)
 OverrideFloor.SetSurfaceForegroundPatternId(GetFillPattern.Id)
 OverrideFloor.SetCutForegroundPatternColor(ColorFloorCut)
 OverrideFloor.SetCutForegroundPatternId(GetFillPattern.Id)
-SetColorFloor = AcView.SetCategoryOverrides(ElementId(-2000032),OverrideFloor)
+SetColorFloor = AcView.SetCategoryOverrides(get_elementid_from_value(-2000032),OverrideFloor)
 """ Wall """
 OverrideWall = Autodesk.Revit.DB.OverrideGraphicSettings()
 OverrideWall.SetSurfaceForegroundPatternColor(ColorWall)
 OverrideWall.SetSurfaceForegroundPatternId(GetFillPattern.Id)
 OverrideWall.SetCutForegroundPatternColor(ColorWallCut)
 OverrideWall.SetCutForegroundPatternId(GetFillPattern.Id)
-SetColorWall = AcView.SetCategoryOverrides(ElementId(-2000011),OverrideWall)
+SetColorWall = AcView.SetCategoryOverrides(get_elementid_from_value(-2000011),OverrideWall)
 """ Column """
 OverrideColumn = Autodesk.Revit.DB.OverrideGraphicSettings()
 OverrideColumn.SetSurfaceForegroundPatternColor(ColorColumn)
 OverrideColumn.SetSurfaceForegroundPatternId(GetFillPattern.Id)
 OverrideColumn.SetCutForegroundPatternColor(ColorColumnCut)
 OverrideColumn.SetCutForegroundPatternId(GetFillPattern.Id)
-SetColorColumn = AcView.SetCategoryOverrides(ElementId(-2001330),OverrideColumn)
+SetColorColumn = AcView.SetCategoryOverrides(get_elementid_from_value(-2001330),OverrideColumn)
 """ Foundation """
 OverrideFoundation = Autodesk.Revit.DB.OverrideGraphicSettings()
 OverrideFoundation.SetSurfaceForegroundPatternColor(ColorFoundation)
 OverrideFoundation.SetSurfaceForegroundPatternId(GetFillPattern.Id)
 OverrideFoundation.SetCutForegroundPatternColor(ColorFoundationCut)
 OverrideFoundation.SetCutForegroundPatternId(GetFillPattern.Id)
-SetColorFoundation = AcView.SetCategoryOverrides(ElementId(-2001300),OverrideFoundation)
+SetColorFoundation = AcView.SetCategoryOverrides(get_elementid_from_value(-2001300),OverrideFoundation)
 
 # Override in view_floorA
 collector_floor = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Floors).WhereElementIsNotElementType()

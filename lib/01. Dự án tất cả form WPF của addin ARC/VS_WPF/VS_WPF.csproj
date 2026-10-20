@@ -74,6 +74,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="..\..\..\..\..\..\pyRevit-Master\extensions\pyRevitCore.extension\pyRevit.tab\pyRevit.panel\Settings.smartbutton\SettingsWindow.xaml">
+      <Link>Link WPF\SettingsWindow.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="..\..\..\..\ARCdev.extension\ARC-dev.tab_hủy\Learning WPF.panel\WPF.stack\Test XAML_frompyrevit.pushbutton\ui_test.xaml">
       <Link>Link WPF\ui_test.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
