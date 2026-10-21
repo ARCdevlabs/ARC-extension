@@ -1,8 +1,8 @@
 import pickle
 from pyrevit import revit
 from pyrevit.coreutils import appdata
-from nances import getelementid
-
+# from nances import getelementid
+from pyrevit.compat import get_elementid_value_func
 def get_document_data_file(file_id, file_ext):
     proj_info = revit.query.get_project_info()
 
@@ -18,7 +18,7 @@ doc = uidoc.Document
 
 current_view = doc.ActiveView
 
-get_elementid_value_func = getelementid.get_elementid_value_func()
+get_elementid_value_func = get_elementid_value_func()
 
 selected_ids = {get_elementid_value_func(current_view.Id)}
 
