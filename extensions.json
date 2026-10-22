@@ -6,9 +6,9 @@
     "name": "ARC extension",
     "description": "Custom pyRevit addin by Nguyễn Thanh Sơn",
     "author": "Nguyễn Thanh Sơn - Phan Mẫu Cường",
-    "author_profile": "https://github.com/ARCdevlabs",
-    "url": "https://github.com/ARCdevlabs/ARC-extension",
-    "website": "https://github.com/ARCdevlabs/ARC-extension",
+    "author_profile": "https://github.com/ARCdevlabs.git",
+    "url": "https://github.com/ARCdevlabs/ARC-extension.git",
+    "website": "https://github.com/ARCdevlabs/ARC-extension.git",
     "image": "",
     "dependencies": []
 }
